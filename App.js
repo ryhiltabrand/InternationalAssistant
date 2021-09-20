@@ -1,24 +1,22 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * 
- *
- */
-
+import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import Tabs from './app/navigator/bottomNav/tabs'
+import { NavigationContainer } from '@react-navigation/native';
 
-const HelloWorldApp = () => {
+export default function App() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
-      }}>
-      <Text>Hello, world!</Text>
-    </View>
+    <NavigationContainer>
+      <Tabs/>
+    </NavigationContainer>
   )
 }
-export default HelloWorldApp;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
