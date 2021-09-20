@@ -1,22 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Tabs from './app/navigator/bottomNav/tabs'
-import { NavigationContainer } from '@react-navigation/native';
+/**
+ * f21-Blue
+ * Created by Marquel
+ *
+ * 
+ *
+ */
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Tabs/>
-    </NavigationContainer>
-  )
+
+
+import React from 'react';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
+
+import RootStackScreen from './Screens/RootStackScreen';
+
+export default class App extends React.Component{
+  render(){
+    return(
+        <NavigationContainer>
+          <RootStackScreen/>
+        </NavigationContainer>
+    )
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
