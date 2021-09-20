@@ -1,0 +1,27 @@
+stages:
+ - build
+ - test
+ - deploy
+
+before_script:
+  #install dependcies before continuing
+  - npm install
+
+build-react-native-app:
+  stage: build
+  script:
+    - echo "Building application"
+    #- npx react-native start
+
+#https://www.testim.io/blog/react-native-unit-testing/
+test-react-native-app:
+  stage: test
+  script: 
+    - echo "Start unit testing"
+    - npx jest
+
+#https://hackernoon.com/understanding-expo-for-react-native-7bf23054bbcd
+deploy-react-native-app-to-expo-server:
+  stage: deploy
+  script:
+    - echo "Deploying to Expo Server"
