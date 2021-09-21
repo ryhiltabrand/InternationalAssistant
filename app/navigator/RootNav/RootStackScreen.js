@@ -13,9 +13,9 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
- import SignupScreen from './../views/signupScreen';
- import LoginScreen from './../views/loginScreen';
- import ForgotScreen from './../views/forgotScreen';
+ import SignupScreen from '../../components/views/signupScreen';
+ import LoginScreen from '../../components/views/loginScreen';
+ import ForgotScreen from '../../components/views/forgotScreen';
 
  const RootStack = createNativeStackNavigator();
  

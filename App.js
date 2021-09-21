@@ -15,7 +15,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 
-import RootStackScreen from './app/components/views/RootStackScreen';
+import RootStackScreen from './app/navigator/RootNav/RootStackScreen';
 
 export default class App extends React.Component{
   render(){
