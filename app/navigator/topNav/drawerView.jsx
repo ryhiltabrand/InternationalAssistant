@@ -12,6 +12,11 @@ export default function DrawerCustom(props) {
       
       <DrawerContentScrollView {...props}>
         <DrawerItem
+        label="Profile"
+        onPress={() => {
+          props.navigation.navigate("Profile");
+        }}/>
+        <DrawerItem
           label="Home"
           onPress={() => {
             props.navigation.navigate("Home");
@@ -32,15 +37,16 @@ export default function DrawerCustom(props) {
         <DrawerItem
           label="Help"
           onPress={() => {
-            props.navigation.navigate("Locations");
+            props.navigation.navigate("Help");
           }}
         />
         <DrawerItem
           label="Q&A"
           onPress={() => {
-            props.navigation.navigate("Locations");
+            props.navigation.navigate("Q&A");
           }}
         />
+      
       </DrawerContentScrollView>
     </View>
   );
