@@ -6,24 +6,20 @@
  *
  */
 
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground, Image } from 'react-native';
-import bgImage from './../Assets/bgImage.jpg';
 
-const ForgotScreen = ({navigation}) => {
-	
-    const [email, setEmail] = useState();
-	
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
+import bgImage from '../../assets/bgImage.jpg';
+
+const LoginScreen = ({navigation}) => {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  
     return (
 	  <ImageBackground source={bgImage} style={styles.bkimage}>
       <View style={styles.container}>
-		
-	  <Image
-	      style={{ width: 150, height: 150 }}
-	      source={require('./../Assets/lock.png')}
-       />
-	  <Text style={styles.header}>Trouble logging in?</Text>
-        <Text style={styles.forgotText}>Enter your email and we'll send you a password reset link to get back into you account.</Text>
+	  
+        <Text style={styles.logo}>International Assistant</Text>
 		
 		<View style={styles.inputView} >
           <TextInput  
@@ -33,17 +29,26 @@ const ForgotScreen = ({navigation}) => {
             onChangeText={(userEmail) => setEmail(userEmail)}/>
         </View>
 		
-		<TouchableOpacity style={styles.linkBtn}>
-          <Text style={styles.linkText}>Send Login Link</Text>
+		 <View style={styles.inputView} >
+          <TextInput  
+            secureTextEntry
+            style={styles.inputText}
+            placeholder="Password" 
+            placeholderTextColor='rgba(225, 225, 225, 1.0)'
+            onChangeText={(userPassword) => setPassword(userPassword)}/>
+        </View>
+		
+		<TouchableOpacity style={styles.loginBtn}>
+          <Text style={styles.loginText}>Log In</Text>
         </TouchableOpacity>
 		
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('ForgotScreen')}>
           <Text style={styles.forgot}>Forgot your login details? Get help signing in.</Text>
         </TouchableOpacity>
 		
 		<View style={{flex: 1, justifyContent: 'flex-end'}}>
-		<TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.loginBtn}>
-          <Text style={styles.loginText}>Back To Log In.</Text>
+		<TouchableOpacity onPress={() => navigation.navigate('SignupScreen')} style={styles.signupBtn}>
+          <Text style={styles.signupText}>Don't have an account? Sign up.</Text>
         </TouchableOpacity>
         </View>
 
@@ -51,9 +56,9 @@ const ForgotScreen = ({navigation}) => {
       </View>
 	   </ImageBackground>
     );
-};
+}
 
-export default ForgotScreen;
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -61,19 +66,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  header:{
-    fontWeight:"bold",
-    fontSize:25,
-    color:'black',
-    marginBottom:40
-  },
   bkimage:{
     flex: 1
   },
-  forgotText:{
+  logo:{
+    fontWeight:"bold",
+    fontSize:25,
     color:"black",
-	fontSize:15,
-	padding:20
+    marginBottom:40
   },
   inputView:{
     width:"80%",
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     color:"black",
     fontSize:15
   },
-  linkBtn:{
+  loginBtn:{
     width:"80%",
     backgroundColor:'rgba(94, 8, 203, 0.7)',
     borderRadius:25,
@@ -101,11 +101,11 @@ const styles = StyleSheet.create({
     marginTop:40,
     marginBottom:10
   },
-  linkText:{
+  loginText:{
     color:"black",
 	fontSize:15
   },
-  loginBtn:{
+  signupBtn:{
     width:1000,
     backgroundColor:'rgba(94, 8, 203, 0.7)',
     height:50,
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     marginTop:40,
     marginBottom:0
   },
-  loginText:{
+  signupText:{
 	justifyContent: 'center', 
     alignItems: 'center',
     bottom: 0,

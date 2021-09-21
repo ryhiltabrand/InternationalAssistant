@@ -9,7 +9,7 @@
 
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
-import bgImage from './../Assets/bgImage.jpg';
+import bgImage from '../../assets/bgImage.jpg';
 
 const SignInScreen = ({navigation}) => {
 
