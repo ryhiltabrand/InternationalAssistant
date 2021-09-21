@@ -3,7 +3,7 @@ import { Text, View, Button } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 
-function HomeScreen() {
+const HomeScreen = () => {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Button
