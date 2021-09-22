@@ -5,8 +5,11 @@ import {
   DrawerItem,
   DrawerItemList,
 } from "@react-navigation/drawer";
+import { FontAwesome5 } from "@expo/vector-icons";
+
 
 export default function DrawerCustom(props) {
+     
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
@@ -21,18 +24,19 @@ export default function DrawerCustom(props) {
               source={require("../../assets/icon.png")}
             />
           </TouchableOpacity>
-          <View style={{ marginLeft: 15, flexDirection: "column", marginTop: 120 }}>
+          <TouchableOpacity
+            style={{marginLeft: 150, marginTop: 25}}
+            onPress={() => {
+                props.navigation.navigate("Settings");
+            }}>
+            <Text><FontAwesome5 name={'cog'} size={30} color={'black'} /></Text>
+          </TouchableOpacity>
+          <View style={{ marginLeft: 15, flexDirection: "column", marginTop: 65 }}>
             <Text style={{fontSize:20}}>{props.profileName}</Text>
             <Text style={{marginTop:0}}>{props.profileEmail}</Text>
           </View>
         </View>
         <View style={{  }}>
-          <DrawerItem
-            label="Settings"
-            onPress={() => {
-              props.navigation.navigate("Settings");
-            }}
-          />
           <DrawerItem
             label="Home"
             onPress={() => {
