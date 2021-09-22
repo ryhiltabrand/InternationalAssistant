@@ -1,28 +1,46 @@
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import credentials from 'app/utilities/firebaseAuth.js';
+import credentials from './firebaseAuth.js';
 
-const database = firebase.firestore(credentials);
+firebase.initializeApp(credentials);
+
+const database = firebase.firestore();
 
 //User Collection
 
 class UsersCollection {
+    static #documentID;
+    static #userFieldEntries = new Map();
 
-    set #createProfile(name, birthday, email, language = []) {
+//Accessor and Mutator for 'users' collection
+
+    setName(name) {
+        this.#userFieldEntries.set('name', name)
+    }
+
+    setDateofBirth(date) {
+        this.#userFieldEntries.set('dateofbirth', date)
+    }
+
+    setEmail(email) {
+        this.#userFieldEntries.set('email', email)
+    }
+
+    setLanguage(language) { 
+        this.#userFieldEntries.set('language', language) 
+    }
+    
+    async createUserAccountInformation() {
+        // Create new instance
         try {
-            const docRef = await addDoc(collection(db, "users"), {
-                name: name,
-                dateOfBirth: birthday,
-                email: email,
-                language: language
-            });
-            console.log("Users document written with ID: ", docRef.id);
+            await setDoc(collection(db, "users", this.#userFieldEntries.get(email)), this.#userFieldEntries);
+            console.log("Users document written with ID: ", this.#userFieldEntries.get(email));
         } catch (e) {
             console.error("Error adding Users document: ", e);
         }
     }
 
-    get #obtainProfile(email) {
+    async getAccountInformation(email) {
         const docRef = doc(db, "users", email);
         const docSnap = await getDoc(docRef);
 
@@ -31,13 +49,11 @@ class UsersCollection {
             return docSnap.data();
         } else {
             // doc.data() will be undefined in this case
-            console.log("No such User document!");
+            console.log("No such UserAccountInformation document for ", email);
         }
     }
 
-    constructor(name, birthday, email, language = []) {
-        //may break due to not supported by node.js (Private instance methods)
-        //this.#createProfile(name, birthday, email, language);
+    constructor() {
     }
 
 }
