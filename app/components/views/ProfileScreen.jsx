@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { View, ScrollView, TouchableOpacity, Image, TouchableHighlight, ImageEditor, Text } from 'react-native';
-
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 
 const ProfileScreen = () => {
@@ -86,4 +87,36 @@ const ProfileScreen = () => {
   
 }
 
-export default ProfileScreen;
+const PStack = createNativeStackNavigator();
+const ProfileStackScreen = ({ navigation }) => (
+  <PStack.Navigator
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: "#ADD8E6",
+      },
+      headerTintColor: "#000000",
+      headerTitleStyle: {
+        fontWeight: "bold",
+      },
+    }}
+  >
+    <PStack.Screen
+      name="ProfileScreen"
+      component={ProfileScreen}
+      options={{
+        title: "CHANGE TO DATABASE NAME",
+        headerTitleAlign:"center",
+        headerLeft: () => (
+          <FontAwesome5.Button
+            name="bars"
+            size={25}
+            color="#000000"
+            backgroundColor="#ADD8E6"
+            onPress={() => navigation.openDrawer()}
+          ></FontAwesome5.Button>
+        ),
+      }}
+    />
+  </PStack.Navigator>
+);
+export default ProfileStackScreen;

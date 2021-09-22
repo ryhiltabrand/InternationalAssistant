@@ -1,10 +1,10 @@
-import EventsScreen from "./EventsScreen"
-import HelpScreen from "./HelpScreen"
-import HomeScreen from "./HomeScreen"
-import LocationsScreen from "./LocationsScreen"
-import QandAScreen from "./QandAScreen"
-import ProfileScreen from "./ProfileScreen"
-import SettingsScreen from "./Settings"
+import EventStackScreen from "./EventsScreen"
+import HelpStackScreen from "./HelpScreen"
+import HomeStackScreen from "./HomeScreen"
+import LocationStackScreen from "./LocationsScreen"
+import QAStackScreen from "./QandAScreen"
+import ProfileStackScreen from "./ProfileScreen"
+import SettingsStackScreen from "./Settings"
 
 
-export {EventsScreen, HelpScreen, HomeScreen, LocationsScreen, QandAScreen, ProfileScreen, SettingsScreen}
+export {EventStackScreen, HelpStackScreen, HomeStackScreen, LocationStackScreen, QAStackScreen, ProfileStackScreen, SettingsStackScreen}
