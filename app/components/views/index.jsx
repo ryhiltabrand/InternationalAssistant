@@ -4,6 +4,7 @@ import HomeScreen from "./HomeScreen"
 import LocationsScreen from "./LocationsScreen"
 import QandAScreen from "./QandAScreen"
 import ProfileScreen from "./ProfileScreen"
+import SettingsScreen from "./Settings"
 
 
-export {EventsScreen, HelpScreen, HomeScreen, LocationsScreen, QandAScreen, ProfileScreen}
+export {EventsScreen, HelpScreen, HomeScreen, LocationsScreen, QandAScreen, ProfileScreen, SettingsScreen}

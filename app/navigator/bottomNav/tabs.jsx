@@ -18,6 +18,7 @@ const HomeStackScreen = ({navigation}) => (
       }}>
           <HStack.Screen name="HomeScreen" component={HomeScreen} options={{
           title:'Home',
+          headerTitleAlign:"center",
           headerLeft: () => (
               <FontAwesome5.Button name="bars" size={25} color="#000000" backgroundColor="#ADD8E6" onPress={() => navigation.openDrawer()}></FontAwesome5.Button>
           )
@@ -38,6 +39,7 @@ const HomeStackScreen = ({navigation}) => (
         }}>
             <EStack.Screen name="EventScreen" component={EventsScreen} options={{
             title:'Events',
+            headerTitleAlign:"center",
             headerLeft: () => (
                 <FontAwesome5.Button name="bars" size={25} color="#000000" backgroundColor="#ADD8E6" onPress={() => navigation.openDrawer()}></FontAwesome5.Button>
             )
@@ -58,6 +60,7 @@ const HomeStackScreen = ({navigation}) => (
         }}>
             <LStack.Screen name="LocationScreen" component={LocationsScreen} options={{
             title:'Locations',
+            headerTitleAlign:"center",
             headerLeft: () => (
                 <FontAwesome5.Button name="bars" size={25} color="#000000" backgroundColor="#ADD8E6" onPress={() => navigation.openDrawer()}></FontAwesome5.Button>
             )
@@ -78,6 +81,7 @@ const HomeStackScreen = ({navigation}) => (
         }}>
             <HelpStack.Screen name="HelpScreen" component={HelpScreen} options={{
             title:'Help',
+            headerTitleAlign:"center",
             headerLeft: () => (
                 <FontAwesome5.Button name="bars" size={25} color="#000000" backgroundColor="#ADD8E6" onPress={() => navigation.openDrawer()}></FontAwesome5.Button>
             )
@@ -98,6 +102,7 @@ const HomeStackScreen = ({navigation}) => (
         }}>
             <QAStack.Screen name="LocationScreen" component={QandAScreen} options={{
             title:'Q&A',
+            headerTitleAlign:"center",
             headerLeft: () => (
                 <FontAwesome5.Button name="bars" size={25} color="#000000" backgroundColor="#ADD8E6" onPress={() => navigation.openDrawer()}></FontAwesome5.Button>
             )
@@ -144,8 +149,8 @@ const Tabs = () => {
             tabBarInactiveTintColor: 'black',
             tabBarStyle: {position: 'absolute'},
             tabBarShowLabel: false,
-            tabBarActiveBackgroundColor: '#ADD8E6',
-            tabBarInactiveBackgroundColor: '#1E90FF',
+            tabBarActiveBackgroundColor: '#1E90FF',
+            tabBarInactiveBackgroundColor: '#ADD8E6',
             headerShown: false
           })}
           >
