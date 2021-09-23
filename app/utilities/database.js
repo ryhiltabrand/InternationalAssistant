@@ -1,42 +1,45 @@
-import * as firebase from 'firebase';
-import 'firebase/firestore';
-import credentials from './firebaseAuth.js';
+import { initializeApp } from "firebase/app";
+import { getFirestore, setDoc, collection, doc } from "firebase/firestore";
 
-firebase.initializeApp(credentials);
+import {credentials} from './firebaseAuth.js';
 
-const database = firebase.firestore();
+const firebaseApp = initializeApp(credentials);
+const db = getFirestore();
 
 //User Collection
 
-class UsersCollection {
-    static #documentID;
-    static #userFieldEntries = new Map();
+export class UsersCollection {
+    #userFieldEntries = {};
 
 //Accessor and Mutator for 'users' collection
 
     setName(name) {
-        this.#userFieldEntries.set('name', name)
+        //this.#userFieldEntries.set('name', name)
+        this.#userFieldEntries.name = name
     }
 
     setDateofBirth(date) {
-        this.#userFieldEntries.set('dateofbirth', date)
+        // this.#userFieldEntries.set('dateofbirth', date)
+        this.#userFieldEntries.dateofbirth = date
     }
 
     setEmail(email) {
-        this.#userFieldEntries.set('email', email)
+        // this.#userFieldEntries.set('email', email)
+        this.#userFieldEntries.email = email
     }
 
     setLanguage(language) { 
-        this.#userFieldEntries.set('language', language) 
+        // this.#userFieldEntries.set('language', language)
+        this.#userFieldEntries.language = language
     }
     
     async createUserAccountInformation() {
         // Create new instance
         try {
-            await setDoc(collection(db, "users", this.#userFieldEntries.get(email)), this.#userFieldEntries);
-            console.log("Users document written with ID: ", this.#userFieldEntries.get(email));
+            await setDoc(doc(db, "users", this.#userFieldEntries.email.replace(/\./g,'')), this.#userFieldEntries);
+            console.log("Users document written with ID: ", this.#userFieldEntries.email);
         } catch (e) {
-            console.error("Error adding Users document: ", e);
+            console.error("Error adding Users document with email ", e);
         }
     }
 
@@ -51,9 +54,6 @@ class UsersCollection {
             // doc.data() will be undefined in this case
             console.log("No such UserAccountInformation document for ", email);
         }
-    }
-
-    constructor() {
     }
 
 }
