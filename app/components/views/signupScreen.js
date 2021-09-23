@@ -8,64 +8,122 @@
 
 
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ImageBackground,
+  Alert,
+  ActivityIndicator,
+  Button,
+} from "react-native";
 import bgImage from '../../assets/bgImage.jpg';
-
-const SignInScreen = ({navigation}) => {
-
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
-	const [username, setUsername] = useState();
-   
-	return (
-	<ImageBackground source={bgImage} style={styles.bkimage}>
-      <View style={styles.container}>
-	    <Text style={styles.logo}>International Assistant</Text>
-		 <Text style={styles.signupText}>Sign up to find friends and connect with others.</Text>
-	      
-		 <View style={styles.inputView} >
-          <TextInput  
-            style={styles.inputText}
-            placeholder="Email or Mobile Number" 
-            placeholderTextColor="white"
-            onChangeText={(userEmail) => setEmail(userEmail)}/>
+import { Component } from 'react';
+import firebase from "../../utilities/firebase";
+export class signupScreen extends Component {
+  constructor(props){
+    super(props);
+    this.state={
+      name: '',
+      email: '',
+      password: '',
+      isLoading: false
+    }
+  }
+  updateInputVal = (val, prop) => {
+    const state = this.state;
+    state[prop] = val;
+    this.setState(state);
+  }
+  registerUser = () => {
+    if((this.state.email === '' && this.state.password === '')) {
+      Alert.alert('Enter details to signup!')
+    } else if(this.state.email.endsWith('.edu') !== true){
+      Alert.alert('Emails must be school emails')
+      }
+      else{
+        this.setState({
+          isLoading: true,
+        })
+        firebase
+      .auth()
+      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .then((res) => {
+        res.user.updateProfile({
+          displayName: this.state.name
+        })
+        console.log('User registered successfully!')
+        this.setState({
+          isLoading: false,
+          displayName: '',
+          email: '', 
+          password: ''
+        })
+        this.props.navigation.navigate('Login')
+      })
+      .catch(error => this.setState({ errorMessage: error.message })) 
+      }    
+    }
+  render(){
+    if(this.state.isLoading){
+      return(
+        <View style={styles.preloader}>
+          <ActivityIndicator size="large" color="#9E9E9E"/>
         </View>
-		
-		<View style={styles.inputView} >
-          <TextInput  
-            style={styles.inputText}
-            placeholder="Username" 
-            placeholderTextColor="white"
-            onChangeText={(userUsername) => setUsername(userUsername)}/>
-        </View>
-		
+      )
+    }
+    return (
+      <ImageBackground source={bgImage} style={styles.bkimage}>
+          <View style={styles.container}>
+          <Text style={styles.logo}>International Assistant</Text>
+         <Text style={styles.signupText}>Sign up to find friends and connect with others.</Text>
+            
+         <View style={styles.inputView} >
+              <TextInput  
+                style={styles.inputText}
+                placeholder="Name" 
+                placeholderTextColor="white"
+                onChangeText={(val) => this.updateInputVal(val, 'name')}/>
+            </View>
+        
         <View style={styles.inputView} >
-          <TextInput  
-            secureTextEntry
-            style={styles.inputText}
-            placeholder="Password" 
-            placeholderTextColor="white"
-            onChangeText={(userPassword) => setPassword(userPassword)}/>
-        </View>
-		
-		<TouchableOpacity style={styles.signupBtn}>
-          <Text style={styles.signupBtnText}>Sign up</Text>
-        </TouchableOpacity>
-		  
-      <Text style={styles.policy}>By signing up, you agree to our Terms & Privacy Policy.</Text>
-	  
-	   <View style={{flex: 1, justifyContent: 'flex-end'}}>
-		<TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.loginBtn}>
-          <Text style={styles.loginText}>Already have an account? Sign In.</Text>
-        </TouchableOpacity>
-       </View>
-	  
-      </View>
-	  </ImageBackground>
-    );
-};
+              <TextInput  
+                style={styles.inputText}
+                placeholder="Email" 
+                placeholderTextColor="white"
+                onChangeText={(val) => this.updateInputVal(val, 'email')}/>
+            </View>
+        
+            <View style={styles.inputView} >
+              <TextInput  
+                secureTextEntry
+                style={styles.inputText}
+                placeholder="Password" 
+                placeholderTextColor="white"
+                onChangeText={(val) => this.updateInputVal(val, 'password')}/>
+            </View>
+        
+        <TouchableOpacity onPress= {() => this.registerUser()} style={styles.signupBtn}>
+              <Text style={styles.signupBtnText}>Sign up</Text>
+            </TouchableOpacity>
+          
+          <Text style={styles.policy}>By signing up, you agree to our Terms & Privacy Policy.</Text>
+        
+         <View style={{flex: 1, justifyContent: 'flex-end'}}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate("Login")} style={styles.loginBtn}>
+              <Text style={styles.loginText}>Already have an account? Sign In.</Text>
+            </TouchableOpacity>
+           </View>
+        
+          </View>
+        </ImageBackground>
+        );
+    };
+  }
 
-export default SignInScreen;
+export default signupScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -133,5 +191,15 @@ const styles = StyleSheet.create({
     bottom: 0,
     color:"black",
 	fontSize:15
+  },
+  preloader: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff'
   }
 });

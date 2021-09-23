@@ -5,15 +5,52 @@
  * 
  *
  */
-
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground, Image } from 'react-native';
+ import * as React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ImageBackground,
+  Alert,
+  ActivityIndicator,
+  Button,
+  Image
+} from "react-native";
 import bgImage from '../../assets/bgImage.jpg';
+import firebase from "../../utilities/firebase";
+import { Component } from "react";
 
-const ForgotScreen = ({navigation}) => {
-	
-    const [email, setEmail] = useState();
-	
+export class ForgotScreen extends Component {
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+      isLoading: false,
+    };
+  }
+  updateInputVal = (val,prop) => {
+    const state= this.state;
+    state[prop] = val;
+    this.setState();
+  }
+  resetPassword(){
+    return(
+      firebase.auth().sendPasswordResetEmail(this.state.email)
+    )
+  }
+
+	render() {
+    if(this.state.isLoading){
+      return(
+        <View style={styles.preloader}>
+          <ActivityIndicator size="large" color="#9E9E9E"/>
+        </View>
+      )
+    }  
     return (
 	  <ImageBackground source={bgImage} style={styles.bkimage}>
       <View style={styles.container}>
@@ -30,10 +67,10 @@ const ForgotScreen = ({navigation}) => {
             style={styles.inputText}
             placeholder="Email" 
             placeholderTextColor='white'
-            onChangeText={(userEmail) => setEmail(userEmail)}/>
+            onChangeText={(val) => this.updateInputVal(val, 'email')}/>
         </View>
 		
-		<TouchableOpacity style={styles.linkBtn}>
+		<TouchableOpacity onPress= {() => {this.resetPassword()}} style={styles.linkBtn}>
           <Text style={styles.linkText}>Send Login Link</Text>
         </TouchableOpacity>
 		
@@ -42,7 +79,7 @@ const ForgotScreen = ({navigation}) => {
         </TouchableOpacity>
 		
 		<View style={{flex: 1, justifyContent: 'flex-end'}}>
-		<TouchableOpacity onPress={() => navigation.navigate('LoginScreen')} style={styles.loginBtn}>
+		<TouchableOpacity onPress={() => {this.props.navigation.navigate('Login')}} style={styles.loginBtn}>
           <Text style={styles.loginText}>Back To Log In.</Text>
         </TouchableOpacity>
         </View>
@@ -51,7 +88,8 @@ const ForgotScreen = ({navigation}) => {
       </View>
 	   </ImageBackground>
     );
-};
+  }
+}
 
 export default ForgotScreen;
 
@@ -120,5 +158,15 @@ const styles = StyleSheet.create({
     bottom: 0,
     color:"black",
 	fontSize:15
+  },
+  preloader: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff'
   }
 });

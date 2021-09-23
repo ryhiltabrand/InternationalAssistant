@@ -2,60 +2,131 @@
  * f21-Blue
  * Created by Marquel
  *
- * 
+ *
  *
  */
 
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
+import * as React from "react";
+import { Component } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ImageBackground,
+  Alert,
+  ActivityIndicator,
+  Button,
+} from "react-native";
+import bgImage from "../../assets/bgImage.jpg";
+import firebase from "../../utilities/firebase";
+import signupScreen from "./signupScreen";
 
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground } from 'react-native';
-import bgImage from '../../assets/bgImage.jpg';
 
-const LoginScreen = ({navigation}) => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+export class LoginScreen extends Component {
   
-    return (
-	  <ImageBackground source={bgImage} style={styles.bkimage}>
-      <View style={styles.container}>
-	  
-        <Text style={styles.logo}>International Assistant</Text>
-		
-		<View style={styles.inputView} >
-          <TextInput  
-            style={styles.inputText}
-            placeholder="Email" 
-            placeholderTextColor='white'
-            onChangeText={(userEmail) => setEmail(userEmail)}/>
-        </View>
-		
-		 <View style={styles.inputView} >
-          <TextInput  
-            secureTextEntry
-            style={styles.inputText}
-            placeholder="Password" 
-            placeholderTextColor='rgba(225, 225, 225, 1.0)'
-            onChangeText={(userPassword) => setPassword(userPassword)}/>
-        </View>
-		
-		<TouchableOpacity style={styles.loginBtn}>
-          <Text style={styles.loginText}>Log In</Text>
-        </TouchableOpacity>
-		
-        <TouchableOpacity onPress={() => navigation.navigate('ForgotScreen')}>
-          <Text style={styles.forgot}>Forgot your login details? Get help signing in.</Text>
-        </TouchableOpacity>
-		
-		<View style={{flex: 1, justifyContent: 'flex-end'}}>
-		<TouchableOpacity onPress={() => navigation.navigate('SignupScreen')} style={styles.signupBtn}>
-          <Text style={styles.signupText}>Don't have an account? Sign up.</Text>
-        </TouchableOpacity>
-        </View>
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "",
+      password: "",
+      isLoading: false,
+    };
+  }
 
+  updateInputVal = (val,prop) => {
+    const state= this.state;
+    state[prop] = val;
+    this.setState();
+  }
+  userLogin = () => {
+    if(this.state.email === '' && this.state.password === '') {
+      Alert.alert('Enter details to signin!')
+    } else {
+      this.setState({
+        isLoading: true,
+      })
+      firebase
+      .auth()
+      .signInWithEmailAndPassword(this.state.email, this.state.password)
+      .then((res) => {
+        console.log(res)
+        Alert.alert('User logged-in successfully!')
+        console.log('User logged-in successfully!')
+        this.setState({
+          isLoading: false,
+          email: '', 
+          password: ''
+        })
+      })
+      .catch(error => this.setState({ errorMessage: error.message }))
+    }
+  }
   
-      </View>
-	   </ImageBackground>
-    );
+  render() {
+    if(this.state.isLoading){
+      return(
+        
+        <View style={styles.preloader}>
+          <ActivityIndicator size="large" color="#9E9E9E"/>
+        </View>
+      )
+    }  
+      return (
+        <ImageBackground source={bgImage} style={styles.bkimage}>
+          <View style={styles.container}>
+            <Text style={styles.logo}>International Assistant</Text>
+  
+            <View style={styles.inputView}>
+              <TextInput
+                style={styles.inputText}
+                placeholder="Email"
+                placeholderTextColor="white"
+                onChangeText={(val) => this.updateInputVal(val, 'email')}
+              />
+            </View>
+  
+            <View style={styles.inputView}>
+              <TextInput
+                secureTextEntry
+                style={styles.inputText}
+                placeholder="Password"
+                placeholderTextColor="rgba(225, 225, 225, 1.0)"
+                onChangeText={(val) => this.updateInputVal(val, 'password')}
+              />
+            </View>
+  
+            <TouchableOpacity  onPress={() => {this.userLogin()}} style={styles.loginBtn}>
+              <Text style={styles.loginText}>Log In</Text>
+            </TouchableOpacity>
+  
+            <TouchableOpacity onPress={() => {this.props.navigation.navigate("Forgot")}}>
+              <Text style={styles.forgot}>
+                Forgot your login details? Get help signing in.
+              </Text>
+            </TouchableOpacity>
+  
+            <View style={{ flex: 1, justifyContent: "flex-end" }}>
+              <TouchableOpacity
+                onPress={() => {this.props.navigation.navigate('Register')}}
+                style={styles.signupBtn}
+              >
+                <Text style={styles.signupText}>
+                  Don't have an account? Sign up.
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ImageBackground>
+      )
+    
+  }
+  
+ 
 }
 
 export default LoginScreen;
@@ -63,62 +134,72 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bkimage: {
+    flex: 1,
+  },
+  logo: {
+    fontWeight: "bold",
+    fontSize: 25,
+    color: "black",
+    marginBottom: 40,
+  },
+  inputView: {
+    width: "80%",
+    backgroundColor: "#465881",
+    height: 50,
+    marginBottom: 20,
+    justifyContent: "center",
+    padding: 20,
+  },
+  inputText: {
+    height: 50,
+    color: "white",
+  },
+  forgot: {
+    color: "black",
+    fontSize: 15,
+  },
+  loginBtn: {
+    width: "80%",
+    backgroundColor: "rgba(94, 8, 203, 0.7)",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    marginBottom: 10,
+  },
+  loginText: {
+    color: "black",
+    fontSize: 15,
+  },
+  signupBtn: {
+    width: 1000,
+    backgroundColor: "rgba(94, 8, 203, 0.7)",
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    marginBottom: 0,
+  },
+  signupText: {
+    justifyContent: "center",
+    alignItems: "center",
+    bottom: 0,
+    color: "black",
+    fontSize: 15,
+  },
+  preloader: {
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  bkimage:{
-    flex: 1
-  },
-  logo:{
-    fontWeight:"bold",
-    fontSize:25,
-    color:"black",
-    marginBottom:40
-  },
-  inputView:{
-    width:"80%",
-    backgroundColor:"#465881",
-    height:50,
-    marginBottom:20,
-    justifyContent:"center",
-    padding:20
-  },
-  inputText:{
-    height:50,
-    color:"white"
-  },
-  forgot:{
-    color:"black",
-    fontSize:15
-  },
-  loginBtn:{
-    width:"80%",
-    backgroundColor:'rgba(94, 8, 203, 0.7)',
-    borderRadius:25,
-    height:50,
-    alignItems:"center",
-    justifyContent:"center",
-    marginTop:40,
-    marginBottom:10
-  },
-  loginText:{
-    color:"black",
-	fontSize:15
-  },
-  signupBtn:{
-    width:1000,
-    backgroundColor:'rgba(94, 8, 203, 0.7)',
-    height:50,
-    alignItems:"center",
-    justifyContent:"center",
-    marginTop:40,
-    marginBottom:0
-  },
-  signupText:{
-	justifyContent: 'center', 
-    alignItems: 'center',
-    bottom: 0,
-    color:"black",
-	fontSize:15
+    backgroundColor: '#fff'
   }
 });
