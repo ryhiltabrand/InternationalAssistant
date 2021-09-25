@@ -40,7 +40,7 @@ export class UsersCollection {
     }
 
     async getAccountInformation(email) {
-        const docRef = doc(db, "users", email);
+        const docRef = doc(db, "users", email.replace(/\./g,''));
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -53,6 +53,10 @@ export class UsersCollection {
         }
     }
 
+    // async deleteAccountInformation(email) {
+    //         await deleteDoc(doc(email));
+    //     }
+    
 }
 
 //Other Collection
