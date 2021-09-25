@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, setDoc, collection, doc } from "firebase/firestore";
+import { getFirestore, setDoc, doc, getDoc } from "firebase/firestore";
 
 import {credentials} from './firebaseAuth.js';
 
@@ -14,22 +14,18 @@ export class UsersCollection {
 //Accessor and Mutator for 'users' collection
 
     setName(name) {
-        //this.#userFieldEntries.set('name', name)
         this.#userFieldEntries.name = name
     }
 
     setDateofBirth(date) {
-        // this.#userFieldEntries.set('dateofbirth', date)
         this.#userFieldEntries.dateofbirth = date
     }
 
     setEmail(email) {
-        // this.#userFieldEntries.set('email', email)
         this.#userFieldEntries.email = email
     }
 
     setLanguage(language) { 
-        // this.#userFieldEntries.set('language', language)
         this.#userFieldEntries.language = language
     }
     
@@ -49,10 +45,11 @@ export class UsersCollection {
 
         if (docSnap.exists()) {
             console.log("Document data:", docSnap.data());
-            return docSnap.data();
+            return Promise.resolve(docSnap.data());
         } else {
             // doc.data() will be undefined in this case
-            console.log("No such UserAccountInformation document for ", email);
+            return Promise.reject("No such UserAccountInformation document for ", email);
+            //console.log("No such UserAccountInformation document for ", email);
         }
     }
 
