@@ -10,11 +10,11 @@ function createTestUserInfo() {
     testUser.setLanguage(['English', 'Spanish'])
     testUser.setCountry('usa')
     testUser.setBio('I am groot')
-    testUser.profilePicture('https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg')
+    testUser.setProfilePicture('https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg')
     
-    testUser.setEvents('Something in the Water')
-    testUser.setFriends(['Marquel', 'Goku', 'Snorlax'])
-    testUser.setRequests(['JarjarBinks', 'Nick Cannon', 'George Lucas'])
+    // testUser.setEvents('Something in the Water')
+    // testUser.setFriends(['Marquel', 'Goku', 'Snorlax'])
+    // testUser.setRequests(['JarjarBinks', 'Nick Cannon', 'George Lucas'])
 
 
 }
@@ -40,4 +40,33 @@ test('create new account', () => {
         profilepicture: 'https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg'
     });
 })
+
+// test('create users event preferences', () => {
+
+//     testUser.createUserPreferences('root@cs.odu.edu')
+
+//     return expect(testUser.getUserPreferences('root@cs.odu.edu')).resolves.toMatchObject({
+//         events: 'something in the Water'
+//     });
+// })
+
+// test('create user friend preference', () => {
+
+
+//     testUser.createUserFriendPreferences('root@cs.odu.edu')
+
+//     return expect(testUser.getUserFriendPreferences('root@cs.odu.edu')).resolves.toMatchObject({
+//         friends: ['Marquel', 'Goku', 'Snorlax']
+//     });
+// })
+
+// test('create user request preference', () => {
+
+
+//     testUser.createUserRequestPreferences('root@cs.odu.edu')
+
+//     return expect(testUser.getUserRequestPreferences('root@cs.odu.edu')).resolves.toMatchObject({
+//         requests: ['JarjarBinks', 'Nick Cannon', 'George Lucas']
+//     });
+// })
 
