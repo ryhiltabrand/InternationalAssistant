@@ -5,7 +5,9 @@ stages:
 
 before_script:
   #install dependcies before continuing
-  - npm install
+  - echo "Installing dependcies"
+  - npm i
+  - npm i firebase@9.1.0
 
 # build-react-native-app:
 #   stage: build
