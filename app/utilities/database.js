@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, setDoc, doc, getDoc } from "firebase/firestore";
+import { getFirestore, setDoc, collection, doc, getDoc, addDoc} from "firebase/firestore";
 
 import {credentials} from './firebaseAuth.js';
 
@@ -28,6 +28,19 @@ export class UsersCollection {
     setLanguage(language) { 
         this.#userFieldEntries.language = language
     }
+
+    setCountry(country) {
+        this.#userFieldEntries.country = country
+    }
+
+    setBio(bio) {
+        this.#userFieldEntries.bio = bio
+    }
+
+    setProfilePicture(pictureURL) {
+        this.#userFieldEntries.profilepicture = pictureURL
+    }
+
     
     async createUserAccountInformation() {
         // Create new instance
