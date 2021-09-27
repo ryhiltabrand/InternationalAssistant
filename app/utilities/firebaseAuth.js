@@ -1,18 +1,18 @@
 // Initialize Firebase
 export const credentials = {
     //Information can be define in CI varibles. Then sed in by the gitlab runner
-    apiKey: "$APIKey",
+    apiKey: "$APIKEY",
   
-    authDomain: "$authDomain",
+    authDomain: "$AUTHDOMAIN",
   
-    projectId: "$projectId",
+    projectId: "$PROJECTID",
   
-    storageBucket: "$storageBucket",
+    storageBucket: "$STORAGEBUCKET",
   
-    messagingSenderId: "$messagingSenderId",
+    messagingSenderId: "$MESSAGINGSENDERID",
   
-    appId: "$appId",
+    appId: "$APPID",
   
-    measurementId: "$measurementId"
+    measurementId: "$MEASUREMENTID"
   
   };

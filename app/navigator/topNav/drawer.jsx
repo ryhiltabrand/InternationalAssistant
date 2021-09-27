@@ -8,6 +8,8 @@ import {
 } from "./../../components/views/index";
 import Tabs from "../bottomNav/tabs";
 import DrawerCustom from "./drawerView";
+import landingScreen from "../LandingScreen";
+import LoginScreen from "../../components/views/loginScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -36,6 +38,7 @@ const DrawerN = () => {
       <Drawer.Screen name="Homes" component={Tabs} />
       <Drawer.Screen name="Profile" component={ProfileStackScreen} />
       <Drawer.Screen name="Settings" component={SettingsStackScreen} />
+      <Drawer.Screen name="Signout" component={LoginScreen} />
     </Drawer.Navigator>
   );
 };

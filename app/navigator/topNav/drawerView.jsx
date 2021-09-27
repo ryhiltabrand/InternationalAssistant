@@ -6,6 +6,8 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { FontAwesome5 } from "@expo/vector-icons";
+import firebase from '../../utilities/firebase';
+import LoginScreen from "../../components/views/loginScreen";
 
 
 export default function DrawerCustom(props) {
@@ -67,7 +69,20 @@ export default function DrawerCustom(props) {
               props.navigation.navigate("Q&A");
             }}
           />
+          <TouchableOpacity
+            style={{marginLeft: 150, marginTop: 25}}
+            onPress={() => {
+                firebase.auth().signOut().then(() =>
+                {
+                  props.navigation.navigate("Signout")
+                }).catch((error) =>{
+                  console.log('this dont work')
+                })
+            }}>
+            <Text><FontAwesome5 name={'fingerprint'} size={30} color={'black'} /></Text>
+          </TouchableOpacity>
         </View>
+        
       </DrawerContentScrollView>
     </View>
   );

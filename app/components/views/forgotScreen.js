@@ -74,10 +74,6 @@ export class ForgotScreen extends Component {
           <Text style={styles.linkText}>Send Login Link</Text>
         </TouchableOpacity>
 		
-        <TouchableOpacity>
-          <Text style={styles.forgot}>Forgot your login details? Get help signing in.</Text>
-        </TouchableOpacity>
-		
 		<View style={{flex: 1, justifyContent: 'flex-end'}}>
 		<TouchableOpacity onPress={() => {this.props.navigation.navigate('Login')}} style={styles.loginBtn}>
           <Text style={styles.loginText}>Back To Log In.</Text>

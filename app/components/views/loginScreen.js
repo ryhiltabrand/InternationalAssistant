@@ -24,9 +24,11 @@ import {
 } from "react-native";
 import bgImage from "../../assets/bgImage.jpg";
 import firebase from "../../utilities/firebase";
-import signupScreen from "./signupScreen";
+import "firebase/auth";
+import DrawerN from "../../navigator/topNav/drawer";
+import landingScreen from "../../navigator/LandingScreen";
 
-
+const user=firebase.auth().currentUser;
 export class LoginScreen extends Component {
   
   constructor(props) {
@@ -43,6 +45,7 @@ export class LoginScreen extends Component {
     state[prop] = val;
     this.setState();
   }
+      
   userLogin = () => {
     if(this.state.email === '' && this.state.password === '') {
       Alert.alert('Enter details to signin!')
@@ -54,8 +57,8 @@ export class LoginScreen extends Component {
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.password)
       .then((res) => {
+        this.authStateListener()
         console.log(res)
-        Alert.alert('User logged-in successfully!')
         console.log('User logged-in successfully!')
         this.setState({
           isLoading: false,
@@ -66,14 +69,10 @@ export class LoginScreen extends Component {
       .catch(error => this.setState({ errorMessage: error.message }))
     }
   }
-  
   render() {
     if(this.state.isLoading){
       return(
-        
-        <View style={styles.preloader}>
-          <ActivityIndicator size="large" color="#9E9E9E"/>
-        </View>
+          <DrawerN/>
       )
     }  
       return (
@@ -123,10 +122,7 @@ export class LoginScreen extends Component {
           </View>
         </ImageBackground>
       )
-    
   }
-  
- 
 }
 
 export default LoginScreen;
