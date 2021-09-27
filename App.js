@@ -15,21 +15,14 @@ import RoostStackScreen from "./app/navigator/RootNav/RootStackScreen";
 import signupScreen from "./app/components/views/signupScreen";
 import ForgotScreen from "./app/components/views/forgotScreen";
 import { View } from "react-native";
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import Tabs from './app/navigator/bottomNav/tabs'
+import { NavigationContainer } from '@react-navigation/native';
+import DrawerN from './app/navigator/topNav/drawer';
 
 
-
-/*
-export default class App extends React.Component{
-  render(){
-    return(
-        <NavigationContainer>
-          <RootStackScreen/>
-        </NavigationContainer>
-    )
-  }
-}
-
-*/
 
 
 const Stack = createStackNavigator();
@@ -44,12 +37,18 @@ function NavStack() {
   }
 
 
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import Tabs from './app/navigator/bottomNav/tabs'
+import { NavigationContainer } from '@react-navigation/native';
+import DrawerN from './app/navigator/topNav/drawer';
 
 export default function App() {
   return(
     <NavigationContainer>
-    <NavStack />
-  </NavigationContainer>
+      <DrawerN/>
+    </NavigationContainer>
   )
 }
 
