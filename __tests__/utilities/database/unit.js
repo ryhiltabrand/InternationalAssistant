@@ -11,7 +11,7 @@ function createTestUserInfo() {
     testUser.setCountry('usa')
     testUser.setBio('I am groot')
     testUser.setProfilePicture('https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg')
-    
+    testUser.setUID('Kl10VHPc9d72dg3K4pyHoMDhXRkA')
     // testUser.setEvents('Something in the Water')
     // testUser.setFriends(['Marquel', 'Goku', 'Snorlax'])
     // testUser.setRequests(['JarjarBinks', 'Nick Cannon', 'George Lucas'])
@@ -25,7 +25,7 @@ function createTestUserInfo() {
 // }
 
 test('create new account', () => {
-     
+
    //deleteTestUser()
     createTestUserInfo()
     testUser.createUserAccountInformation()
@@ -37,7 +37,8 @@ test('create new account', () => {
         language: ['English', 'Spanish'],
         country: 'usa',
         bio: 'I am groot',
-        profilepicture: 'https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg'
+        profilepicture: 'https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg',
+        UID: 'Kl10VHPc9d72dg3K4pyHoMDhXRkA'
     });
 })
 

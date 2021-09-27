@@ -41,6 +41,10 @@ export class UsersCollection {
         this.#userFieldEntries.profilepicture = pictureURL
     }
 
+    setUID(uid) {
+        this.#userFieldEntries.UID = uid
+    }
+
     
     async createUserAccountInformation() {
         // Create new instance
