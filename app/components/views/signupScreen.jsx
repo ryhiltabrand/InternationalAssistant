@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
     fontWeight:"bold",
     fontSize:25,
     color:'rgba(225, 225, 225, 1.0)',
+    marginTop: 60,
     marginBottom:40
   },
   signupText:{

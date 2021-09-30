@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 25,
     color: "black",
+    marginTop: 60,
     marginBottom: 40,
   },
   inputView: {
