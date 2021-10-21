@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, setDoc, collection, doc, getDoc, addDoc} from "firebase/firestore";
+import { getFirestore, setDoc, collection, getDoc, getDocs, addDoc, query, where} from "firebase/firestore";
 
+// import {credentials} from './firebaseAuth.js';
 import {credentials} from './firebaseAuth.js';
 
 const firebaseApp = initializeApp(credentials);
@@ -45,29 +46,65 @@ export class UsersCollection {
         this.#userFieldEntries.UID = uid
     }
 
-    
+
+//Creates a User Document with given fields from the userFieldEntries object
     async createUserAccountInformation() {
-        // Create new instance
+
+        //doc = getAccountInformation(this.#userFieldEntries.UID)
+        //console.error(doc)
+        //Create user document
+        // if(doc === 'undefined') {
+        //     console.error("it is undefined")
+        //     try {
+        //         await addDoc(collection(db, 'users'), this.#userFieldEntries)
+        //     } catch (err) {
+        //         console.error("Error adding Users document with UID ", this.#userFieldEntries.UID, err)
+        //     }
+        // }
+        // //Update existing user document
+        // else {
+        //     console.error("Didn't detect")
+        //     try {
+        //         userDocument = 
+        //         await updateDoc(userDocument, this.#userFieldEntries)
+        //     } catch (err) {
+        //         console.error("Error adding Users document with UID ", this.#userFieldEntries.UID, err)
+        //     }
+        // }
+
         try {
-            await setDoc(doc(db, "users", this.#userFieldEntries.email.replace(/\./g,'')), this.#userFieldEntries);
-            console.log("Users document written with ID: ", this.#userFieldEntries.email);
-        } catch (e) {
-            console.error("Error adding Users document with email ", e);
+            await addDoc(collection(db, 'users'), this.#userFieldEntries)
+        } catch (err) {
+            console.error("Error adding Users document with UID ", this.#userFieldEntries.UID, err)
         }
+
+
+        // try {
+        //     await setDoc(doc(db, "users", this.#userFieldEntries.UID), this.#userFieldEntries);
+        //     console.log("Users document written with ID: ", this.#userFieldEntries.UID);
+        // } catch (e) {
+        //     console.error("Error adding Users document with UID ", e);
+        // }
     }
 
-    async getAccountInformation(email) {
-        const docRef = doc(db, "users", email.replace(/\./g,''));
-        const docSnap = await getDoc(docRef);
+//Retrieves User Information from document based on UID
+    async getAccountInformation(UID) {
+        const UIDQuery = query(collection(db, "users"), where("UID", "==", UID));
+        const querySnapshot = await getDocs(UIDQuery);
+        console.log(querySnapshot.docs[0].id)
+        return querySnapshot.docs[0].id;
+        // const docRef = "cm0IF5KopLgxnJTUtfi403kJuMl2"
+        // const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
-            return Promise.resolve(docSnap.data());
-        } else {
-            // doc.data() will be undefined in this case
-            return Promise.reject("No such UserAccountInformation document for ", email);
-            //console.log("No such UserAccountInformation document for ", email);
-        }
+        // if (docSnap.exists()) {
+        //     console.log("Document data:", docSnap.data());
+        //     //Returns user object
+        //     return docSnap.data();
+        // } else {
+        //     // doc.data() will be undefined in this case
+        //     return Promise.reject("No such UserAccountInformation document for ", email);
+        //     //console.log("No such UserAccountInformation document for ", email);
+        // }
     }
 
     // async deleteAccountInformation(email) {
