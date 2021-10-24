@@ -6,124 +6,55 @@
  *
  */
 
+ import * as React from "react";
 
 
-
-
-/*
-
-const user = firebase.auth().currentUser;
-if(user) {
- Alert.alert("User is logged in")
-}
-else{
-  Alert.alert("User is not logged in")
-}
-const Stack = createStackNavigator();
-function NavStack() {
-    return (
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}} />
-        <Stack.Screen name="Register" component={signupScreen} options={{headerShown:false}} />
-        <Stack.Screen name="Forgot" component={ForgotScreen} options={{headerShown:false}} />
-      </Stack.Navigator>
-    );
-  }
-*/
-
-import React from 'react';
-import { StyleSheet, Text, Dimensions, View } from 'react-native';
-
-import * as Permissions from 'expo-permissions';
-import * as Location from 'expo-location';
-import MapView from 'react-native-maps';
-import Marker from 'react-native-maps';
-
-const { width, height } = Dimensions.get("window");
-
-const SCREEN_HEIGHT = height;
-const SCREEN_WIDTH = width;
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
-/*Get user location */
-export default class App extends React.Component {
-
-  state = {
-    location: null,
-    errorMessage: null,
-    positionState: {
-      latitude: 0,
-      longitude: 0,
-      latitudeDelta: 0,
-      longitudeDelta: 0
-    },
-
-    markerPosition: {
-      latitude: 0,
-      longitude: 0
-    }
-   };
-
-   componentDidMount() {
-       this.getLocation();
+ import { createStackNavigator } from "@react-navigation/stack";
+ import LoginScreen from "./app/components/views/loginScreen";
+ import signupScreen from "./app/components/views/signupScreen";
+ import ForgotScreen from "./app/components/views/forgotScreen";
+ import { NavigationContainer } from '@react-navigation/native';
+ import DrawerN from './app/navigator/topNav/drawer';
+ import LandingScreen from "./app/navigator/LandingScreen";
+ 
+ 
+ 
+ 
+ const Stack = createStackNavigator();
+ function NavStack() {
+     return (
+       <Stack.Navigator initialRouteName="Login">
+         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}} />
+         <Stack.Screen name="Register" component={signupScreen} options={{headerShown:false}} />
+         <Stack.Screen name="Forgot" component={ForgotScreen} options={{headerShown:false}} />
+       </Stack.Navigator>
+     );
    }
-
-   getLocation = async() => {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION)
-        
-    if (status !== 'granted'){
-      console.log('Permission not granted!');
-
-      this.setstate({errorMessage: 'Permission not granted'});
-
-    }
-
-    const location = await Location.getCurrentPositionAsync();
-
-    this.setState({location, errorMessage: null});
-
-    var lat = parseFloat(location.coords.latitude);
-    var long = parseFloat(location.coords.longitude);
-
-   
-    var region = {
-      latitude: lat,
-      longitude: long,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA
-    };
-      this.setState({ positionState: region });
-      this.setState({ markerPosition: region });
-   };
-
-  render() {
-    let text = JSON.stringify(this.state.location); 
-     console.log(text)
-    return (
-      
-      /*<View style={styles.container}>
-        <Text>{JSON.stringify(this.state.location)}</Text>
-        </View>*/
-        
-        <>
-
-        <MapView
-          style={{ flex: 1 }}
-          initialRegion={this.state.positionState} />
-          <Marker coordinate={this.state.markerPosition}/></>
-      
-    );
-  }
-
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20
-  }
-});
+ /*
+ 
+ const user = firebase.auth().currentUser;
+ if(user) {
+  Alert.alert("User is logged in")
+ }
+ else{
+   Alert.alert("User is not logged in")
+ }
+ const Stack = createStackNavigator();
+ function NavStack() {
+     return (
+       <Stack.Navigator initialRouteName="Login">
+         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}} />
+         <Stack.Screen name="Register" component={signupScreen} options={{headerShown:false}} />
+         <Stack.Screen name="Forgot" component={ForgotScreen} options={{headerShown:false}} />
+       </Stack.Navigator>
+     );
+   }
+ */
+ export default function App() {
+   return(
+     <LandingScreen/>
+   )
+ }
+ 
+ 
+ 
