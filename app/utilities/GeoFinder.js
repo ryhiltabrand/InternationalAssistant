@@ -6,38 +6,11 @@
  *
  */
 
-
-
-
-
-/*
-
-const user = firebase.auth().currentUser;
-if(user) {
- Alert.alert("User is logged in")
-}
-else{
-  Alert.alert("User is not logged in")
-}
-const Stack = createStackNavigator();
-function NavStack() {
-    return (
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown:false}} />
-        <Stack.Screen name="Register" component={signupScreen} options={{headerShown:false}} />
-        <Stack.Screen name="Forgot" component={ForgotScreen} options={{headerShown:false}} />
-      </Stack.Navigator>
-    );
-  }
-*/
-
 import React from 'react';
-import { StyleSheet, Text, Dimensions, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
-import MapView from 'react-native-maps';
-import Marker from 'react-native-maps';
 
 const { width, height } = Dimensions.get("window");
 
@@ -48,7 +21,7 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 /*Get user location */
-export default class App extends React.Component {
+export class GeoFinder extends Component {
 
   state = {
     location: null,
@@ -87,26 +60,21 @@ export default class App extends React.Component {
     var lat = parseFloat(location.coords.latitude);
     var long = parseFloat(location.coords.longitude);
 
-   
     var region = {
       latitude: lat,
       longitude: long,
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA
     };
+
       this.setState({ positionState: region });
       this.setState({ markerPosition: region });
    };
 
-  render() {
+   render() {
     let text = JSON.stringify(this.state.location); 
      console.log(text)
-    return (
-      
-      /*<View style={styles.container}>
-        <Text>{JSON.stringify(this.state.location)}</Text>
-        </View>*/
-        
+    return (  
         <>
 
         <MapView
@@ -116,14 +84,14 @@ export default class App extends React.Component {
       
     );
   }
-
 }
+
+export default GeoFinder;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20
   }
 });
