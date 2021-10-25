@@ -5,6 +5,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
   ProfileStackScreen,
   SettingsStackScreen,
+  FriendsStackScreen
 } from "./../../components/views/index";
 import Tabs from "../bottomNav/tabs";
 import DrawerCustom from "./drawerView";
@@ -37,6 +38,7 @@ const DrawerN = () => {
       <Drawer.Screen name="Homes" component={Tabs} />
       <Drawer.Screen name="Profile" component={ProfileStackScreen} />
       <Drawer.Screen name="Settings" component={SettingsStackScreen} />
+      <Drawer.Screen name="Friends" component={FriendsStackScreen} />
       
     </Drawer.Navigator>
   );

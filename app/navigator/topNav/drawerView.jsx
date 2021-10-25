@@ -48,6 +48,12 @@ export default function DrawerCustom(props) {
             }}
           />
           <DrawerItem
+            label="Friends"
+            onPress={() => {
+              props.navigation.navigate("Friends");
+            }}
+          />
+          <DrawerItem
             label="Events"
             onPress={() => {
               props.navigation.navigate("Events");
