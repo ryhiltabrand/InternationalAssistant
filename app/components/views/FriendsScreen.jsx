@@ -26,45 +26,23 @@ const Tabs = () => {
             <Tab.Navigator
             //initialRouteName="FriendsList"
             screenOptions={({ route }) => ({
-              /*tabBarIcon: ({ color, size }) => {
-                let iconName;
-    
-                if (route.name === 'Home') {
-                  iconName = 'home';
-                } else if (route.name === 'Locations') {
-                  iconName =  'search-location';
-                } else if (route.name === 'Events') {
-                  iconName =  'calendar-alt';
-                } else if (route.name === 'Help') {
-                  iconName =  'hands-helping';
-                } else if (route.name === 'Q&A') {
-                  iconName =  'question-circle';
-                }
-                
-    
-                // You can return any component that you like here!
-                return <FontAwesome5 name={iconName} size={size} color={color} />;
+              tabBarIconStyle: { display: "none" },
+              tabBarLabelStyle: {
+                fontWeight: "700",
+                fontSize: 15,
+                padding: 14,
+                position: "absolute"
               },
-              tabBarStyle: { 
-                              position: 'absolute',
-                              bottom: 50,
-                              left: 20,
-                              right: 20,
-                              elevation: 0,
-                              height: 200,
-                              borderRadius: 15
-              },*/
               tabBarActiveTintColor: 'black',
               tabBarInactiveTintColor: 'black',
               tabBarStyle: {position: 'absolute'},
-              tabBarShowLabel: false,
+              tabBarShowLabel: true,
               tabBarActiveBackgroundColor: '#1E90FF',
               tabBarInactiveBackgroundColor: '#ADD8E6',
               headerShown: false
             })}
             >
-              {/*<Tab.Screen name="Home" component={HomeStackScreen} />
-              <Tab.Screen name="Help" component={HelpStackScreen} />*/}
+              
               <Tab.Screen name="FriendsList" component={FriendsListScreen} />
               <Tab.Screen name="FriendSearch" component={FriendsSearchScreen} />
           </Tab.Navigator>  
