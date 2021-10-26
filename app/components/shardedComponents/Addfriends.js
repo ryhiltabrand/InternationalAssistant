@@ -17,7 +17,7 @@ export default function updatefriends(FriendsUID){
 
         {querySnapshot.forEach((doc) => {doc.ref.update(
 
-            {[`FriendsList.${FriendsUID}`]:true})
+            {[`FriendsList.${FriendsUID}`]:False})
         })
     })
     
@@ -29,7 +29,7 @@ export default function updatefriends(FriendsUID){
 
         {querySnapshot.forEach((doc) => {doc.ref.update(
 
-            {[`FriendsList.${Uid}`]:true})
+            {[`FriendsList.${Uid}`]:False})
         })
     })
 
