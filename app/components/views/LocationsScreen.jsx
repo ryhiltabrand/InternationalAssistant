@@ -4,14 +4,15 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MapViewer } from "../views/MapViewer";
 import { DisplayList } from "../views/LocationlistScreen";
+import { GeoFinder } from "../../utilities/GeoFinder";
 
 
 const LocationsScreen = () => {
   
     return (
-        <><DisplayList>
+        <><MapViewer>
 
-        </DisplayList></>
+        </MapViewer></>
     );
   
 }

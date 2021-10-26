@@ -53,8 +53,80 @@ getLocations = async(locationsRetreived) => {
   locationsRetreived(locationList);
 }
 
+FindMatchingLocations = async(locationsRetreived, value) => {
+
+  var locationList = [];
+
+  var snapshot = await firebase.firestore()
+    .collection('Locations')
+    .where("name", '==', value )
+    .get()
+
+  snapshot.forEach((doc) => {
+    const locationItem = doc.data();
+    locationItem.id = doc.id;
+    locationList.push(locationItem);
+  });
+
+  locationsRetreived(locationList);
+}
+
+FindMatchingLocations = (value) => {
+
+  var locationList = [];
+
+  console.log('Non-async FindMatchingLocations()')
+  console.log('mounted')
+  firebase.firestore()
+    .collection('Locations')
+    .where("name", '==', value )
+    .get()
+    .then( snapshot => {
+
+   snapshot.forEach((doc) => {
+    const locationItem = doc.data();
+    locationItem.id = doc.id;
+    locationList.push(locationItem);
+    })
+
+  this.onLocationsReceived(locationList);
+  })
+   .catch( error => console.log(error))
+}
+
+getLocations = () => {
+
+  var locationList = [];
+
+  console.log('Non-async getLocations()')
+  console.log('mounted')
+  firebase.firestore().collection('Locations')
+    .get()
+    .then( snapshot => {
+
+   snapshot.forEach((doc) => {
+    const locationItem = doc.data();
+    locationItem.id = doc.id;
+    locationList.push(locationItem);
+    })
+
+  this.onLocationsReceived(locationList);
+  })
+   .catch( error => console.log(error))
+}
+
 componentDidMount() {
-  this.getLocations(this.onLocationsReceived);
+
+  //List every area from the database
+  //this.getLocations(this.onLocationsReceived);
+
+  //Non-async function
+  this.getLocations();
+  //this.FindMatchingLocations("a");
+
+ 
+   
+   
 }
 
 render() {
@@ -67,7 +139,6 @@ render() {
         <Text style={styles.item}>{item.name}</Text>
       } }
     />
-   
   </View>
   );
 }
