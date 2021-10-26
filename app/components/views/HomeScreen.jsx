@@ -2,6 +2,7 @@ import * as React from "react";
 import { Text, View, Button } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import updatefriends from "../shardedComponents/Addfriends";
 
 
 const HomeScreen = () => {
@@ -11,6 +12,10 @@ const HomeScreen = () => {
         onPress={() => console.log("hello")}
         title="you are home"
       />
+      <Button
+        onPress={()=> updatefriends()}
+        title= "fake"/>
+        
     </View>
   )
 }
