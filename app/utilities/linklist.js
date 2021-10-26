@@ -95,24 +95,24 @@ class Test_linklist
 {
   Test()
   {
-    console.log("Testing linlist!");
+    console.log("Testing linkedlist!");
 
     let list = new LinkedList;
     
-    console.log("Add three numbers to the linklist");
+    console.log("Add three numbers to the linkedlist");
     list.addNode(1);
     list.addNode(2);
     list.addNode(3);
     
-    console.log("Size: " + list.Size() + " of the linklist"); //Size works
+    console.log("Size: " + list.Size() + " of the linkedlist"); //Size works
 
-    console.log("Print the linklist");
+    console.log("Print the linkedlist");
     list.print();
     
-    console.log("Remove 3 from thelinklist");
+    console.log("Remove 3 from the linkedlist");
     list.removeNode(3);
     list.print();
-    console.log("Size: " + list.Size() + " of the linklist"); //Size works
+    console.log("Size: " + list.Size() + " of the linkedist"); //Size works
     
     console.log("Count the list again");
     list.print();

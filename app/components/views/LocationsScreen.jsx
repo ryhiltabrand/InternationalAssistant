@@ -2,21 +2,16 @@ import * as React from "react";
 import { Text, View, TextInput, Button } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { MapViewer } from "../../utilities/MapViewer";
-/*import { MapClass } from "../../utilities/algorithms";*/
-
-
-import MapView from 'react-native-maps';
-import useState from 'react';
+import { MapViewer } from "../views/MapViewer";
+import { DisplayList } from "../views/LocationlistScreen";
 
 
 const LocationsScreen = () => {
   
     return (
-        
-        <MapView
-        style={{ alignSelf: 'stretch', height: '100%' }}
-        />
+        <><DisplayList>
+
+        </DisplayList></>
     );
   
 }
