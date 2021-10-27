@@ -9,81 +9,70 @@ This is gonna be test for that timer error if node modules needs to be deleted u
 
 export default function FriendMatcher(){
     var Matcher=[]
-    const Loc= async () => {
+    const Loc = async () => {
         counter=0
-        const usersRef= firebase.firestore().collection('users').where("UID", "==", firebase.auth().currentUser.uid).get();
-        (await usersRef).forEach((doc) => {
-         var location = doc.get('country')
-         var uid = doc.get('UID')
-         var friend = doc.get('FriendsList')
-         var friendslist = Object.keys(friend) 
-         firebase.firestore().collection("users")
-         .where("country", '==', location )
-         .get()
-         .then((snapshot) =>{
-             snapshot.docs.map((doc) => {
-                var otherUID= doc.get("UID")
-                if((friendslist.includes(otherUID)!=true && counter<2)){
-                    if(otherUID != uid){
-                        console.log("This is the way")
-                        console.log(otherUID)
-                        Matcher.push(otherUID)
-                        counter++
-                    }
-                }   
-               
-             })
-             
-         })
-        })
-    }
-    const Lang = async() => {
-        counter=0
-        const usersRef= firebase.firestore().collection('users').where("UID", "==", firebase.auth().currentUser.uid).get();
-        (await usersRef).forEach((doc) => {
-            var language = doc.get('language')
-            var uid = doc.get('UID')
-            var friend = doc.get('FriendsList')
-            var friendslist = Object.keys(friend) 
-            for(var i =0; i<language.length; i++){
-                if(language.length ==1){
-                    firebase.firestore().collection("users")
-                    .where("language", 'array-contains' , language[i] )
-                    .get()
-                    .then((snapshot) =>{
-                        snapshot.docs.map((doc) => {
-                            var otherUID = doc.get("UID")
-                            if(friendslist.includes(otherUID)!= true && counter<2 && Matcher.includes(otherUID) != true){
-                                if(otherUID != uid){
-                                    console.log("This is the way")
-                                    console.log(otherUID)
-                                    Matcher.push(otherUID)
-                                    counter++;
-                                }
-                            }   
-                        })
-                    })
-                }
-                else if(language.length>=2){
-                    firebase.firestore().collection("users")
-                    .where("language", 'array-contains' , language[i] )
-                    .get()
-                    .then((snapshot) =>{
-                        snapshot.docs.map((doc) => {
-                            var otherUID = doc.get("UID")
-                            if(friendslist.includes(otherUID)!= true && counter<2 && Matcher.includes(otherUID) != true){
-                                if(otherUID != uid){
-                                    console.log("This is the way")
-                                    console.log(otherUID)
-                                    Matcher.push(otherUID)
-                                    counter++;
-                                }
-                            }   
-                        })
-                    })
+        userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
+        const doc = await userRef.get()
+        var location = doc.data().country
+        var uid = doc.data().UID
+        var friend = doc.data().FriendsList
+        var friendslist = Object.keys(friend)
+        locquery = await firebase.firestore().collection('users')
+        .where("country", "==", location).get()
+        locquery.docs.map((doc) =>{
+            var otherUID = doc.data().UID
+            if((friendslist.includes(otherUID)!=true && counter<2)){
+                if(otherUID != uid){
+                    console.log("This is the Loc")
+                    console.log(otherUID)
+                    Matcher.push(otherUID)
+                    counter++
                 }
             }
         })
     }
-    //Make into all one function since async is causing problems.
+    const Lang = async() => {
+        counter=0
+        userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
+        const doc= await userRef.get()
+        var language = doc.data().language
+        var uid = doc.data().UID
+        var friend = doc.data().FriendsList
+        var friendslist = Object.keys(friend)
+        for (var i=0; i<language.length; i++){
+            if(language.length ==1){
+                firebase.firestore().collection("users")
+                .where("language", 'array-contains' , language[i])
+                .get()
+                .then((snapshot) =>{
+                    snapshot.docs.map((doc) => {
+                        var otherUID = doc.get("UID")
+                        if(friendslist.includes(otherUID)!= true && counter<2 && Matcher.includes(otherUID) != true){
+                            if(otherUID != uid){
+                                console.log("This is the way")
+                                console.log(otherUID)
+                                Matcher.push(otherUID)
+                                counter++;
+                            }
+                        }   
+                    })
+                })
+            }
+            else if(language.length>=2){
+                langquery= await firebase.firestore().collection('users')
+                .where("language", "array-contains", language[i])
+                .get()
+                langquery.docs.map((doc) => {
+                    var otherUID = doc.data().UID
+                    if((friendslist.includes(otherUID)!= true) && counter<2 && (Matcher.includes(otherUID) != true)){
+                        if(otherUID != uid){
+                            Matcher.push(otherUID)
+                            counter++;
+                        }
+                    }
+                })
+            }
+        }
+    }
+    Loc().then(()=> Lang())
 }
