@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import firebase from 'firebase';
 
 // Initialize Firebase
 export const credentials = {
@@ -13,5 +13,5 @@ export const credentials = {
   
   };
 
- const firebaseCred = initializeApp(credentials);
+ const firebaseCred = firebase.initializeApp(credentials);
  export default firebaseCred;
