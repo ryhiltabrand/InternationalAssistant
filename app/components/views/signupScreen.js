@@ -51,6 +51,7 @@ export class signupScreen extends Component {
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then((res) => {
+        
         res.user.updateProfile({
           displayName: this.state.name
         })
@@ -67,13 +68,7 @@ export class signupScreen extends Component {
       }    
     }
   render(){
-    if(this.state.isLoading){
-      return(
-        <View style={styles.preloader}>
-          <ActivityIndicator size="large" color="#9E9E9E"/>
-        </View>
-      )
-    }
+   
     return (
       <ImageBackground source={bgImage} style={styles.bkimage}>
           <View style={styles.container}>
@@ -109,7 +104,7 @@ export class signupScreen extends Component {
               <Text style={styles.signupBtnText}>Sign up</Text>
             </TouchableOpacity>
           
-          <Text style={styles.policy}>By signing up, you agree to our Terms & Privacy Policy.</Text>
+          <Text style={styles.policy}>By signing up, you agree to our Nonexistence Terms & Privacy Policy.</Text>
         
          <View style={{flex: 1, justifyContent: 'flex-end'}}>
         <TouchableOpacity onPress={() => this.props.navigation.navigate("Login")} style={styles.loginBtn}>
