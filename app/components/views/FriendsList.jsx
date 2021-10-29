@@ -25,38 +25,33 @@ class FriendsListScreen extends React.Component {
   componentDidMount() {
     this.Loc();
   }
-  componentWillUnmount() {
-    
-  }
+  componentWillUnmount() {}
 
   Loc = async () => {
-    /*const usersRef = firebase
+    const usersRef = firebase
       .firestore()
       .collection("users")
-      .where("UID", "==", "0xxKyF55NpVIvZ8Zq2WchryNQSY2")
-      .get();*/
-    const usersRef = firebase.firestore().collection("users").where('UID', '==', firebase.auth().currentUser.uid).get();
-    (await usersRef).forEach((doc) => {
-      var fl = doc.get("FriendsList");
-      var f1A = Object.keys(fl);
-      for (var i = 0; i < f1A.length; i++) {
-        firebase
-          .firestore()
-          .collection("users")
-          .where("UID", "==", f1A[i])
-          .get()
-          .then((snapshot) => {
-            snapshot.docs.map((doc) => {
-              const name = doc.get("name");
-              const profpic = doc.get("profilepicture");
-              let friend = { name: name, pic: profpic };
-              this.setState({
-                data: [...this.state.data, friend],
-              });
-            });
-          });
-      }
-    });
+      .doc(firebase.auth().currentUser.uid);
+    
+    const doc = await usersRef.get();
+    var fl = doc.data().FriendsList;
+    var f1A = Object.keys(fl);
+    for (var i = 0; i < f1A.length; i++) {
+      Friendquery = await firebase
+        .firestore()
+        .collection("users")
+        .where("UID", "==", f1A[i])
+        .get();
+      Friendquery.docs.map((doc) => {
+        const name = doc.get("name");
+        const profpic = doc.get("profilepicture");
+        let friend = { uid: f1A[i], name: name, pic: profpic };
+        this.setState({
+          data: [...this.state.data, friend],
+        });
+      });
+    }
+    
   };
   render() {
     return (
@@ -82,36 +77,34 @@ class FriendsListScreen extends React.Component {
       </View>
     );
   }
-  
 }
 const styles = StyleSheet.create({
-  image:{
+  image: {
     width: 60,
     height: 60,
   },
-  
-  box: {
-    padding:5,
-    marginTop:5,
-    marginBottom:5,
-    backgroundColor: '#FFFFFF',
-    flexDirection: 'row',
-    shadowColor: 'black',
-    shadowOpacity: .2,
-    shadowOffset: {
-      height:1,
-      width:-2
-    },
-    elevation:2,
 
+  box: {
+    padding: 5,
+    marginTop: 5,
+    marginBottom: 5,
+    backgroundColor: "#FFFFFF",
+    flexDirection: "row",
+    shadowColor: "black",
+    shadowOpacity: 0.2,
+    shadowOffset: {
+      height: 1,
+      width: -2,
+    },
+    elevation: 2,
   },
-  name:{
+  name: {
     color: "#20B2AA",
-    fontSize:22,
-    alignSelf:'center',
-    marginLeft:10,
-    textAlign:'center'
-  }
+    fontSize: 22,
+    alignSelf: "center",
+    marginLeft: 10,
+    textAlign: "center",
+  },
 });
 
 export default FriendsListScreen;

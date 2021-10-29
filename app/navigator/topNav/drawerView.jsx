@@ -6,14 +6,11 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { FontAwesome5 } from "@expo/vector-icons";
-import firebase from '../../utilities/firebase';
+import firebase from "../../utilities/firebase";
 import LoginScreen from "../../components/views/loginScreen";
 import { EventRegister } from "react-native-event-listeners";
 
-
-
 export default function DrawerCustom(props) {
-     
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
@@ -21,26 +18,34 @@ export default function DrawerCustom(props) {
           <TouchableOpacity
             style={styles.student_image}
             onPress={() => {
-                props.navigation.navigate("Profile");
-            }}>
+              props.navigation.navigate("Profile");
+            }}
+          >
             <Image
               style={styles.student_image}
-              source={require("../../assets/icon.png")}
+              source={{
+                uri: "https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg",
+              }}
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={{marginLeft: 150, marginTop: 25}}
+            style={{ marginLeft: 150, marginTop: 25 }}
             onPress={() => {
-                props.navigation.navigate("Settings");
-            }}>
-            <Text><FontAwesome5 name={'cog'} size={30} color={'black'} /></Text>
+              props.navigation.navigate("Settings");
+            }}
+          >
+            <Text>
+              <FontAwesome5 name={"cog"} size={30} color={"black"} />
+            </Text>
           </TouchableOpacity>
-          <View style={{ marginLeft: 15, flexDirection: "column", marginTop: 65 }}>
-            <Text style={{fontSize:20}}>{props.profileName}</Text>
-            <Text style={{marginTop:0}}>{props.profileEmail}</Text>
+          <View
+            style={{ marginLeft: 15, flexDirection: "column", marginTop: 65 }}
+          >
+            <Text style={{ fontSize: 20 }}>{props.profileName}</Text>
+            <Text style={{ marginTop: 0 }}>{props.profileEmail}</Text>
           </View>
         </View>
-        <View style={{  }}>
+        <View style={{}}>
           <DrawerItem
             label="Home"
             onPress={() => {
@@ -78,19 +83,24 @@ export default function DrawerCustom(props) {
             }}
           />
           <TouchableOpacity
-            style={{marginLeft: 150, marginTop: 25}}
+            style={{ marginLeft: 150, marginTop: 25 }}
             onPress={() => {
-                firebase.auth().signOut().then(() =>
-                {
-                  EventRegister.emit('auth', null)
-                }).catch((error) =>{
-                  console.log('this dont work')
+              firebase
+                .auth()
+                .signOut()
+                .then(() => {
+                  EventRegister.emit("auth", null);
                 })
-            }}>
-            <Text><FontAwesome5 name={'fingerprint'} size={30} color={'black'} /></Text>
+                .catch((error) => {
+                  console.log("this dont work");
+                });
+            }}
+          >
+            <Text>
+              <FontAwesome5 name={"fingerprint"} size={30} color={"black"} />
+            </Text>
           </TouchableOpacity>
         </View>
-        
       </DrawerContentScrollView>
     </View>
   );

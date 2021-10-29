@@ -1,8 +1,6 @@
 /**
  * f21-Blue
- * Created by Marquel
- *
- *
+ * 
  *
  */
 
