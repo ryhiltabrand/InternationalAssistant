@@ -99,4 +99,7 @@ export default function FriendMatcher(){
     }
     Loc().then(()=> Lang())
     .then(() => Mutual())
+    .then(() => {
+        return Matcher;
+    })
 }
