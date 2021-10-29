@@ -22,6 +22,8 @@ import {
 import bgImage from '../../assets/bgImage.jpg';
 import { Component } from 'react';
 import firebase from "../../utilities/firebase";
+import { getCurrentUserUID } from '../../utilities/currentUser';
+import * as database from '../../utilities/database';
 export class signupScreen extends Component {
   constructor(props) {
     super(props);
@@ -29,15 +31,25 @@ export class signupScreen extends Component {
       name: '',
       email: '',
       password: '',
+      country: '',
+      language: '',
+      birthday: '',
       isLoading: false
     }
-  }
+  } 
+  //user inputs
   updateInputVal = (val, prop) => {
     const state = this.state;
     state[prop] = val;
     this.setState(state);
   }
+
+  //Birthday inputView
+
   registerUser = () => {
+
+    var newUser = new database.UsersCollection();
+
     if ((this.state.email === '' && this.state.password === '')) {
       Alert.alert('Enter details to signup!')
     } else if (this.state.email.endsWith('.edu') !== true) {
@@ -56,15 +68,37 @@ export class signupScreen extends Component {
             displayName: this.state.name
           })
           console.log('User registered successfully!')
+
+          //Apply attributes and create DB object
+          newUser.setName(this.state.name)
+          newUser.setDateofBirth(this.state.birthday)
+          newUser.setEmail(this.state.email)
+          newUser.setLanguage([this.state.language])
+          newUser.setCountry(this.state.country)
+          newUser.setBio('Hi! My name is' + this.state.name + '. I\'m new to the app. Say hello!')
+          newUser.setProfilePicture('https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg')
+          newUser.setUID(getCurrentUserUID())
+          newUser.createUserAccountInformation()
+
+          //clear previous entry?
           this.setState({
             isLoading: false,
             displayName: '',
             email: '',
-            password: ''
-          })
+            password: '',
+            name: '',
+            email: '',
+            password: '',
+            country: '',
+            language: '',
+            birthday: '',
+          }
+          )
           this.props.navigation.navigate('Login')
+
         })
         .catch(error => this.setState({ errorMessage: error.message }))
+
     }
   }
   render() {
@@ -79,7 +113,7 @@ export class signupScreen extends Component {
             <TextInput
               style={styles.inputText}
               placeholder="Name"
-              placeholderTextColor="white"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
               onChangeText={(val) => this.updateInputVal(val, 'name')} />
           </View>
 
@@ -87,7 +121,7 @@ export class signupScreen extends Component {
             <TextInput
               style={styles.inputText}
               placeholder="Email"
-              placeholderTextColor="white"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
               onChangeText={(val) => this.updateInputVal(val, 'email')} />
           </View>
 
@@ -96,8 +130,32 @@ export class signupScreen extends Component {
               secureTextEntry
               style={styles.inputText}
               placeholder="Password"
-              placeholderTextColor="white"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
               onChangeText={(val) => this.updateInputVal(val, 'password')} />
+          </View>
+
+          <View style={styles.inputView} >
+            <TextInput
+              style={styles.inputText}
+              placeholder="Country"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
+              onChangeText={(val) => this.updateInputVal(val, 'country')} />
+          </View>
+
+          <View style={styles.inputView} >
+            <TextInput
+              style={styles.inputText}
+              placeholder="Language"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
+              onChangeText={(val) => this.updateInputVal(val, 'language')} />
+          </View>
+
+          <View style={styles.inputView} >
+            <TextInput
+              style={styles.inputText}
+              placeholder="Birthday"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
+              onChangeText={(val) => this.updateInputVal(val, 'birthday')} />
           </View>
 
           <TouchableOpacity onPress={() => this.registerUser()} style={styles.signupBtn}>
