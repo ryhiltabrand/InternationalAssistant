@@ -23,8 +23,6 @@ export default function FriendMatcher(){
             var otherUID = doc.data().UID
             if((friendslist.includes(otherUID)!=true && counter<2)){
                 if(otherUID != uid){
-                    console.log("This is the Loc")
-                    console.log(otherUID)
                     Matcher.push(otherUID)
                     counter++
                 }
@@ -49,8 +47,6 @@ export default function FriendMatcher(){
                         var otherUID = doc.get("UID")
                         if(friendslist.includes(otherUID)!= true && counter<2 && Matcher.includes(otherUID) != true){
                             if(otherUID != uid){
-                                console.log("This is the way")
-                                console.log(otherUID)
                                 Matcher.push(otherUID)
                                 counter++;
                             }
@@ -74,5 +70,33 @@ export default function FriendMatcher(){
             }
         }
     }
+    const Mutual = async() => {
+        userRef = firebase.firestore().collection('users')
+        .doc(firebase.auth().currentUser.uid)
+        const doc = await userRef.get()
+        var uid = doc.data().UID
+        var friend = doc.data().FriendsList
+        var friendslist = Object.keys(friend)
+        for(var i=0; i<friendslist.length; i++){
+            mutualquery = await firebase.firestore().collection('users')
+            .where("UID", "==", friendslist[i]).get()
+            mutualquery.docs.map((doc) => {
+                var friends = doc.data().FriendsList
+                var otherList= Object.keys(friends)
+                for(var j=0; j<otherList.length; j++){
+                    if((friendslist.includes(otherList[j]) != true) && (Matcher.includes(otherList[j]) != true)){
+                        if(otherList[j] != uid){
+                            Matcher.push(otherList[j])
+                            break;
+                        }
+                    }
+                }
+            })
+            if(Matcher.length==5){
+                break;
+            }
+        }
+    }
     Loc().then(()=> Lang())
+    .then(() => Mutual())
 }

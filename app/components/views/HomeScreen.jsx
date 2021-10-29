@@ -11,10 +11,6 @@ const HomeScreen = () => {
         onPress={() => console.log("hello")}
         title="you are home"
       />
-      <Button
-        onPress={() => FriendMatcher()}
-        title="test"
-      />
     </View>
   )
 }
