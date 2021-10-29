@@ -72,9 +72,9 @@ export default class App extends React.Component {
   componentWillUnmount() {
     EventRegister.removeEventListener(this.listener);
   }
-//Change back to == when implementation is done
+
   render() {
-    return this.state.signedIn != null ? (
+    return this.state.signedIn == null ? (
       <>
         <NavStack />
       </>
