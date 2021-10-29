@@ -29,6 +29,8 @@ export default function FriendMatcher(){
             }
         })
     }
+
+        
     const Lang = async() => {
         counter=0
         userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
@@ -39,23 +41,21 @@ export default function FriendMatcher(){
         var friendslist = Object.keys(friend)
         for (var i=0; i<language.length; i++){
             if(language.length ==1){
-                firebase.firestore().collection("users")
+                langquery= await firebase.firestore().collection("users")
                 .where("language", 'array-contains' , language[i])
                 .get()
-                .then((snapshot) =>{
-                    snapshot.docs.map((doc) => {
-                        var otherUID = doc.get("UID")
-                        if(friendslist.includes(otherUID)!= true && counter<2 && Matcher.includes(otherUID) != true){
-                            if(otherUID != uid){
-                                Matcher.push(otherUID)
-                                counter++;
-                            }
-                        }   
-                    })
+                langquery.docs.map((doc) => {
+                    var otherUID = doc.get("UID")
+                    if(friendslist.includes(otherUID)!= true && counter<2 && Matcher.includes(otherUID) != true){
+                        if(otherUID != uid){
+                            Matcher.push(otherUID)
+                            counter++;
+                        }
+                    }   
                 })
             }
             else if(language.length>=2){
-                langquery= await firebase.firestore().collection('users')
+                langquery = await firebase.firestore().collection('users')
                 .where("language", "array-contains", language[i])
                 .get()
                 langquery.docs.map((doc) => {
