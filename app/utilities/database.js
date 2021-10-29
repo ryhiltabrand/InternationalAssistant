@@ -1,13 +1,11 @@
 //import { initializeApp } from "firebase/app";
-import firebaseCred from './firebaseAuth.js';
+import firebase from "./firebase";
 //import { getFirestore, setDoc, collection, getDoc, getDocs, addDoc, query, where} from "firebase/firestore";
-const firebase = require("firebase");
-require("firebase/firestore");
 
 // import {credentials} from './firebaseAuth.js';
 
 //const firebaseApp = initializeApp(credentials);
-var db = firebaseCred.firestore();
+var db = firebase.firestore();
 
 //User Collection
 
@@ -43,7 +41,7 @@ export class UsersCollection {
     setProfilePicture(pictureURL) {
         this.#userFieldEntries.profilepicture = pictureURL
     }
-
+    
     setUID(uid) {
         this.#userFieldEntries.UID = uid
     }
