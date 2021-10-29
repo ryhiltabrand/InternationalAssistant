@@ -22,101 +22,159 @@ import {
 import bgImage from '../../assets/bgImage.jpg';
 import { Component } from 'react';
 import firebase from "../../utilities/firebase";
+import { getCurrentUserUID } from '../../utilities/currentUser';
+import * as database from '../../utilities/database';
 export class signupScreen extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state={
+    this.state = {
       name: '',
       email: '',
       password: '',
+      country: '',
+      language: '',
+      birthday: '',
       isLoading: false
     }
-  }
+  } 
+  //user inputs
   updateInputVal = (val, prop) => {
     const state = this.state;
     state[prop] = val;
     this.setState(state);
   }
+
+  //Birthday inputView
+
   registerUser = () => {
-    if((this.state.email === '' && this.state.password === '')) {
+
+    var newUser = new database.UsersCollection();
+
+    if ((this.state.email === '' && this.state.password === '')) {
       Alert.alert('Enter details to signup!')
-    } else if(this.state.email.endsWith('.edu') !== true){
+    } else if (this.state.email.endsWith('.edu') !== true) {
       Alert.alert('Emails must be school emails')
-      }
-      else{
-        this.setState({
-          isLoading: true,
-        })
-        firebase
-      .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then((res) => {
-        
-        res.user.updateProfile({
-          displayName: this.state.name
-        })
-        console.log('User registered successfully!')
-        this.setState({
-          isLoading: false,
-          displayName: '',
-          email: '', 
-          password: ''
-        })
-        this.props.navigation.navigate('Login')
-      })
-      .catch(error => this.setState({ errorMessage: error.message })) 
-      }    
     }
-  render(){
-   
+    else {
+      this.setState({
+        isLoading: true,
+      })
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then((res) => {
+
+          res.user.updateProfile({
+            displayName: this.state.name
+          })
+          console.log('User registered successfully!')
+
+          //Apply attributes and create DB object
+          newUser.setName(this.state.name)
+          newUser.setDateofBirth(this.state.birthday)
+          newUser.setEmail(this.state.email)
+          newUser.setLanguage([this.state.language])
+          newUser.setCountry(this.state.country)
+          newUser.setBio('Hi! My name is' + this.state.name + '. I\'m new to the app. Say hello!')
+          newUser.setProfilePicture('https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg')
+          newUser.setUID(getCurrentUserUID())
+          newUser.createUserAccountInformation()
+
+          //clear previous entry?
+          this.setState({
+            isLoading: false,
+            displayName: '',
+            email: '',
+            password: '',
+            name: '',
+            email: '',
+            password: '',
+            country: '',
+            language: '',
+            birthday: '',
+          }
+          )
+          this.props.navigation.navigate('Login')
+
+        })
+        .catch(error => this.setState({ errorMessage: error.message }))
+
+    }
+  }
+  render() {
+
     return (
       <ImageBackground source={bgImage} style={styles.bkimage}>
-          <View style={styles.container}>
+        <View style={styles.container}>
           <Text style={styles.logo}>International Assistant</Text>
-         <Text style={styles.signupText}>Sign up to find friends and connect with others.</Text>
-            
-         <View style={styles.inputView} >
-              <TextInput  
-                style={styles.inputText}
-                placeholder="Name" 
-                placeholderTextColor="white"
-                onChangeText={(val) => this.updateInputVal(val, 'name')}/>
-            </View>
-        
-        <View style={styles.inputView} >
-              <TextInput  
-                style={styles.inputText}
-                placeholder="Email" 
-                placeholderTextColor="white"
-                onChangeText={(val) => this.updateInputVal(val, 'email')}/>
-            </View>
-        
-            <View style={styles.inputView} >
-              <TextInput  
-                secureTextEntry
-                style={styles.inputText}
-                placeholder="Password" 
-                placeholderTextColor="white"
-                onChangeText={(val) => this.updateInputVal(val, 'password')}/>
-            </View>
-        
-        <TouchableOpacity onPress= {() => this.registerUser()} style={styles.signupBtn}>
-              <Text style={styles.signupBtnText}>Sign up</Text>
-            </TouchableOpacity>
-          
+          <Text style={styles.signupText}>Sign up to find friends and connect with others.</Text>
+
+          <View style={styles.inputView} >
+            <TextInput
+              style={styles.inputText}
+              placeholder="Name"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
+              onChangeText={(val) => this.updateInputVal(val, 'name')} />
+          </View>
+
+          <View style={styles.inputView} >
+            <TextInput
+              style={styles.inputText}
+              placeholder="Email"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
+              onChangeText={(val) => this.updateInputVal(val, 'email')} />
+          </View>
+
+          <View style={styles.inputView} >
+            <TextInput
+              secureTextEntry
+              style={styles.inputText}
+              placeholder="Password"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
+              onChangeText={(val) => this.updateInputVal(val, 'password')} />
+          </View>
+
+          <View style={styles.inputView} >
+            <TextInput
+              style={styles.inputText}
+              placeholder="Country"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
+              onChangeText={(val) => this.updateInputVal(val, 'country')} />
+          </View>
+
+          <View style={styles.inputView} >
+            <TextInput
+              style={styles.inputText}
+              placeholder="Language"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
+              onChangeText={(val) => this.updateInputVal(val, 'language')} />
+          </View>
+
+          <View style={styles.inputView} >
+            <TextInput
+              style={styles.inputText}
+              placeholder="Birthday"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
+              onChangeText={(val) => this.updateInputVal(val, 'birthday')} />
+          </View>
+
+          <TouchableOpacity onPress={() => this.registerUser()} style={styles.signupBtn}>
+            <Text style={styles.signupBtnText}>Sign up</Text>
+          </TouchableOpacity>
+
           <Text style={styles.policy}>By signing up, you agree to our Nonexistence Terms & Privacy Policy.</Text>
-        
-         <View style={{flex: 1, justifyContent: 'flex-end'}}>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate("Login")} style={styles.loginBtn}>
+
+          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Login")} style={styles.loginBtn}>
               <Text style={styles.loginText}>Already have an account? Sign In.</Text>
             </TouchableOpacity>
-           </View>
-        
           </View>
-        </ImageBackground>
-        );
-    };
-  }
+
+        </View>
+      </ImageBackground>
+    );
+  };
+}
 
 export default signupScreen;
 
@@ -126,66 +184,66 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  bkimage:{
+  bkimage: {
     flex: 1
   },
-  logo:{
-    fontWeight:"bold",
-    fontSize:25,
-    color:'rgba(225, 225, 225, 1.0)',
-    marginBottom:40
+  logo: {
+    fontWeight: "bold",
+    fontSize: 25,
+    color: 'rgba(225, 225, 225, 1.0)',
+    marginBottom: 40
   },
-  signupText:{
-    color:"white",
-	fontSize:15,
-	padding:20
+  signupText: {
+    color: "white",
+    fontSize: 15,
+    padding: 20
   },
-  inputView:{
-    width:"80%",
-    backgroundColor:"#465881",
-    height:30,
-    marginBottom:20,
-    justifyContent:"center",
-    padding:20
+  inputView: {
+    width: "80%",
+    backgroundColor: "#465881",
+    height: 30,
+    marginBottom: 20,
+    justifyContent: "center",
+    padding: 20
   },
-  inputText:{
-    height:50,
-    color:"white"
+  inputText: {
+    height: 50,
+    color: "white"
   },
-  signupBtn:{
-    width:"80%",
-    backgroundColor:'rgba(182, 32, 32, 0.7)',
-    borderRadius:25,
-    height:50,
-    alignItems:"center",
-    justifyContent:"center",
-    marginTop:40,
-    marginBottom:10
+  signupBtn: {
+    width: "80%",
+    backgroundColor: 'rgba(182, 32, 32, 0.7)',
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    marginBottom: 10
   },
-  signupBtnText:{
-    color:"white",
-	fontSize:15
+  signupBtnText: {
+    color: "white",
+    fontSize: 15
   },
-  policy:{
-    color:"white",
-    fontSize:15,
+  policy: {
+    color: "white",
+    fontSize: 15,
 
   },
-  loginBtn:{
-    width:1000,
-    backgroundColor:'rgba(94, 8, 203, 0.7)',
-    height:50,
-    alignItems:"center",
-    justifyContent:"center",
-    marginTop:40,
-    marginBottom:0
+  loginBtn: {
+    width: 1000,
+    backgroundColor: 'rgba(94, 8, 203, 0.7)',
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    marginBottom: 0
   },
-  loginText:{
-	justifyContent: 'center', 
+  loginText: {
+    justifyContent: 'center',
     alignItems: 'center',
     bottom: 0,
-    color:"black",
-	fontSize:15
+    color: "black",
+    fontSize: 15
   },
   preloader: {
     left: 0,
