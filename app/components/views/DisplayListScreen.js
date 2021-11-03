@@ -32,66 +32,6 @@ onLocationsReceived = (locationList) => {
   this.setState(prevState => ({
   locationList: prevState.locationList = locationList
   }));
-
-
-}
-
-getLocations = async(locationsRetreived) => {
-
-  var locationList = [];
-
-  var snapshot = await firebase.firestore()
-    .collection('Locations')
-    .get()
-
-  snapshot.forEach((doc) => {
-    const locationItem = doc.data();
-    locationItem.id = doc.id;
-    locationList.push(locationItem);
-  });
-
-  locationsRetreived(locationList);
-}
-
-FindMatchingLocations = async(locationsRetreived, value) => {
-
-  var locationList = [];
-
-  var snapshot = await firebase.firestore()
-    .collection('Locations')
-    .where("name", '==', value )
-    .get()
-
-  snapshot.forEach((doc) => {
-    const locationItem = doc.data();
-    locationItem.id = doc.id;
-    locationList.push(locationItem);
-  });
-
-  locationsRetreived(locationList);
-}
-
-FindMatchingLocations = (value) => {
-
-  var locationList = [];
-
-  console.log('Non-async FindMatchingLocations()')
-  console.log('mounted')
-  firebase.firestore()
-    .collection('Locations')
-    .where("name", '==', value )
-    .get()
-    .then( snapshot => {
-
-   snapshot.forEach((doc) => {
-    const locationItem = doc.data();
-    locationItem.id = doc.id;
-    locationList.push(locationItem);
-    })
-
-  this.onLocationsReceived(locationList);
-  })
-   .catch( error => console.log(error))
 }
 
 getLocations = () => {
@@ -115,18 +55,62 @@ getLocations = () => {
    .catch( error => console.log(error))
 }
 
+FindMatchingLocations = (value) => {
+
+  var locationList = [];
+
+  console.log('Non-async FindMatchingLocations()')
+  console.log('mounted')
+  firebase.firestore()
+    .collection('Locations')
+    .where("category", '==', value )
+    .get()
+    .then( snapshot => {
+
+   snapshot.forEach((doc) => {
+    const locationItem = doc.data();
+    locationItem.id = doc.id;
+    locationList.push(locationItem);
+    })
+
+  this.onLocationsReceived(locationList);
+  })
+   .catch( error => console.log(error))
+}
+
+MatchLocations = (value1, value2) => {
+
+  var locationList = [];
+
+  console.log('Non-async MatchLocations()')
+  console.log('mounted')
+  firebase.firestore()
+    .collection('Locations')
+    .where(value1, '==', value2 )
+    .get()
+    .then( snapshot => {
+
+   snapshot.forEach((doc) => {
+    const locationItem = doc.data();
+    locationItem.id = doc.id;
+    locationList.push(locationItem);
+    })
+
+  this.onLocationsReceived(locationList);
+  })
+   .catch( error => console.log(error))
+}
+
 componentDidMount() {
+  //Lists all locations
+  //this.getLocations();
 
-  //List every area from the database
-  //this.getLocations(this.onLocationsReceived);
-
-  //Non-async function
-  this.getLocations();
+  //Finds a matching location with the path to compare being hardcoded then define the value for comparison
+  //category is currently hardcoded for the path to compare
   //this.FindMatchingLocations("a");
 
- 
-   
-   
+  //Finds a matching location by defining the path to compare and defining the value for comparison
+  this.MatchLocations("name","a");
 }
 
 render() {

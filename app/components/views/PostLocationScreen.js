@@ -14,11 +14,12 @@
    View,
    TextInput,
    TouchableOpacity,
+   Image
  } from "react-native";
  import { Component } from 'react';
  import firebase from "../../utilities/firebase";
 
- export class LocationSaveScreen extends Component {
+ export class PostLocationScreen extends Component {
 
   constructor(props){
     super(props);
@@ -26,10 +27,11 @@
       location_name: '',
       location_address: '',
       location_contributor: '',
-      location_rating: '',
-      isLoading: false
+      location_category: '',
+      location_rating: ''
     }
   }
+
   componentDidMount() {
     console.log('mounted')
     firebase.firestore().collection('Locations')
@@ -57,15 +59,50 @@
        name: this.state.location_name,
        address: this.state.location_address,
        contributor: this.state.location_contributor,
-       rating: ''
+       category: this.state.location_category,
+       rating: this.state.location_rating
       })
   }
 
-  render(){
-     
+   CustomRatingBar = () => {
+    const [defaultRating, setdefaultRating] = useState(2);
+    const [maxRating, setmaxRating] = useState([1,2,3,4,5]);
+    const starImgFilled = './../assets/star_filled.png';
+    const starImgCorner = './../assets/star_corner.png';
+    return (
+      <View style={styles.customRatingBarStyle} >
+        {
+          maxRating.map((item, key) => {
+            return(
+              <TouchableOpacity
+              activeOpacity={0.7}
+              key={item}
+              onPress={() => setdefaultRating(item)}
+              >
+
+              <Image
+                style={styles.starImgStyle}
+                source={
+                  item <= defaultRating
+                    ? {uri: starImgFilled}
+                    : {uri: starImgCorner}
+                }
+              />
+              </TouchableOpacity>
+            )
+          })
+        }
+        <Text style={styles.TextStyle}>
+          {defaultRating + ' / ' + maxRating.length}
+        </Text>
+    </View>
+    )
+  }
+
+  render(){ 
     return (
        <View style={styles.container}>  
-        <Text style={styles.titleText}>Enter a location to search with others.</Text> 
+        <Text style={styles.titleText}>Enter a location to share with others.</Text> 
          <View style={styles.inputView} >
               <TextInput  
                 style={styles.inputText}
@@ -90,6 +127,17 @@
                 placeholderTextColor="white"
                 onChangeText={(val) => this.updateInputVal(val, 'location_contributor')}/>
             </View>
+
+            <View style={styles.inputView} >
+              <TextInput  
+                secureTextEntry
+                style={styles.inputText}
+                placeholder="Category" 
+                placeholderTextColor="white"
+                onChangeText={(val) => this.updateInputVal(val, 'location_category')}/>
+            </View>
+
+            <this.CustomRatingBar/>
         
         <TouchableOpacity onPress= {() => this.uploadLocation()} style={styles.SumbitBtn}>
               <Text style={styles.SumbitBtnText}>Sumbit</Text>
@@ -157,5 +205,15 @@
       bottom: 0,
       color:"black",
     fontSize:15
+    },
+    customRatingBarStyle:{
+      justifyContent: 'center',
+      flexDirection: 'row',
+      marginTop: 30
+    },
+    starImgStyle: {
+      width: 40,
+      height: 40,
+      resizeMode: 'cover'
     }
   });

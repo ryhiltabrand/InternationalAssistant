@@ -17,49 +17,79 @@ import Marker from 'react-native-maps';
 import useState from 'react';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
+import * as Permissions from 'expo-permissions';
+import * as Location from 'expo-location';
+
+const { width, height } = Dimensions.get("window");
+
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
 export class MapViewer extends Component{
 
-  constructor(props) {
-    super(props);
-    this.state = {
-        initialRegion: {
-            latitude: 0,
-            longitude: 0,
-            latitudeDelta: 0,
-            longitudeDelta: 0,
-            error: null
-        }
-    };
-}
-
-componentDidMount() {
-  navigator.geolocation.getCurrentPosition(
-    position => {
-       this.setState({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        error: null
-
-      });
+  state = {
+    location: null,
+    loadingMap: false,
+    errorMessage: null,
+    positionState: {
+      latitude: 0,
+      longitude: 0,
+      latitudeDelta: 0,
+      longitudeDelta: 0
     },
-    error => this.setState({ error: error.message }),
-    {enableHighAccuracy: true, timeout: 20000, maximumAge: 2000 }
-  );
-}
+    markerPosition: {
+      latitude: 0,
+      longitude: 0
+    }
+   };
 
+   componentDidUpdate()
+   {
+    if (this.state.positionState.latitude!=='0'){
+      this.state.loadingMap = true; 
+      }  
+   }
+
+   componentDidMount() {
+       this.getLocation();
+   }
+
+   getLocation = async() => {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION)
+        
+    if (status !== 'granted'){
+      console.log('Permission not granted!');
+
+      this.setstate({errorMessage: 'Permission not granted'});
+
+    }
+
+    const location = await Location.getCurrentPositionAsync();
+
+    this.setState({location, errorMessage: 'Permission granted'});
+
+    var lat = parseFloat(location.coords.latitude);
+    var long = parseFloat(location.coords.longitude);
+
+    var region = {
+      latitude: lat,
+      longitude: long,
+      latitudeDelta: LATITUDE_DELTA, //0
+      longitudeDelta: LONGITUDE_DELTA //0
+    };
+
+      this.setState({ positionState: region });
+      this.setState({ markerPosition: region });
+   };
 render() {
     return (
       <View style={{marginTop: 10, flex: 1}}>
 
-      <MapView
+        {this.state.loadingMap && <MapView
          style={styles.map}
-         region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.015,
-            longitudeDelta: 0.0121
-         }}
-       />
+         initialRegion={this.state.positionState}
+       />}
       
       <GooglePlacesAutocomplete
         placeholder = "Search"

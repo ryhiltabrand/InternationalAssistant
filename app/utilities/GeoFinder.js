@@ -24,7 +24,8 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 /*Get user location */
 export class GeoFinder extends Component {
 
-  state = {
+  constructor(props) {
+  this.state = {
     location: null,
     loadingMap: false,
     errorMessage: null,
@@ -34,13 +35,12 @@ export class GeoFinder extends Component {
       latitudeDelta: 0,
       longitudeDelta: 0
     },
-
     markerPosition: {
       latitude: 0,
       longitude: 0
     }
    };
-
+  }
    componentDidUpdate()
    {
     if (this.state.positionState.latitude!=='0'){
@@ -80,11 +80,18 @@ export class GeoFinder extends Component {
       this.setState({ markerPosition: region });
    };
 
+   printlocation = () =>
+   {
+    let text = JSON.stringify(this.state.positionState);
+    console.log(text);
+   }
+
    render() {
+    this.printlocation();
     let text = JSON.stringify(this.state.location);
     let error = JSON.stringify(this.state.errorMessage);
-    console.log(text)
-    console.log(error)
+    //console.log(text);
+    //console.log(error);
 
     return (  
         <>
