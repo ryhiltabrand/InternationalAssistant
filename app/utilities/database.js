@@ -97,13 +97,12 @@ export class UsersCollection {
     //Retrieves User Information from document based on UID
     async getAccountInformation(UID) {
 
-        docRef = db.collection("users").doc(UID);
+        var docRef = db.collection("users").doc(UID);
         //return docSnap.then;
         return docRef.get().then(function(doc) {
             if (doc.exists) {
-                //console.log(doc.data())
-                stuff = doc.data();
-                return stuff;
+                console.log("From getter: ", doc.data())
+               return doc.data();
             }
             // else {
             //     return Promise.reject("No such UserAccountInformation document for ", UID);
