@@ -38,6 +38,12 @@ export class MapViewer extends Component{
       latitudeDelta: 0,
       longitudeDelta: 0
     },
+    searchPosition: {
+      latitude: 0,
+      longitude: 0,
+      latitudeDelta: LATITUDE_DELTA, //0
+      longitudeDelta: LONGITUDE_DELTA //0
+    },
     markerPosition: {
       latitude: 0,
       longitude: 0
@@ -90,6 +96,7 @@ render() {
          style={styles.map}
          initialRegion={this.state.positionState}
        />}
+       <Marker coordinate={this.state.markerPosition} />
       
       <GooglePlacesAutocomplete
         placeholder = "Search"
@@ -97,18 +104,27 @@ render() {
         onPress={(data, details = null) => {
           // 'details' is provided when fetchDetails = true
           console.log(data, details);
+          var region = {
+              latitude: details.geometry.location.lat,
+              longitude: details.geometry.location.lng,
+              latitudeDelta: LATITUDE_DELTA, //0
+              longitudeDelta: LONGITUDE_DELTA //0
+          };
+        
+          this.setState({ searchPosition: region });
         }}
         query={{
           key: "AIzaSyDmGQcOZNNjq6NFMES1ppUJkO0jVHnhCbI",
-          language: "en"
+          language: "en",
+          components: "country:us"
         }}
         styles={{
           container: { flex: 0, position: "absolute", width: "100%", zIndex: 1 },
           listView: { backgroundColor: "white" }
         }}
       />
+      <Marker coordinate={this.state.searchPosition} />
 
-      <Marker coordinate={this.state} />
       </View>
     );
   }
