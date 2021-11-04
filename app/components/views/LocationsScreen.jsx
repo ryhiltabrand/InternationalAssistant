@@ -11,9 +11,9 @@ import { PostLocationScreen } from "../views/PostLocationScreen";
 const LocationsScreen = () => {
   
     return (
-        <><MapViewer>
+        <><PostLocationScreen>
 
-        </MapViewer></>
+        </PostLocationScreen></>
     );
   
 }

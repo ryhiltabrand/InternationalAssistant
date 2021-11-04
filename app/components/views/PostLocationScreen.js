@@ -67,8 +67,8 @@
    CustomRatingBar = () => {
     const [defaultRating, setdefaultRating] = useState(2);
     const [maxRating, setmaxRating] = useState([1,2,3,4,5]);
-    const starImgFilled = './../assets/star_filled.png';
-    const starImgCorner = './../assets/star_corner.png';
+    const starImgFilled = '../../assets/star_filled.png';
+    const starImgCorner = '../../assets/star_corner.png';
     return (
       <View style={styles.customRatingBarStyle} >
         {
@@ -84,8 +84,8 @@
                 style={styles.starImgStyle}
                 source={
                   item <= defaultRating
-                    ? {uri: starImgFilled}
-                    : {uri: starImgCorner}
+                    ? require(starImgFilled)
+                    : require(starImgCorner)
                 }
               />
               </TouchableOpacity>
@@ -94,6 +94,7 @@
         }
         <Text style={styles.TextStyle}>
           {defaultRating + ' / ' + maxRating.length}
+          {console.log(defaultRating)}
         </Text>
     </View>
     )
@@ -102,52 +103,50 @@
   render(){ 
     return (
        <View style={styles.container}>  
-        <Text style={styles.titleText}>Enter a location to share with others.</Text> 
+         <Text style={styles.titleText}>Enter a location to share with others.</Text> 
          <View style={styles.inputView} >
               <TextInput  
                 style={styles.inputText}
                 placeholder="Name" 
                 placeholderTextColor="white"
                 onChangeText={(val) => this.updateInputVal(val, 'location_name')}/>
-            </View>
+         </View>
         
-        <View style={styles.inputView} >
+          <View style={styles.inputView} >
               <TextInput  
                 style={styles.inputText}
                 placeholder="Address" 
                 placeholderTextColor="white"
                 onChangeText={(val) => this.updateInputVal(val, 'location_address')}/>
-            </View>
+          </View>
         
-            <View style={styles.inputView} >
+          <View style={styles.inputView} >
               <TextInput  
-                secureTextEntry
                 style={styles.inputText}
                 placeholder="Contributor" 
                 placeholderTextColor="white"
                 onChangeText={(val) => this.updateInputVal(val, 'location_contributor')}/>
-            </View>
+          </View>
 
-            <View style={styles.inputView} >
+          <View style={styles.inputView} >
               <TextInput  
-                secureTextEntry
                 style={styles.inputText}
                 placeholder="Category" 
                 placeholderTextColor="white"
                 onChangeText={(val) => this.updateInputVal(val, 'location_category')}/>
-            </View>
+          </View>
 
-            <this.CustomRatingBar/>
+          <this.CustomRatingBar/>
         
-        <TouchableOpacity onPress= {() => this.uploadLocation()} style={styles.SumbitBtn}>
+          <TouchableOpacity onPress= {() => this.uploadLocation()} style={styles.SumbitBtn}>
               <Text style={styles.SumbitBtnText}>Sumbit</Text>
-            </TouchableOpacity>
+          </TouchableOpacity>
         
-         <View style={{flex: 1, justifyContent: 'flex-end'}}>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate("MapViewer")} style={styles.backBtn}>
+          <View style={{flex: 1, justifyContent: 'flex-end'}}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate("MapViewer")} style={styles.backBtn}>
               <Text style={styles.backText}>Back to MapViewer</Text>
-            </TouchableOpacity>
-           </View>
+          </TouchableOpacity>
+          </View>
        </View>
         );
     };
