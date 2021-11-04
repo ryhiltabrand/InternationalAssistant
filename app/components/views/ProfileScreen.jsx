@@ -20,13 +20,13 @@ var currentUserInfo = {
 
 //console.log(currentUserInfo);
 
-// function userInfo({ route }) {
-// currentUser.getAccountInformation(UID).then((result) => {
-//   currentUserInfo = result;
-// });
-// }
+//function userInfo({ route }) {
+currentUser.getAccountInformation(UID).then((result) => {
+  currentUserInfo = result;
+});
+//}
 
-var stuff = userInfo
+//var stuff = userInfo
 function getName() {
   return currentUserInfo.name;
 }
