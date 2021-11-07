@@ -88,6 +88,7 @@
                     : require(starImgCorner)
                 }
               />
+              {(defaultRating) => this.updateInputVal(defaultRating, 'location_rating')}
               </TouchableOpacity>
             )
           })
@@ -142,11 +143,9 @@
               <Text style={styles.SumbitBtnText}>Sumbit</Text>
           </TouchableOpacity>
         
-          <View style={{flex: 1, justifyContent: 'flex-end'}}>
           <TouchableOpacity onPress={() => this.props.navigation.navigate("MapViewer")} style={styles.backBtn}>
               <Text style={styles.backText}>Back to MapViewer</Text>
           </TouchableOpacity>
-          </View>
        </View>
         );
     };

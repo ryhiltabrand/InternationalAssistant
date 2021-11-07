@@ -5,6 +5,7 @@
   View,
   TextInput,
   TouchableOpacity,
+  Image,
   Alert,
   ActivityIndicator,
   Button,
@@ -90,42 +91,47 @@ export class MapViewer extends Component{
    };
 render() {
     return (
-      <View style={{marginTop: 10, flex: 1}}>
+      <><View style={{ marginTop: 10, flex: 1 }}>
 
         {this.state.loadingMap && <MapView
-         style={styles.map}
-         initialRegion={this.state.positionState}
-       />}
-       <Marker coordinate={this.state.markerPosition} />
-      
-      <GooglePlacesAutocomplete
-        placeholder = "Search"
-        fetchDetails={true}
-        onPress={(data, details = null) => {
-          // 'details' is provided when fetchDetails = true
-          console.log(data, details);
-          var region = {
+          style={styles.map}
+          initialRegion={this.state.positionState} />}
+        <Marker coordinate={this.state.markerPosition} />
+
+        <GooglePlacesAutocomplete
+          placeholder="Search"
+          fetchDetails={true}
+          onPress={(data, details = null) => {
+            // 'details' is provided when fetchDetails = true
+            console.log(data, details);
+            var region = {
               latitude: details.geometry.location.lat,
               longitude: details.geometry.location.lng,
-              latitudeDelta: LATITUDE_DELTA, //0
+              latitudeDelta: LATITUDE_DELTA,
               longitudeDelta: LONGITUDE_DELTA //0
-          };
-        
-          this.setState({ searchPosition: region });
-        }}
-        query={{
-          key: "AIzaSyDmGQcOZNNjq6NFMES1ppUJkO0jVHnhCbI",
-          language: "en",
-          components: "country:us"
-        }}
-        styles={{
-          container: { flex: 0, position: "absolute", width: "100%", zIndex: 1 },
-          listView: { backgroundColor: "white" }
-        }}
-      />
-      <Marker coordinate={this.state.searchPosition} />
+            };
 
-      </View>
+            this.setState({ searchPosition: region });
+          } }
+          query={{
+            key: "AIzaSyDmGQcOZNNjq6NFMES1ppUJkO0jVHnhCbI",
+            language: "en",
+            components: "country:us"
+          }}
+          styles={{
+            container: { flex: 0, position: "absolute", width: "100%", zIndex: 1 },
+            listView: { backgroundColor: "white" }
+          }} />
+        <Marker coordinate={this.state.searchPosition} />
+
+      </View><View style={styles.btncontainer}>
+          <TouchableOpacity style={styles.listBtn} onPress={() => {this.props.navigation.navigate('DisplayList')}}>
+            <Image source={require("../../assets/icon2.png")} style={styles.Listimage} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.PostBtn} onPress={() => {this.props.navigation.navigate('PostLocationScreen')}}>
+            <Image source={require("../../assets/icon2.png")} style={styles.Listimage} />
+          </TouchableOpacity>
+        </View></>
     );
   }
 }
@@ -140,5 +146,25 @@ justifyContent: "center"
 map: {
 width: Dimensions.get("window").width,
 height: Dimensions.get("window").height
+},
+btncontainer: {
+  flex: 1
+},
+listBtn:{
+borderRadius: 20,
+padding: 1,
+alignSelf: 'flex-end',
+marginTop: -250,
+position: 'absolute'
+},
+PostBtn:{
+  borderRadius: 20,
+  padding: 1,
+  marginTop: 20
+},
+Listimage:{
+  width: 50,
+  height: 50,
+  resizeMode: 'contain'
 }
 });
