@@ -12,9 +12,6 @@ const HomeScreen = () => {
         onPress={() => console.log("hello")}
         title="you are home"
       />
-      <Button
-        onPress={()=> updatefriends()}
-        title= "fake"/>
         
     </View>
   )
