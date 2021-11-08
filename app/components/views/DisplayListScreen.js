@@ -4,7 +4,6 @@
   Text,
   View,
   SafeAreaView,
-  TextInput,
   TouchableOpacity,
   Image,
   Alert,
@@ -42,27 +41,6 @@ getLocations = () => {
 
   var locationList = [];
 
-  console.log('Non-async getLocations()')
-  console.log('mounted')
-  firebase.firestore().collection('Locations')
-    .get()
-    .then( snapshot => {
-
-   snapshot.forEach((doc) => {
-    const locationItem = doc.data();
-    locationItem.id = doc.id;
-    locationList.push(locationItem);
-    })
-
-  this.onLocationsReceived(locationList);
-  })
-   .catch( error => console.log(error))
-}
-
-getLocations2 = () => {
-
-  var locationList = [];
-
   console.log('mounted')
   firebase.firestore().collection('Locations')
     .get()
@@ -77,34 +55,10 @@ getLocations2 = () => {
    .catch( error => console.log(error))
 }
 
-FindMatchingLocations = (value) => {
-
-  var locationList = [];
-
-  console.log('Non-async FindMatchingLocations()')
-  console.log('mounted')
-  firebase.firestore()
-    .collection('Locations')
-    .where("category", '==', value )
-    .get()
-    .then( snapshot => {
-
-   snapshot.forEach((doc) => {
-    const locationItem = doc.data();
-    locationItem.id = doc.id;
-    locationList.push(locationItem);
-    })
-
-  this.onLocationsReceived(locationList);
-  })
-   .catch( error => console.log(error))
-}
-
 MatchLocations = (value1, value2) => {
 
   var locationList = [];
 
-  console.log('Non-async MatchLocations()')
   console.log('mounted')
   firebase.firestore()
     .collection('Locations')
@@ -125,17 +79,13 @@ MatchLocations = (value1, value2) => {
 
 componentDidMount() {
   //Lists all locations
-  this.getLocations2();
-
-  //Finds a matching location with the path to compare being hardcoded then define the value for comparison
-  //category is currently hardcoded for the path to compare
-  //this.FindMatchingLocations("a");
+  this.getLocations();
 
   //Finds a matching location by defining the path to compare and defining the value for comparison
   //this.MatchLocations("name","a");
 }
 
-
+/*
 render() {
   return this.state.locationList.length > 0 ?
     <SafeAreaView style={styles.container}>
@@ -155,7 +105,7 @@ render() {
             <ListItem
               containerStyle={styles.listItem}
               title={item.name}
-              subtitle={item.name}
+              subtitle={item.address}
               //subtitle={`name: ${item.name}`}
               //titleStyle={styles.titleStyle}
               //subtitleStyle={styles.subtitleStyle}
@@ -178,44 +128,41 @@ render() {
       <Text style={styles.emptyTitle}>No Locations found {console.log("Nothing was found")}</Text>
     </View>
 }
-}
+}*/
 
-/*render() {
+render() {
   return (
-    <View style={styles.container}>
-    <FlatList
-      data={this.state.locationList}
-      ItemSeparatorComponent={() => <Divider style={{ backgroundColor: 'black' }} />}
-      keyExtractor={(item, index) => index.toString()}
-      renderItem={({ item }) => {
-        return (
-          <ListItem
-            containerStyle={styles.listItem}
-            title={item.name}
-          />
-        );
-      }
-      } 
-    />
+    <><View style={styles.btncontainer}>
+      <TouchableOpacity style={styles.MapBtn} onPress={() => { this.props.navigation.navigate('MapViewer'); } }>
+        <Image source={require("../../assets/mapicon.png")} style={styles.image} />
+      </TouchableOpacity>
     </View>
+    <FlatList
+        data={this.state.locationList}
+        ItemSeparatorComponent={() => <Divider style={{ backgroundColor: 'black' }} />}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => {
+          console.log(item.name);
+          console.log(item.address);
+          console.log(item.category);
+          console.log(item.category);
+          return (
+            <ListItem
+              title={item.name}
+              subtitle={item.address}
+              subtitle={item.category}
+              subtitle={item.rating}
+              subtitle={item.contributor}
+              onPress={() => {
+                this.setState(prevState => ({ selectedIndex: prevState.selectedIndex = index }));
+              }} 
+            />
+          );
+        } } /></>
     );
   }
 
-}*/
-
-/*
-render() {
-  return (
-    <><>
-    </><View style={styles.container}>
-        <TouchableOpacity style={styles.MapBtn} onPress={() => { this.props.navigation.navigate('MapViewer'); } }>
-          <Image source={require("../../assets/mapicon.png")} style={styles.image} />
-        </TouchableOpacity>
-      </View></>
-  );
 }
-
-}*/
 
 const styles = StyleSheet.create({
 container: {

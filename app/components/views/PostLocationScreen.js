@@ -69,6 +69,7 @@
     const [maxRating, setmaxRating] = useState([1,2,3,4,5]);
     const starImgFilled = '../../assets/star_filled.png';
     const starImgCorner = '../../assets/star_corner.png';
+    this.state.location_rating = defaultRating;
     return (
       <View style={styles.customRatingBarStyle} >
         {
@@ -77,7 +78,7 @@
               <TouchableOpacity
               activeOpacity={0.7}
               key={item}
-              onPress={() => setdefaultRating(item)}
+              onPress={() => setdefaultRating(item) }
               >
 
               <Image
@@ -88,7 +89,6 @@
                     : require(starImgCorner)
                 }
               />
-              {(defaultRating) => this.updateInputVal(defaultRating, 'location_rating')}
               </TouchableOpacity>
             )
           })
