@@ -5,7 +5,7 @@ import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Setting a timer']);
 This is gonna be test for that timer error if node modules needs to be deleted uncomment this and see if it works.
 */
-
+let lister =[]
 
 export default async function FriendMatcher(){
     var Matcher=[]
@@ -22,9 +22,10 @@ export default async function FriendMatcher(){
         .where("country", "==", location).get()
         locquery.docs.map((doc) =>{
             var otherUID = doc.data().UID
-            if((friendslist.includes(otherUID)!=true && counter<2)){
+            if((friendslist.includes(otherUID)!=true && counter<2 && lister.includes(otherUID) != true)){
                 if(otherUID != uid){
                     Matcher.push(otherUID)
+                    lister.push(otherUID)
                     counter++
                 }
             }
@@ -47,9 +48,10 @@ export default async function FriendMatcher(){
                 .get()
                 langquery.docs.map((doc) => {
                     var otherUID = doc.get("UID")
-                    if(friendslist.includes(otherUID)!= true && counter<2 && Matcher.includes(otherUID) != true){
+                    if(friendslist.includes(otherUID)!= true && counter<2 && Matcher.includes(otherUID) != true && lister.includes(otherUID) != true){
                         if(otherUID != uid){
                             Matcher.push(otherUID)
+                            lister.push(otherUID)
                             counter++;
                         }
                     }   
@@ -61,9 +63,10 @@ export default async function FriendMatcher(){
                 .get()
                 langquery.docs.map((doc) => {
                     var otherUID = doc.data().UID
-                    if((friendslist.includes(otherUID)!= true) && counter<2 && (Matcher.includes(otherUID) != true)){
+                    if((friendslist.includes(otherUID)!= true) && counter<2 && (Matcher.includes(otherUID) != true && lister.includes(otherUID) != true)){
                         if(otherUID != uid){
                             Matcher.push(otherUID)
+                            lister.push(otherUID)
                             counter++;
                         }
                     }
@@ -85,9 +88,10 @@ export default async function FriendMatcher(){
                 var friends = doc.data().FriendsList
                 var otherList= Object.keys(friends)
                 for(var j=0; j<otherList.length; j++){
-                    if((friendslist.includes(otherList[j]) != true) && (Matcher.includes(otherList[j]) != true)){
+                    if((friendslist.includes(otherList[j]) != true) && (Matcher.includes(otherList[j]) != true) && (lister.includes(otherList[j]) != true)){
                         if(otherList[j] != uid){
                             Matcher.push(otherList[j])
+                            lister.push(otherList[j])
                             break;
                         }
                     }
@@ -99,9 +103,10 @@ export default async function FriendMatcher(){
         }
     }
     return Loc().then(()=> Lang())
-    //.then(() => Mutual())
+    .then(() => Mutual())
     .then(() => {
-        //console.log(Matcher)
+        console.log("THIS IS LIT")
+        console.log(lister)
         return Matcher;
         //return 0;
     }).catch(function(error){
