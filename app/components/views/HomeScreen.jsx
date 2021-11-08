@@ -2,7 +2,7 @@ import * as React from "react";
 import { Text, View, Button } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
+import FriendMatcher from "../shardedComponents/friendmatch";
 
 const HomeScreen = () => {
   return (
