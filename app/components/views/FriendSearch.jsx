@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Text, View, Button, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  Button,
+  TouchableOpacity,
+  Modal,
+  StyleSheet,
+} from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SearchBar } from "react-native-elements";
@@ -16,12 +23,19 @@ export default class FriendsSearchScreen extends React.Component {
       type: null,
       language: null,
       campus: null,
+      modalVisible: false,
+      data:["j"]
     };
   }
   componentDidMount() {
     this.clearState();
   }
   componentWillUnmount() {}
+
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
+  };
+
   clearState = () => {
     this.setState({
       name: null,
@@ -36,80 +50,71 @@ export default class FriendsSearchScreen extends React.Component {
     const state = this.state;
     var criteria = {};
     for (const property in state) {
-      if (state[property] != null) {
+      if (state[property] != null && state[property] != true && state[property] != false && state[property] != "data" ) {
         console.log(property, state[property]);
         criteria[property] = state[property];
       }
     }
-    console.log(criteria);
+    //console.log(criteria);
 
     if (Object.keys(criteria).length == 5) {
-      console.log(Object.keys(criteria));
+      //console.log(Object.keys(criteria));
       Friendquery = Friendquery.where(
-        Object.keys(criteria)[0], "==", Object.values(criteria)[0]
-      ).where(
-        Object.keys(criteria)[1], "==", Object.values(criteria)[1]
-      ).where(
-        Object.keys(criteria)[2], "==", Object.values(criteria)[2]
-      ).where(
-        Object.keys(criteria)[3], "==", Object.values(criteria)[3]
-      ).where(
-        Object.keys(criteria)[4], "==", Object.values(criteria)[4]
+        Object.keys(criteria)[0],
+        "==",
+        Object.values(criteria)[0]
       )
+        .where(Object.keys(criteria)[1], "==", Object.values(criteria)[1])
+        .where(Object.keys(criteria)[2], "==", Object.values(criteria)[2])
+        .where(Object.keys(criteria)[3], "==", Object.values(criteria)[3])
+        .where(Object.keys(criteria)[4], "==", Object.values(criteria)[4]);
     } else if (Object.keys(criteria).length == 4) {
       console.log(Object.keys(criteria));
       Friendquery = Friendquery.where(
-        Object.keys(criteria)[0], "==", Object.values(criteria)[0]
-      ).where(
-        Object.keys(criteria)[1], "==", Object.values(criteria)[1]
-      ).where(
-        Object.keys(criteria)[2], "==", Object.values(criteria)[2]
-      ).where(
-        Object.keys(criteria)[3], "==", Object.values(criteria)[3]
+        Object.keys(criteria)[0],
+        "==",
+        Object.values(criteria)[0]
       )
+        .where(Object.keys(criteria)[1], "==", Object.values(criteria)[1])
+        .where(Object.keys(criteria)[2], "==", Object.values(criteria)[2])
+        .where(Object.keys(criteria)[3], "==", Object.values(criteria)[3]);
     } else if (Object.keys(criteria).length == 3) {
       console.log(Object.keys(criteria));
       Friendquery = Friendquery.where(
-        Object.keys(criteria)[0], "==", Object.values(criteria)[0]
-      ).where(
-        Object.keys(criteria)[1], "==", Object.values(criteria)[1]
-      ).where(
-        Object.keys(criteria)[2], "==", Object.values(criteria)[2]
+        Object.keys(criteria)[0],
+        "==",
+        Object.values(criteria)[0]
       )
+        .where(Object.keys(criteria)[1], "==", Object.values(criteria)[1])
+        .where(Object.keys(criteria)[2], "==", Object.values(criteria)[2]);
     } else if (Object.keys(criteria).length == 2) {
       console.log(Object.keys(criteria));
       Friendquery = Friendquery.where(
-        Object.keys(criteria)[0], "==", Object.values(criteria)[0]
-      ).where(
-        Object.keys(criteria)[1], "==", Object.values(criteria)[1]
-      )
+        Object.keys(criteria)[0],
+        "==",
+        Object.values(criteria)[0]
+      ).where(Object.keys(criteria)[1], "==", Object.values(criteria)[1]);
     } else if (Object.keys(criteria).length == 1) {
       console.log(Object.keys(criteria));
       Friendquery = Friendquery.where(
-        Object.keys(criteria)[0], "==", Object.values(criteria)[0]
-      )
+        Object.keys(criteria)[0],
+        "==",
+        Object.values(criteria)[0]
+      );
     } else {
       console.log("invalid Search");
-    }
-    Friendquery = Friendquery.get().then(snap => {
-      console.log(snap.size)
-        snap.forEach(doc => {
-          console.log(doc.id)
-        })
-    }
       
-    )
-    /*Friendquery = firebase
-      .firestore()
-      .collection("users")
-      .where("country", "==", this.state.country)
-      .get()
-      .then(snap => {
-        console.log(snap.size)
-        snap.forEach(doc => {
-          console.log(doc.id)
-        })
-      })*/
+    }
+    //console.log(criteria.length)
+    if(Object.keys(criteria).length >= 1){
+      Friendquery = Friendquery.get().then((snap) => {
+      console.log(snap.size);
+      snap.forEach((doc) => {
+        //console.log(doc.id);
+      });
+    });
+    }
+    
   };
 
   updatename = (name) => {
@@ -145,6 +150,8 @@ export default class FriendsSearchScreen extends React.Component {
   };
 
   render() {
+    const { modalVisible } = this.state;
+
     const countries = [
       "Any",
       "Brazil",
@@ -177,6 +184,7 @@ export default class FriendsSearchScreen extends React.Component {
     const { name } = this.state;
     return (
       <View>
+        
         <SearchBar
           placeholder="Search by Name..."
           onChangeText={this.updatename}
@@ -223,7 +231,6 @@ export default class FriendsSearchScreen extends React.Component {
             }}
           />
         </View>
-
         <TouchableOpacity
           style={{ marginLeft: 150, marginTop: 25 }}
           onPress={() => {
@@ -232,7 +239,6 @@ export default class FriendsSearchScreen extends React.Component {
         >
           <Text>Clear Search</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           style={{ marginLeft: 150, marginTop: 25 }}
           onPress={() => {
@@ -242,85 +248,77 @@ export default class FriendsSearchScreen extends React.Component {
           <Text>Search</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={{ marginLeft: 150, marginTop: 25 }}
-          onPress={() => {
-            props.navigation.navigate();
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            this.setModalVisible(!modalVisible);
           }}
         >
-          <Text>Auto Matching</Text>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Hello World!</Text>
+              <TouchableOpacity
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => this.setModalVisible(!modalVisible)}
+              >
+                <Text>Hide Modal</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+        <TouchableOpacity
+          style={[styles.button, styles.buttonOpen]}
+          onPress={() => this.setModalVisible(true)}
+        >
+          <Text style={styles.textStyle}>Show Modal</Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
-/*if (
-              this.state.name == null &&
-              this.state.country == null &&
-              this.state.language == null &&
-              this.state.type == null &&
-              this.state.campus == null
-            ) {
-              <Text>No Search was made</Text>;
-              console.log("No Search");
-            } else if (
-              this.state.name != null &&
-              this.state.country == null &&
-              this.state.language == null &&
-              this.state.type == null &&
-              this.state.campus == null
-            ) {
-              <Text>d</Text>;
-              console.log(this.state.name);
-            } else if (
-              this.state.name == null &&
-              this.state.country != null &&
-              this.state.language == null &&
-              this.state.type == null &&
-              this.state.campus == null
-            ) {
-              <Text>d</Text>;
-              this.Loc()
-            } else if (
-              this.state.name == null &&
-              this.state.country == null &&
-              this.state.language != null &&
-              this.state.type == null &&
-              this.state.campus == null
-            ) {
-              <Text>d</Text>;
-              console.log(this.state.language);
-            } else if (
-              this.state.name != null &&
-              this.state.country == null &&
-              this.state.language == null &&
-              this.state.type != null &&
-              this.state.campus == null
-            ) {
-              <Text>d</Text>;
-              console.log(this.state.type);
-            } else if (
-              this.state.name != null &&
-              this.state.country == null &&
-              this.state.language == null &&
-              this.state.type == null &&
-              this.state.campus != null
-            ) {
-              <Text>d</Text>;
-              console.log(this.state.campus);
-            } else if (
-              this.state.name != null &&
-              this.state.country != null &&
-              this.state.language != null &&
-              this.state.type != null &&
-              this.state.campus != null
-            ) {
-              <Text>d</Text>;
-              console.log(
-                this.state.name,
-                this.state.country,
-                this.state.language,
-                this.state.type,
-                this.state.campus
-              );
-            }*/
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+});

@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FriendsListScreen from "./FriendsList";
 import FriendsSearchScreen from "./FriendSearch";
+import FriendsMatchScreen from "./FriendMatching";
 
 
 const FriendsScreen = () => {
@@ -45,6 +46,7 @@ const Tabs = () => {
               
               <Tab.Screen name="FriendsList" component={FriendsListScreen} />
               <Tab.Screen name="FriendSearch" component={FriendsSearchScreen} />
+              <Tab.Screen name="AutoMatching" component={FriendsMatchScreen} />
           </Tab.Navigator>  
     );
   };

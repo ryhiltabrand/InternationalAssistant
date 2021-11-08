@@ -7,8 +7,9 @@ This is gonna be test for that timer error if node modules needs to be deleted u
 */
 
 
-export default function FriendMatcher(){
+export default async function FriendMatcher(){
     var Matcher=[]
+    
     const Loc = async () => {
         counter=0
         userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
@@ -97,9 +98,13 @@ export default function FriendMatcher(){
             }
         }
     }
-    Loc().then(()=> Lang())
-    .then(() => Mutual())
+    return Loc().then(()=> Lang())
+    //.then(() => Mutual())
     .then(() => {
+        //console.log(Matcher)
         return Matcher;
+        //return 0;
+    }).catch(function(error){
+        return "error";
     })
 }
