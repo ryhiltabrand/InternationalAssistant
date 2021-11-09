@@ -12,10 +12,12 @@ function createTestUserInfo() {
     testUser.setBio('I am groot')
     testUser.setProfilePicture('https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg')
     testUser.setUID('cm0IF5KopLgxnJTUtfi403kJuMl2')
+    testUser.setSchool("ODU")
+    testUser.setNative("Native")
+
     // testUser.setEvents('Something in the Water')
     // testUser.setFriends(['Marquel', 'Goku', 'Snorlax'])
     // testUser.setRequests(['JarjarBinks', 'Nick Cannon', 'George Lucas'])
-
 
 }
 
@@ -49,7 +51,9 @@ test('create new account', () => {
             country: 'usa',
             bio: 'I am groot',
             profilepicture: 'https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg',
-            UID: 'cm0IF5KopLgxnJTUtfi403kJuMl2'
+            UID: 'cm0IF5KopLgxnJTUtfi403kJuMl2',
+            school: 'ODU',
+            friendList: {}
     })
     // return expect(testUser.getAccountInformation("cm0IF5KopLgxnJTUtfi403kJuMl2")).resolves.toEqual(
     //     expect.objectContaining({

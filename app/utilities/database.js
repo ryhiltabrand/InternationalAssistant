@@ -10,7 +10,9 @@ var db = firebase.firestore();
 //User Collection
 
 export class UsersCollection {
-    #userFieldEntries = {};
+    #userFieldEntries = {
+        friendList: {}
+    };
 
     //Accessor and Mutator for 'users' collection
 
@@ -44,6 +46,14 @@ export class UsersCollection {
     
     setUID(uid) {
         this.#userFieldEntries.UID = uid
+    }
+
+    setSchool(school) {
+        this.#userFieldEntries.school = school
+    }
+
+    setNative(native) {
+        this.#userFieldEntries.native = native
     }
 
 
