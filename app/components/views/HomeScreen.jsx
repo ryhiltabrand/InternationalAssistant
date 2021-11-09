@@ -3,6 +3,8 @@ import { Text, View, Button } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FriendMatcher from "../shardedComponents/friendmatch";
+import deletefriends from "../shardedComponents/removefriends";
+import updatefriends from "../shardedComponents/Addfriends";
 
 const HomeScreen = () => {
   return (
@@ -10,6 +12,15 @@ const HomeScreen = () => {
       <Button
         onPress={() => console.log("hello")}
         title="you are home"
+      />
+
+      <Button
+        onPress={() => deletefriends("cm0IF5KopLgxnJTUtfi403kJuMl2")}
+        title="delete"
+      />
+      <Button
+        onPress={() => updatefriends("cm0IF5KopLgxnJTUtfi403kJuMl2")}
+        title="add"
       />
     </View>
   )
