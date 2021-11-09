@@ -13,15 +13,6 @@ const HomeScreen = () => {
         onPress={() => console.log("hello")}
         title="you are home"
       />
-
-      <Button
-        onPress={() => deletefriends("cm0IF5KopLgxnJTUtfi403kJuMl2")}
-        title="delete"
-      />
-      <Button
-        onPress={() => updatefriends("cm0IF5KopLgxnJTUtfi403kJuMl2")}
-        title="add"
-      />
     </View>
   )
 }
