@@ -25,103 +25,114 @@ import {
 import bgImage from "../../assets/bgImage.jpg";
 import firebase from "../../utilities/firebase";
 import "firebase/auth";
-import DrawerN from "../../navigator/topNav/drawer";
-import landingScreen from "../../navigator/LandingScreen";
+import { EventRegister } from "react-native-event-listeners";
 
-const user=firebase.auth().currentUser;
+const user = firebase.auth().currentUser;
 export class LoginScreen extends Component {
-  
   constructor(props) {
     super(props);
     this.state = {
       email: "",
       password: "",
-      isLoading: false,
     };
   }
 
-  updateInputVal = (val,prop) => {
-    const state= this.state;
+  updateInputVal = (val, prop) => {
+    const state = this.state;
     state[prop] = val;
     this.setState();
-  }
-      
+  };
+
   userLogin = () => {
-    if(this.state.email === '' && this.state.password === '') {
-      Alert.alert('Enter details to signin!')
+    if (this.state.email === "" && this.state.password === "") {
+      Alert.alert("Enter details to signin!");
     } else {
-      this.setState({
-        isLoading: true,
-      })
       firebase
-      .auth()
-      .signInWithEmailAndPassword(this.state.email, this.state.password)
-      .then((res) => {
-        this.authStateListener()
-        console.log(res)
-        console.log('User logged-in successfully!')
-        this.setState({
-          isLoading: false,
-          email: '', 
-          password: ''
+        .auth()
+        .signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then((res) => {
+          firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+              //console.log(user.uid);
+              EventRegister.emit('auth', user.uid)
+            } else {
+              // User not logged in or has just logged out.
+            }
+          });
+          //console.log(Object.keys(res))
+          
         })
-      })
-      .catch(error => this.setState({ errorMessage: error.message }))
+        /*.then((res) => {
+          this.authStateListener();
+          console.log(res);
+          console.log("User logged-in successfully!");
+          this.setState({
+            email: "",
+            password: "",
+          });
+        })*/
+        .catch((error) => this.setState({ errorMessage: error.message }));
     }
-  }
+  };
   render() {
-    if(this.state.isLoading){
-      return(
-          <DrawerN/>
-      )
-    }  
-      return (
-        <ImageBackground source={bgImage} style={styles.bkimage}>
-          <View style={styles.container}>
-            <Text style={styles.logo}>International Assistant</Text>
-  
-            <View style={styles.inputView}>
-              <TextInput
-                style={styles.inputText}
-                placeholder="Email"
-                placeholderTextColor="white"
-                onChangeText={(val) => this.updateInputVal(val, 'email')}
-              />
-            </View>
-  
-            <View style={styles.inputView}>
-              <TextInput
-                secureTextEntry
-                style={styles.inputText}
-                placeholder="Password"
-                placeholderTextColor="rgba(225, 225, 225, 1.0)"
-                onChangeText={(val) => this.updateInputVal(val, 'password')}
-              />
-            </View>
-  
-            <TouchableOpacity  onPress={() => {this.userLogin()}} style={styles.loginBtn}>
-              <Text style={styles.loginText}>Log In</Text>
-            </TouchableOpacity>
-  
-            <TouchableOpacity onPress={() => {this.props.navigation.navigate("Forgot")}}>
-              <Text style={styles.forgot}>
-                Forgot your login details? Get help signing in.
+    return (
+      <ImageBackground source={bgImage} style={styles.bkimage}>
+        <View style={styles.container}>
+          <Text style={styles.logo}>International Assistant</Text>
+
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder="Email"
+              placeholderTextColor="white"
+              onChangeText={(val) => this.updateInputVal(val, "email")}
+            />
+          </View>
+
+          <View style={styles.inputView}>
+            <TextInput
+              secureTextEntry
+              style={styles.inputText}
+              placeholder="Password"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
+              onChangeText={(val) => this.updateInputVal(val, "password")}
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => {
+              this.userLogin();
+            }}
+            style={styles.loginBtn}
+          >
+            <Text style={styles.loginText}>Log In</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.navigate("Forgot");
+            }}
+          >
+            <Text style={styles.forgot}>
+              Forgot your login details? Get help signing in.
+            </Text>
+          </TouchableOpacity>
+
+          <View style={{ flex: 1, justifyContent: "flex-end" }}>
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate("Register");
+              }}
+              style={styles.signupBtn}
+            >
+              <Text style={styles.signupText}>
+                Don't have an account? Sign up.
               </Text>
             </TouchableOpacity>
-  
-            <View style={{ flex: 1, justifyContent: "flex-end" }}>
-              <TouchableOpacity
-                onPress={() => {this.props.navigation.navigate('Register')}}
-                style={styles.signupBtn}
-              >
-                <Text style={styles.signupText}>
-                  Don't have an account? Sign up.
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
-        </ImageBackground>
-      )
+        </View>
+      </ImageBackground>
+    );
   }
 }
 
@@ -194,9 +205,9 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff'
-  }
+    position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+  },
 });

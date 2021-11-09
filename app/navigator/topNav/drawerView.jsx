@@ -8,6 +8,8 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import firebase from '../../utilities/firebase';
 import LoginScreen from "../../components/views/loginScreen";
+import { EventRegister } from "react-native-event-listeners";
+
 
 
 export default function DrawerCustom(props) {
@@ -74,7 +76,7 @@ export default function DrawerCustom(props) {
             onPress={() => {
                 firebase.auth().signOut().then(() =>
                 {
-                  props.navigation.navigate("Signout")
+                  EventRegister.emit('auth', null)
                 }).catch((error) =>{
                   console.log('this dont work')
                 })
