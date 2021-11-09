@@ -3,20 +3,20 @@
   StyleSheet,
   Text,
   View,
-  TextInput,
   TouchableOpacity,
-  Image,
   Alert,
   ActivityIndicator,
-  Button,
   Dimensions
 } from "react-native";
   
 import React, { Component } from 'react';
 import MapView from 'react-native-maps';
 import Marker from 'react-native-maps';
+
 import useState from 'react';
+
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { FontAwesome5, AntDesign} from "@expo/vector-icons";
 
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
@@ -91,11 +91,13 @@ export class MapViewer extends Component{
    };
 render() {
     return (
+
       <><View style={{ marginTop: 10, flex: 1 }}>
 
         {this.state.loadingMap && <MapView
           style={styles.map}
           initialRegion={this.state.positionState} />}
+          
         <Marker coordinate={this.state.markerPosition} />
 
         <GooglePlacesAutocomplete
@@ -107,7 +109,7 @@ render() {
             var region = {
               latitude: details.geometry.location.lat,
               longitude: details.geometry.location.lng,
-              latitudeDelta: LATITUDE_DELTA,
+              latitudeDelta: LATITUDE_DELTA, //0
               longitudeDelta: LONGITUDE_DELTA //0
             };
 
@@ -122,14 +124,15 @@ render() {
             container: { flex: 0, position: "absolute", width: "100%", zIndex: 1 },
             listView: { backgroundColor: "white" }
           }} />
-        <Marker coordinate={this.state.searchPosition} />
+
+      <Marker coordinate={this.state.searchPosition} />
 
       </View><View style={styles.btncontainer}>
           <TouchableOpacity style={styles.listBtn} onPress={() => {this.props.navigation.navigate('DisplayList')}}>
-            <Image source={require("../../assets/icon2.png")} style={styles.Listimage} />
+            <FontAwesome5 name={"list-alt"} size={50} color={"black"}/>
           </TouchableOpacity>
           <TouchableOpacity style={styles.PostBtn} onPress={() => {this.props.navigation.navigate('PostLocationScreen')}}>
-            <Image source={require("../../assets/icon2.png")} style={styles.Listimage} />
+            <AntDesign name={"addfile"} size={50} color={"black"}/>
           </TouchableOpacity>
         </View></>
     );
@@ -154,11 +157,7 @@ position: 'absolute'
 PostBtn:{
   borderRadius: 20,
   padding: 1,
-  marginTop: 20
-},
-Listimage:{
-  width: 50,
-  height: 50,
-  resizeMode: 'contain'
+  marginTop: 20,
+  position: 'absolute'
 }
 });

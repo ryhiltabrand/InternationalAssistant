@@ -67,9 +67,7 @@ MatchLocations = (value1, value2) => {
     .then( snapshot => {
 
    snapshot.forEach((doc) => {
-    const locationItem = doc.data();
-    locationItem.id = doc.id;
-    locationList.push(locationItem);
+    locationList.push(doc.data());
     })
 
   this.onLocationsReceived(locationList);
@@ -137,6 +135,7 @@ render() {
         <Image source={require("../../assets/mapicon.png")} style={styles.image} />
       </TouchableOpacity>
     </View>
+
     <FlatList
         data={this.state.locationList}
         ItemSeparatorComponent={() => <Divider style={{ backgroundColor: 'black' }} />}
@@ -159,6 +158,7 @@ render() {
             />
           );
         } } /></>
+
     );
   }
 
@@ -167,7 +167,7 @@ render() {
 const styles = StyleSheet.create({
 container: {
   flex: 1
- // backgroundColor: "#fff",
+  //backgroundColor: "#fff",
   //paddingTop: 40
   //paddingHorizaontal: 20
 },

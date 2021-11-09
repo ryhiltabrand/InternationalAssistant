@@ -93,9 +93,10 @@
             )
           })
         }
-        <Text style={styles.TextStyle}>
-          {defaultRating + ' / ' + maxRating.length}
-          {console.log(defaultRating)}
+        <Text>
+          {/*Debugging*/}
+          {/*defaultRating + ' / ' + maxRating.length}
+          {console.log(defaultRating)*/}
         </Text>
     </View>
     )
@@ -104,7 +105,9 @@
   render(){ 
     return (
        <View style={styles.container}>  
+       
          <Text style={styles.titleText}>Enter a location to share with others.</Text> 
+
          <View style={styles.inputView} >
               <TextInput  
                 style={styles.inputText}
@@ -186,7 +189,7 @@
     },
     SumbitBtnText:{
       color:"white",
-    fontSize:15
+      fontSize:15
     },
     backBtn:{
       width:1000,
@@ -198,11 +201,11 @@
       marginBottom:0
     },
     backText:{
-    justifyContent: 'center', 
-      alignItems: 'center',
-      bottom: 0,
-      color:"black",
-    fontSize:15
+     justifyContent: 'center', 
+     alignItems: 'center',
+     bottom: 0,
+     color:"white",
+     fontSize:15
     },
     customRatingBarStyle:{
       justifyContent: 'center',
