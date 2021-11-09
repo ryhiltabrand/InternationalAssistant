@@ -1,15 +1,30 @@
 import * as React from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, TextInput, Button } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
+import { MapViewer } from "../views/MapViewer";
+import { DisplayList } from "../views/DisplayListScreen";
+import { PostLocationScreen } from "../views/PostLocationScreen";
+
+const Stack = createStackNavigator();
+function NavStack() {
+    return (
+      <Stack.Navigator initialRouteName="MapViewer">
+         <Stack.Screen name="MapViewer" component={MapViewer} options={{ headerShown: false }} />
+         <Stack.Screen name="DisplayList" component={DisplayList} options={{ headerShown: false }} />
+         <Stack.Screen name="PostLocationScreen" component={PostLocationScreen} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    );
+  }
 
 
 const LocationsScreen = () => {
-  
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Locations!</Text>
-      </View>
+        <><NavStack>
+
+        </NavStack></>
+
     );
   
 }
