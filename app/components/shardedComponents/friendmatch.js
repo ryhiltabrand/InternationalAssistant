@@ -105,8 +105,7 @@ export default async function FriendMatcher(){
     return Loc().then(()=> Lang())
     .then(() => Mutual())
     .then(() => {
-        console.log("THIS IS LIT")
-        console.log(lister)
+        
         return Matcher;
         //return 0;
     }).catch(function(error){

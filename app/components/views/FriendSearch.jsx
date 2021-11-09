@@ -6,13 +6,16 @@ import {
   TouchableOpacity,
   Modal,
   StyleSheet,
+  FlatList,
+  Image,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SearchBar } from "react-native-elements";
 import SelectDropdown from "react-native-select-dropdown";
-import { color } from "react-native-reanimated";
+import { color, cos } from "react-native-reanimated";
 import firebase from "firebase";
+import updatefriends from "../shardedComponents/Addfriends";
 
 export default class FriendsSearchScreen extends React.Component {
   constructor(props) {
@@ -24,7 +27,7 @@ export default class FriendsSearchScreen extends React.Component {
       language: null,
       campus: null,
       modalVisible: false,
-      data:["j"]
+      data: [],
     };
   }
   componentDidMount() {
@@ -43,14 +46,33 @@ export default class FriendsSearchScreen extends React.Component {
       type: null,
       language: null,
       campus: null,
+      data: [],
     });
   };
+  data = async (Uid) => {
+    userRef = firebase.firestore().collection("users").doc(Uid);
+    const doc = await userRef.get();
+    var name = doc.data().name;
+    var profpic = doc.data().profilepicture;
+    console.log(Uid, name, profpic, friend);
+    let friend = { uid: Uid, name: name, pic: profpic };
+    this.setState({
+      data: [...this.state.data, friend],
+    });
+  };
+
   Loc = async () => {
     var Friendquery = firebase.firestore().collection("users");
     const state = this.state;
     var criteria = {};
     for (const property in state) {
-      if (state[property] != null && state[property] != true && state[property] != false && state[property] != "data" ) {
+      //console.log(state[property])
+      if (
+        state[property] != null &&
+        state[property] != true &&
+        state[property] &&
+        Array.isArray(state[property]) != true
+      ) {
         console.log(property, state[property]);
         criteria[property] = state[property];
       }
@@ -103,18 +125,17 @@ export default class FriendsSearchScreen extends React.Component {
       );
     } else {
       console.log("invalid Search");
-      
     }
     //console.log(criteria.length)
-    if(Object.keys(criteria).length >= 1){
+    if (Object.keys(criteria).length >= 1) {
       Friendquery = Friendquery.get().then((snap) => {
-      console.log(snap.size);
-      snap.forEach((doc) => {
-        //console.log(doc.id);
+        console.log(snap.size);
+        snap.forEach((doc) => {
+          console.log(doc.id);
+          this.data(doc.id);
+        });
       });
-    });
     }
-    
   };
 
   updatename = (name) => {
@@ -155,7 +176,7 @@ export default class FriendsSearchScreen extends React.Component {
     const countries = [
       "Any",
       "Brazil",
-      "canada",
+      "Canada",
       "China",
       "Finland",
       "France",
@@ -184,7 +205,6 @@ export default class FriendsSearchScreen extends React.Component {
     const { name } = this.state;
     return (
       <View>
-        
         <SearchBar
           placeholder="Search by Name..."
           onChangeText={this.updatename}
@@ -240,9 +260,10 @@ export default class FriendsSearchScreen extends React.Component {
           <Text>Clear Search</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{ marginLeft: 150, marginTop: 25 }}
+          style={styles.button}
+          //style={{ marginLeft: 150, marginTop: 25 }}
           onPress={() => {
-            this.Loc();
+            this.Loc().then(() => this.setModalVisible(true));
           }}
         >
           <Text>Search</Text>
@@ -250,31 +271,46 @@ export default class FriendsSearchScreen extends React.Component {
 
         <Modal
           animationType="slide"
-          transparent={true}
+          transparent={false}
           visible={modalVisible}
           onRequestClose={() => {
             Alert.alert("Modal has been closed.");
             this.setModalVisible(!modalVisible);
           }}
         >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Hello World!</Text>
-              <TouchableOpacity
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => this.setModalVisible(!modalVisible)}
-              >
-                <Text>Hide Modal</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <TouchableOpacity
+            style={[styles.button, styles.buttonClose]}
+            onPress={() => {
+              this.setModalVisible(!modalVisible);
+              this.clearState();
+            }}
+          >
+            <Text>Back to Search</Text>
+          </TouchableOpacity>
+          <FlatList
+            style={styles.container}
+            enableEmptySections={true}
+            data={this.state.data}
+            keyExtractor={(item) => {
+              return item.name;
+            }}
+            renderItem={({ item }) => {
+              return (
+                <TouchableOpacity>
+                  <View style={styles.box}>
+                    <Image style={styles.image} source={{ uri: item.pic }} />
+                    <Text style={styles.name}>{item.name}</Text>
+                    <TouchableOpacity onPress={() => {
+                      updatefriends(item.uid)
+                    }}><Text>Add</Text></TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
+
+          
         </Modal>
-        <TouchableOpacity
-          style={[styles.button, styles.buttonOpen]}
-          onPress={() => this.setModalVisible(true)}
-        >
-          <Text style={styles.textStyle}>Show Modal</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -302,6 +338,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   button: {
+    textAlignVertical: "center",
     borderRadius: 20,
     padding: 10,
     elevation: 2,
@@ -319,6 +356,32 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
+    textAlign: "center",
+  },
+  image: {
+    width: 60,
+    height: 60,
+  },
+
+  box: {
+    padding: 5,
+    marginTop: 5,
+    marginBottom: 5,
+    backgroundColor: "#FFFFFF",
+    flexDirection: "row",
+    shadowColor: "black",
+    shadowOpacity: 0.2,
+    shadowOffset: {
+      height: 1,
+      width: -2,
+    },
+    elevation: 2,
+  },
+  name: {
+    color: "#20B2AA",
+    fontSize: 22,
+    alignSelf: "center",
+    marginLeft: 10,
     textAlign: "center",
   },
 });

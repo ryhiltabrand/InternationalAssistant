@@ -32,7 +32,6 @@ class FriendsMatchScreen extends React.Component {
     const doc = await userRef.get();
     var name = doc.data().name;
     var profpic = doc.data().profilepicture;
-    console.log(Uid, name, profpic, friend);
     let friend = { uid: Uid, name: name, pic: profpic };
     this.setState({
       data: [...this.state.data, friend],
