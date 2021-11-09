@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { View, ScrollView, TouchableOpacity, Image, TouchableHighlight, ImageEditor, Text } from 'react-native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useNavigationState } from '@react-navigation/core';
 import { FontAwesome5 } from "@expo/vector-icons";
 import { getCurrentUserUID } from '../../utilities/currentUser';
 import * as database from '../../utilities/database';
 
 
-const { UID } = route.params;
+// console.log("the routes in profile screen", route)
+// console.log("the navigation in profile screen", navigation)
+//console.log(useNavigationState)
+//const { UID } = route.params;
 const currentUser = new database.UsersCollection();
 var currentUserInfo = {
   name: 'N/A',
@@ -20,11 +24,13 @@ var currentUserInfo = {
 
 //console.log(currentUserInfo);
 
-//function userInfo({ route }) {
-currentUser.getAccountInformation(UID).then((result) => {
+// function userInfo({ route }) {
+//   console.log(route.params.UID)
+currentUser.getAccountInformation('ZYcWzZuierhIoJPwNR4A').then((result) => {
   currentUserInfo = result;
 });
 //}
+//userInfo()
 
 //var stuff = userInfo
 function getName() {
@@ -47,7 +53,11 @@ function getCountry() {
   return currentUserInfo.country
 }
 
+function getProfilePicture() { 
+  return currentUserInfo.profilepicture
+}
 //}
+
 console.log("Print waht inside profilescreen ", currentUserInfo);
 
 const ProfileScreen = () => {
@@ -59,7 +69,7 @@ const ProfileScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
 
         <View style={{ alignItems: 'center' }}>
-          <Image source={require('../../assets/favicon.png')}
+          <Image source={{uri: getProfilePicture()}}
             style={{ width: 120, height: 120, borderRadius: 100, marginTop: 15 }}></Image>
           <Text style={{ fontSize: 20, fontWeight: 'bold', padding: 10 }}> {getName()} </Text>
           <Text style={{ fontSize: 13, fontWeight: 'bold', color: 'grey' }}> {getBirthday()} </Text>
@@ -136,7 +146,7 @@ const ProfileScreen = () => {
 }
 
 const PStack = createNativeStackNavigator();
-const ProfileStackScreen = ({ route, navigation }) => (
+const ProfileStackScreen = ({ navigation }) => (
   <PStack.Navigator
     screenOptions={{
       headerStyle: {
