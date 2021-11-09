@@ -21,9 +21,9 @@ function NavStack() {
 
 const LocationsScreen = () => {
     return (
-        <><NavStack>
 
-        </NavStack></>
+        <NavStack />
+        
 
     );
   

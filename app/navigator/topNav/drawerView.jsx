@@ -46,6 +46,12 @@ export default function DrawerCustom(props) {
           </View>
         </View>
         <View style={{}}>
+        <DrawerItem
+            label="Message"
+            onPress={() => {
+              props.navigation.navigate("Messager");
+            }}
+          />
           <DrawerItem
             label="Home"
             onPress={() => {

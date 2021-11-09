@@ -27,12 +27,18 @@ class FriendsListScreen extends React.Component {
   }
   componentWillUnmount() {}
 
+  clearState = () => {
+    this.setState({
+      data: [],
+    });
+  };
+
   Loc = async () => {
     const usersRef = firebase
       .firestore()
       .collection("users")
       .doc(firebase.auth().currentUser.uid);
-    
+
     const doc = await usersRef.get();
     var fl = doc.data().FriendsList;
     var f1A = Object.keys(fl);
@@ -51,11 +57,18 @@ class FriendsListScreen extends React.Component {
         });
       });
     }
-    
   };
   render() {
     return (
       <View style={styles.body}>
+        <TouchableOpacity
+          onPress={() => {
+            this.clearState();
+            this.Loc();
+          }}
+        >
+          <Text>Refresh</Text>
+        </TouchableOpacity>
         <FlatList
           style={styles.container}
           enableEmptySections={true}
