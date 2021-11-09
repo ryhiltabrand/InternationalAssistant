@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import {
   DrawerContentScrollView,
@@ -7,25 +7,28 @@ import {
 } from "@react-navigation/drawer";
 import { FontAwesome5 } from "@expo/vector-icons";
 import firebase from '../../utilities/firebase';
-import LoginScreen from "../../components/views/loginScreen";
 import { EventRegister } from "react-native-event-listeners";
 
 
 
 export default function DrawerCustom(props) {
      
+  // console.log("the routes ", route)
+  // console.log("the navigation ", navigation)
   return (
     <View style={{ flex: 1 }}>
-      <DrawerContentScrollView {...props}>
+      <DrawerContentScrollView>
         <View style={{ flex: 1 }}>
           <TouchableOpacity
             style={styles.student_image}
             onPress={() => {
-                props.navigation.navigate("Profile");
+                props.navigation.navigate("Profile", {
+                  UID: '8XnTipS1iBhyvzBE7CwX9BM59bP2'
+                });
             }}>
             <Image
               style={styles.student_image}
-              source={require("../../assets/icon.png")}
+              source={{uri: 'https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg'}}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -36,8 +39,8 @@ export default function DrawerCustom(props) {
             <Text><FontAwesome5 name={'cog'} size={30} color={'black'} /></Text>
           </TouchableOpacity>
           <View style={{ marginLeft: 15, flexDirection: "column", marginTop: 65 }}>
-            <Text style={{fontSize:20}}>{props.profileName}</Text>
-            <Text style={{marginTop:0}}>{props.profileEmail}</Text>
+            <Text style={{fontSize:20}}>Nishil</Text>
+            <Text style={{marginTop:0}}>nshah001@odu.edu</Text>
           </View>
         </View>
         <View style={{  }}>

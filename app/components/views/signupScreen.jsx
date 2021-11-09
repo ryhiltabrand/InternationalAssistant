@@ -34,6 +34,8 @@ export class signupScreen extends Component {
       country: '',
       language: '',
       birthday: '',
+      school: '',
+      native: '',
       isLoading: false
     }
   } 
@@ -72,13 +74,19 @@ export class signupScreen extends Component {
           //Apply attributes and create DB object
           newUser.setName(this.state.name)
           newUser.setDateofBirth(this.state.birthday)
+          console.log('b4 getting email')
           newUser.setEmail(this.state.email)
           newUser.setLanguage([this.state.language])
           newUser.setCountry(this.state.country)
           newUser.setBio('Hi! My name is' + this.state.name + '. I\'m new to the app. Say hello!')
           newUser.setProfilePicture('https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg')
+          newUser.setSchool(this.state.school)
+          console.log('b4 getting native')
+          newUser.setNative(this.state.native)
+          console.log('b4 getting current UID')
           newUser.setUID(getCurrentUserUID())
           newUser.createUserAccountInformation()
+          console.log('add users to db')
 
           //clear previous entry?
           this.setState({
@@ -91,11 +99,13 @@ export class signupScreen extends Component {
             password: '',
             country: '',
             language: '',
-            birthday: '',
+            school: '',
+            native: '',
+            birthday: ''
           }
           )
+          console.log('clearing out and clearing state')
           this.props.navigation.navigate('Login')
-
         })
         .catch(error => this.setState({ errorMessage: error.message }))
 
@@ -156,6 +166,22 @@ export class signupScreen extends Component {
               placeholder="Birthday"
               placeholderTextColor="rgba(225, 225, 225, 1.0)"
               onChangeText={(val) => this.updateInputVal(val, 'birthday')} />
+          </View>
+
+          <View style={styles.inputView} >
+            <TextInput
+              style={styles.inputText}
+              placeholder="School"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
+              onChangeText={(val) => this.updateInputVal(val, 'school')} />
+          </View>
+
+          <View style={styles.inputView} >
+            <TextInput
+              style={styles.inputText}
+              placeholder="Are you an international or native student"
+              placeholderTextColor="rgba(225, 225, 225, 1.0)"
+              onChangeText={(val) => this.updateInputVal(val, 'native')} />
           </View>
 
           <TouchableOpacity onPress={() => this.registerUser()} style={styles.signupBtn}>

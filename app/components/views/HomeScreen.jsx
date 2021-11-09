@@ -5,6 +5,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FriendMatcher from "../shardedComponents/friendmatch";
 import deletefriends from "../shardedComponents/removefriends";
 import updatefriends from "../shardedComponents/Addfriends";
+import { useNavigationState } from '@react-navigation/core';
+
+//console.log(useNavigationState)
 
 const HomeScreen = () => {
   return (
