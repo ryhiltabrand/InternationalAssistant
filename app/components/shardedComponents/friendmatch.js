@@ -47,7 +47,7 @@ export default async function FriendMatcher(){
                 .where("language", 'array-contains' , language[i])
                 .get()
                 langquery.docs.map((doc) => {
-                    var otherUID = doc.get("UID")
+                    var otherUID = doc.data().UID
                     if(friendslist.includes(otherUID)!= true && counter<2 && Matcher.includes(otherUID) != true && lister.includes(otherUID) != true){
                         if(otherUID != uid){
                             Matcher.push(otherUID)
@@ -105,10 +105,10 @@ export default async function FriendMatcher(){
     return Loc().then(()=> Lang())
     .then(() => Mutual())
     .then(() => {
-        
+        console.log(Matcher)
         return Matcher;
         //return 0;
     }).catch(function(error){
-        return "error";
+        return("error")
     })
 }

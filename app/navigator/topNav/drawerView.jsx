@@ -20,6 +20,7 @@ export default function DrawerCustom(props) {
           <TouchableOpacity
             style={styles.student_image}
             onPress={() => {
+              
                 props.navigation.navigate("Profile", {
                   UID: '8XnTipS1iBhyvzBE7CwX9BM59bP2'
                 });
