@@ -26,6 +26,8 @@ import bgImage from "../../assets/bgImage.jpg";
 import firebase from "../../utilities/firebase";
 import "firebase/auth";
 import { EventRegister } from "react-native-event-listeners";
+import Loc from './../shardedComponents/userProfile'
+
 
 const user = firebase.auth().currentUser;
 export class LoginScreen extends Component {
@@ -53,7 +55,10 @@ export class LoginScreen extends Component {
         .then((res) => {
           firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-              //console.log(user.uid);
+              console.log(user.uid);
+              let User = Loc();
+              console.log(User[1], User[2])
+
               EventRegister.emit('auth', user.uid)
             } else {
               // User not logged in or has just logged out.

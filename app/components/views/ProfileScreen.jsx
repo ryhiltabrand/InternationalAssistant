@@ -26,7 +26,7 @@ var currentUserInfo = {
 
 // function userInfo({ route }) {
 //   console.log(route.params.UID)
-currentUser.getAccountInformation('ZYcWzZuierhIoJPwNR4A').then((result) => {
+currentUser.getAccountInformation("yVHnHIqhsOYbVbWOM6TbjpU4N3x1").then((result) => {
   currentUserInfo = result;
 });
 //}
@@ -121,23 +121,6 @@ const ProfileScreen = () => {
         }}>
           <Text style={{ fontSize: 13, fontWeight: 'bold', padding: 10, }}>{"Country: " + getCountry()} </Text>
         </View>
-        <TouchableOpacity style={{
-          alignSelf: 'center',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          backgroundColor: '#619BAC',
-          width: '90%',
-          padding: 10,
-          paddingBottom: 22,
-          borderRadius: 10,
-          shadowOpacity: 80,
-          elevation: 15,
-          marginTop: 20,
-          marginBottom: 40,
-          backgroundColor: '#000',
-        }}>
-          <Text style={{ fontSize: 13, fontWeight: 'bold', padding: 10, color: '#fff' }}>Logout</Text>
-        </TouchableOpacity>
       </ScrollView>
     </View>
 
