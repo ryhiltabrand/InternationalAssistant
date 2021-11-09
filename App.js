@@ -74,7 +74,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    return this.state.signedIn == null ? (
+    return this.state.signedIn != null ? (
       <>
         <NavStack />
       </>

@@ -2,12 +2,16 @@ import * as React from "react";
 import { Text, View, Button } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
+import eventRecommendation, { eventmatcher, getInfo, gettinguserinfo } from "./../../utilities/eventmatching"
+import gettingeventinfo from "./../../utilities/eventmatching";
+import FriendMatcher from "./../../utilities/eventmatching";
+import EventMatcher from "./../../utilities/eventmatching";
 
 const EventsScreen = () => {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Events!</Text>
+        <Button onPress = { EventMatcher } title = "event"/>
     </View>
   );
 }

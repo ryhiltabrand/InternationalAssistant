@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import { View, ScrollView, TouchableOpacity, Image, TouchableHighlight, ImageEditor, Text } from 'react-native';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { FontAwesome5 } from "@expo/vector-icons";
-
+import firebase from "firebase"
+import { LogBox } from 'react-native'
+import { db } from './../../utilities/firebase'
 
 const ProfileScreen = () => {
   
@@ -13,7 +15,7 @@ const ProfileScreen = () => {
           <View style={{alignItems:'center'}}>
             <Image source={require('../../assets/favicon.png')} 
             style={{width:120,height:120,borderRadius:100,marginTop:15}}></Image>
-            <Text style={{fontSize:20, fontWeight:'bold',padding:10}}> Eric Lin </Text>
+            <Text style={{fontSize:20, fontWeight:'bold',padding:10}}> </Text>
             <Text style={{fontSize:13, fontWeight:'bold',color:'grey'}}> 22, Male </Text>
           </View>
           <View style={{
