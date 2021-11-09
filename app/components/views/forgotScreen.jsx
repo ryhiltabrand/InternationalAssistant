@@ -56,7 +56,7 @@ export class ForgotScreen extends Component {
       <View style={styles.container}>
 		
 	  <Image
-	      style={{ width: 150, height: 150 }}
+	      style={{ marginTop: 60, width: 150, height: 150 }}
 	      source={require('../../assets/lock.png')}
        />
 	  <Text style={styles.header}>Trouble logging in?</Text>
