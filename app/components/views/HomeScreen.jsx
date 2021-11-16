@@ -6,6 +6,7 @@ import FriendMatcher from "../shardedComponents/friendmatch";
 import deletefriends from "../shardedComponents/removefriends";
 import updatefriends from "../shardedComponents/Addfriends";
 import { useNavigationState } from '@react-navigation/core';
+import filtercat from "../shardedComponents/mapfilter";
 
 //console.log(useNavigationState)
 
@@ -15,6 +16,10 @@ const HomeScreen = () => {
       <Button
         onPress={() => console.log("hello")}
         title="you are home"
+      />
+      <Button
+        onPress={() => filtercat("Park")}
+        title="fake"
       />
     </View>
   )
