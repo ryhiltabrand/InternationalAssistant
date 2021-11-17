@@ -60,7 +60,7 @@ export class DisplayList extends Component {
 
   // Match category to location. Will be use for filtering
   //Finds a matching location by defining the path to compare and defining the value for comparison
-  MatchLocations = (value1, value2) => {
+  matchLocations = (value1, value2) => {
 
     var locationList = [];
 
@@ -105,46 +105,47 @@ export class DisplayList extends Component {
 
   render() {
     //console.log(this.state.locationList[0].name)
-
-    return this.state.locationList.length > 0 ?
-      <SafeAreaView style={styles.mainContainer}>
+    return (
+      <View style={styles.mainContainer}>
         {/* Return to Map Viewer */}
         <View style={styles.topMenuBar}>
-
-          <Pressable onPress={() => { this.getLocations() }}>
-            <Text> All </Text>
+          <View style={styles.categoryBarSection}>
+          <Pressable onPress={() => { this.matchLocations() }}>
+            <Text style={styles.filterButton}> All </Text>
           </Pressable>
-          <Pressable onPress={() => { this.getLocations("category", "Resturant") }}>
+          <Pressable onPress={() => { this.matchLocations("category", "Resturant") }}>
             <Image source={require("../../assets/locations/chicken-leg.png")} style={styles.filterButton} />
           </Pressable>
-          <Pressable onPress={() => { this.getLocations("category", "worship") }}>
+          <Pressable onPress={() => { this.matchLocations("category", "worship") }}>
             <Image source={require("../../assets/locations/pray.png")} style={styles.filterButton} />
           </Pressable>
-          <Pressable onPress={() => { this.getLocations("category", "park"); }}>
+          <Pressable onPress={() => { this.matchLocations("category", "park"); }}>
             <Image source={require("../../assets/locations/park.png")} style={styles.filterButton} />
           </Pressable>
-          <Pressable onPress={() => { this.getLocations("category", "communial") }}>
+          <Pressable onPress={() => { this.matchLocations("category", "communial") }}>
             <Image source={require("../../assets/locations/group.png")} style={styles.filterButton} />
           </Pressable>
           <Pressable onPress={() => { /* user input function */ }}>
-            <Image source={require("../../assets/locations/magnifying-glass.png")} style={styles.mapButton} />
+            <Image source={require("../../assets/locations/magnifying-glass.png")} style={styles.filterButton} />
           </Pressable>
-          <Pressable onPress={() => { this.props.navigation.navigate('MapViewer'); }}>
+          </View>
+          <View style={styles.mapSection}>
+          <Pressable  onPress={() => { this.props.navigation.navigate('MapViewer'); }}>
             <Image source={require("../../assets/locations/map.png")} style={styles.mapButton} />
           </Pressable>
-
+          </View>
         </View>
 
         {/* Define list of places */}
+        <View style={styles.locationList}>
         <FlatList
           data={Object.keys(this.state.locationList)}
           renderItem={this.locationCard}
         //keyExtractor={place => place.name}
         />
-      </SafeAreaView> :
-      <View style={styles.textContainer}>
-        <Text style={styles.emptyTitle}>No Locations found {console.log("Nothing was found")}</Text>
-      </View>
+        </View>
+      </View> 
+    )
   }
 }
 
@@ -156,30 +157,53 @@ const styles = StyleSheet.create({
   },
   /* Main Container where everything is put in */
   mainContainer: {
-    //flex: 4,
+    flex: 1,
     flexDirection: "column",
     backgroundColor: '#fff9e8ff'
   },
   /* Top Menu Bar Styles */
   topMenuBar: {
-    padding: 3,
-    marginTop: 0,
+    flex: 1,
+    //padding: 1,
+    //marginBottom: 30,
+    //height: 20,
+    justifyContent: 'space-between',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+  },
+  categoryBarSection: {
+    flex: 2,
+    padding: 3,
+    justifyContent: 'space-around',
+    flexDirection: 'row',
   },
   filterButton: {
+    flex: 1,
+    width: 25,
+    height: 25,
+    resizeMode: 'contain',
+    alignSelf: 'flex-start'
+  },
+  mapSection: {
+    flex: 1,
+    padding: 3,
     width: 50,
     height: 50,
-    alignSelf: 'flex-end',
-    resizeMode: 'contain'
+    alignItems: 'flex-end',
   },
   mapButton: {
+    flex: 1,
     width: 50,
     height: 50,
-    alignSelf: 'flex-end',
-    resizeMode: 'contain'
+    resizeMode: 'contain',
+  },
+  /* Sort By Dropdown */
+  SortBy: {
+    flex: 1,
   },
   /* Location Card Styles */
+  locationList: {
+    flex: 10
+  },
   locationCard: {
     //flex: 1,
     padding: 30,
