@@ -4,9 +4,9 @@ import {
   Text,
   View,
   SafeAreaView,
-  TouchableOpacity,
   Image,
-  FlatList
+  FlatList,
+  Pressable
 } from "react-native";
 
 import React, { Component } from 'react';
@@ -89,8 +89,14 @@ export class DisplayList extends Component {
   }
 
 
-  locationCard = ({item, backgroundColor}) => (
+
+
+   locationCard = ({ item }) => (
+    
+    //crazy looking multi-layer ternary operation for backgroundColor
+    
     <View style={styles.locationCard}>
+    
       <Text style={styles.titleText}>
         {this.state.locationList[item].name}
       </Text>
@@ -98,22 +104,42 @@ export class DisplayList extends Component {
   )
 
   render() {
-  //console.log(this.state.locationList[0].name)
+    //console.log(this.state.locationList[0].name)
 
     return this.state.locationList.length > 0 ?
       <SafeAreaView style={styles.mainContainer}>
         {/* Return to Map Viewer */}
-        <View style={styles.btncontainer}>
-          <TouchableOpacity style={styles.MapBtn} onPress={() => { this.props.navigation.navigate('MapViewer'); }}>
-            <Image source={require("../../assets/mapicon.png")} style={styles.image} />
-          </TouchableOpacity>
+        <View style={styles.topMenuBar}>
+
+          <Pressable onPress={() => { this.getLocations() }}>
+            <Text> All </Text>
+          </Pressable>
+          <Pressable onPress={() => { this.getLocations("category", "Resturant") }}>
+            <Image source={require("../../assets/locations/chicken-leg.png")} style={styles.filterButton} />
+          </Pressable>
+          <Pressable onPress={() => { this.getLocations("category", "worship") }}>
+            <Image source={require("../../assets/locations/pray.png")} style={styles.filterButton} />
+          </Pressable>
+          <Pressable onPress={() => { this.getLocations("category", "park"); }}>
+            <Image source={require("../../assets/locations/park.png")} style={styles.filterButton} />
+          </Pressable>
+          <Pressable onPress={() => { this.getLocations("category", "communial") }}>
+            <Image source={require("../../assets/locations/group.png")} style={styles.filterButton} />
+          </Pressable>
+          <Pressable onPress={() => { /* user input function */ }}>
+            <Image source={require("../../assets/locations/magnifying-glass.png")} style={styles.mapButton} />
+          </Pressable>
+          <Pressable onPress={() => { this.props.navigation.navigate('MapViewer'); }}>
+            <Image source={require("../../assets/locations/map.png")} style={styles.mapButton} />
+          </Pressable>
+
         </View>
 
         {/* Define list of places */}
         <FlatList
           data={Object.keys(this.state.locationList)}
           renderItem={this.locationCard}
-          //keyExtractor={place => place.name}
+        //keyExtractor={place => place.name}
         />
       </SafeAreaView> :
       <View style={styles.textContainer}>
@@ -123,37 +149,50 @@ export class DisplayList extends Component {
 }
 
 const styles = StyleSheet.create({
+  /* Visual Deubgging */
+  findme: {
+    backgroundColor: '#bc1390ba',
+    borderWidth: 2
+  },
+  /* Main Container where everything is put in */
   mainContainer: {
-    flex: 1,
+    //flex: 4,
+    flexDirection: "column",
     backgroundColor: '#fff9e8ff'
   },
-  btncontainer: {
-    flex: 1
+  /* Top Menu Bar Styles */
+  topMenuBar: {
+    padding: 3,
+    marginTop: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
+  filterButton: {
+    width: 50,
+    height: 50,
+    alignSelf: 'flex-end',
+    resizeMode: 'contain'
+  },
+  mapButton: {
+    width: 50,
+    height: 50,
+    alignSelf: 'flex-end',
+    resizeMode: 'contain'
+  },
+  /* Location Card Styles */
   locationCard: {
-    flex: 1,
+    //flex: 1,
     padding: 30,
     marginVertical: 12,
     marginHorizontal: 16,
     backgroundColor: '#cc0000ff',
     borderWidth: 2,
+    //justifyContent: 'space-around'
   },
   title: {
     fontSize: 32
   },
   subtitle: {
     fontSize: 18
-  },
-  MapBtn: {
-    borderRadius: 20,
-    padding: 1,
-    alignSelf: 'flex-end',
-    marginTop: 0,
-    position: 'absolute'
-  },
-  image: {
-    width: 50,
-    height: 50,
-    resizeMode: 'contain'
   }
 });
