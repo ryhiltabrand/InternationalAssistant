@@ -23,17 +23,18 @@ export class DisplayList extends Component {
       //Drop down for SortBy
       sortBy: null,
       open: false,
-      value: null,
+      value: 'distance',
       items: [
         {label: 'Distance', value: 'distance'},
         {label: 'Name', value: 'name'},
-        {label: 'rating', value: 'rating'}
+        {label: 'Rating', value: 'rating'}
       ]
     };
     this.setValue = this.setValue.bind(this);
   }
 
   //dropdown options
+  //check if dropdown is touch
   setOpen = (open) => {
     console.debug('opens dropdown')
     this.setState({
@@ -41,20 +42,24 @@ export class DisplayList extends Component {
     });
   }
 
+  //shows what property is being sorted by in dropdown
   setValue = (callback) => {
     console.debug('set Value')
-    this.setState(state => ({
-      value: callback(state.value)
-    }));
+    this.setState(state => (
+      console.debug('the value being inputed is ', callback(state.value)),
+      { value: callback(state.value) }
+      )
+    );
   }
 
-  setItems = (callback) => {
-    console.debug('set Item')
-    this.setState(state => ({
-      items: callback(state.items)
-    }));
-  }
-  
+  //not needed due to not changing what inside of dropdown
+  // setItems = (callback) => {
+  //   console.debug('set Item')
+  //   this.setState(state => ({
+  //     items: callback(state.items)
+  //   }));
+  // }
+
   // set location list property to wat is defined
   onLocationsReceived = (locationList) => {
     console.log("The keys mason ", Object.keys(locationList))
