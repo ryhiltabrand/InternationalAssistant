@@ -25,9 +25,9 @@ export class DisplayList extends Component {
       open: false,
       value: 'distance',
       items: [
-        {label: 'Distance', value: 'distance'},
-        {label: 'Name', value: 'name'},
-        {label: 'Rating', value: 'rating'}
+        { label: 'Distance', value: 'distance' },
+        { label: 'Name', value: 'name' },
+        { label: 'Rating', value: 'rating' }
       ]
     };
     this.setValue = this.setValue.bind(this);
@@ -48,7 +48,7 @@ export class DisplayList extends Component {
     this.setState(state => (
       console.debug('the value being inputed is ', callback(state.value)),
       { value: callback(state.value) }
-      )
+    )
     );
     /* setFilter(callback) */
   }
@@ -179,16 +179,16 @@ export class DisplayList extends Component {
           </View>
         </View>
         {/* <View style={styles.sortBy}> */}
-          <DropDownPicker
-            style={styles.sortBy}
-            open={this.state.open}
-            value={this.state.value}
-            items={this.state.items}
-            setOpen={this.setOpen}
-            setValue={this.setValue}
-            setItems={this.setItems}
-            dropDownContainerStyle={styles.sortByDropdown}
-          />
+        <DropDownPicker
+          style={styles.sortBy}
+          open={this.state.open}
+          value={this.state.value}
+          items={this.state.items}
+          setOpen={this.setOpen}
+          setValue={this.setValue}
+          setItems={this.setItems}
+          dropDownContainerStyle={styles.sortByDropdown}
+        />
         {/* </View> */}
         {/* Define list of places */}
         <View style={styles.locationList}>
@@ -253,12 +253,12 @@ const styles = StyleSheet.create({
   /* Sort By Dropdown Styles */
   sortBy: {
     //flex: 1,
-     height: 20,
-     width: 107
+    height: 20,
+    width: 107
   },
   sortByDropdown: {
     //flex: 1,
-     width: 107
+    width: 107
   },
   /* Location Card Styles */
   locationList: {
