@@ -8,13 +8,9 @@ import {
   FlatList,
   Pressable
 } from "react-native";
-
 import React, { Component } from 'react';
 import firebase from "../../utilities/firebase";
-
-//libraries to import infinity scroll
-import { ListItem, Divider } from 'react-native-elements';
-
+import DropDownPicker from 'react-native-dropdown-picker';
 
 //console.log("This is opening DisplayList");
 
@@ -24,8 +20,41 @@ export class DisplayList extends Component {
     super(props);
     this.state = {
       locationList: [],
+      //Drop down for SortBy
+      sortBy: null,
+      open: false,
+      value: null,
+      items: [
+        {label: 'Distance', value: 'distance'},
+        {label: 'Name', value: 'name'},
+        {label: 'rating', value: 'rating'}
+      ]
     };
+    this.setValue = this.setValue.bind(this);
   }
+
+  //dropdown options
+  setOpen = (open) => {
+    console.debug('opens dropdown')
+    this.setState({
+      open
+    });
+  }
+
+  setValue = (callback) => {
+    console.debug('set Value')
+    this.setState(state => ({
+      value: callback(state.value)
+    }));
+  }
+
+  setItems = (callback) => {
+    console.debug('set Item')
+    this.setState(state => ({
+      items: callback(state.items)
+    }));
+  }
+  
   // set location list property to wat is defined
   onLocationsReceived = (locationList) => {
     console.log("The keys mason ", Object.keys(locationList))
@@ -80,6 +109,14 @@ export class DisplayList extends Component {
       .catch(error => console.log(error))
   }
 
+  setSortBy = (property) => {
+    console.debug('the property given ', property);
+    console.debug('Before dropdown change:  ', this.state.sortBy);
+    this.setState({ sortBy: property }, () => {
+      console.debug('Inside setState ', this.state.sortBy);
+    });
+  }
+
   //rerender after mounting
   componentDidMount() {
     //Lists all locations
@@ -91,12 +128,12 @@ export class DisplayList extends Component {
 
 
 
-   locationCard = ({ item }) => (
-    
+  locationCard = ({ item }) => (
+
     //crazy looking multi-layer ternary operation for backgroundColor
-    
+
     <View style={styles.locationCard}>
-    
+
       <Text style={styles.titleText}>
         {this.state.locationList[item].name}
       </Text>
@@ -110,41 +147,50 @@ export class DisplayList extends Component {
         {/* Return to Map Viewer */}
         <View style={styles.topMenuBar}>
           <View style={styles.categoryBarSection}>
-          <Pressable onPress={() => { this.matchLocations() }}>
-            <Text style={styles.filterButton}> All </Text>
-          </Pressable>
-          <Pressable onPress={() => { this.matchLocations("category", "Resturant") }}>
-            <Image source={require("../../assets/locations/chicken-leg.png")} style={styles.filterButton} />
-          </Pressable>
-          <Pressable onPress={() => { this.matchLocations("category", "worship") }}>
-            <Image source={require("../../assets/locations/pray.png")} style={styles.filterButton} />
-          </Pressable>
-          <Pressable onPress={() => { this.matchLocations("category", "park"); }}>
-            <Image source={require("../../assets/locations/park.png")} style={styles.filterButton} />
-          </Pressable>
-          <Pressable onPress={() => { this.matchLocations("category", "communial") }}>
-            <Image source={require("../../assets/locations/group.png")} style={styles.filterButton} />
-          </Pressable>
-          <Pressable onPress={() => { /* user input function */ }}>
-            <Image source={require("../../assets/locations/magnifying-glass.png")} style={styles.filterButton} />
-          </Pressable>
+            <Pressable onPress={() => { this.matchLocations() }}>
+              <Text style={styles.filterButton}> All </Text>
+            </Pressable>
+            <Pressable onPress={() => { this.matchLocations("category", "Resturant") }}>
+              <Image source={require("../../assets/locations/chicken-leg.png")} style={styles.filterButton} />
+            </Pressable>
+            <Pressable onPress={() => { this.matchLocations("category", "Worship") }}>
+              <Image source={require("../../assets/locations/pray.png")} style={styles.filterButton} />
+            </Pressable>
+            <Pressable onPress={() => { this.matchLocations("category", "Park"); }}>
+              <Image source={require("../../assets/locations/park.png")} style={styles.filterButton} />
+            </Pressable>
+            <Pressable onPress={() => { this.matchLocations("category", "Communial") }}>
+              <Image source={require("../../assets/locations/group.png")} style={styles.filterButton} />
+            </Pressable>
+            <Pressable onPress={() => { /* user input function */ }}>
+              <Image source={require("../../assets/locations/magnifying-glass.png")} style={styles.filterButton} />
+            </Pressable>
           </View>
           <View style={styles.mapSection}>
-          <Pressable  onPress={() => { this.props.navigation.navigate('MapViewer'); }}>
-            <Image source={require("../../assets/locations/map.png")} style={styles.mapButton} />
-          </Pressable>
+            <Pressable onPress={() => { this.props.navigation.navigate('MapViewer'); }}>
+              <Image source={require("../../assets/locations/map.png")} style={styles.mapButton} />
+            </Pressable>
           </View>
         </View>
-
+        <View style={styles.sortBy}>
+          <DropDownPicker
+            open={this.state.open}
+            value={this.state.value}
+            items={this.state.items}
+            setOpen={this.setOpen}
+            setValue={this.setValue}
+            setItems={this.setItems}
+          />
+        </View>
         {/* Define list of places */}
         <View style={styles.locationList}>
-        <FlatList
-          data={Object.keys(this.state.locationList)}
-          renderItem={this.locationCard}
-        //keyExtractor={place => place.name}
-        />
+          <FlatList
+            data={Object.keys(this.state.locationList)}
+            renderItem={this.locationCard}
+          //keyExtractor={place => place.name}
+          />
         </View>
-      </View> 
+      </View>
     )
   }
 }
@@ -196,8 +242,8 @@ const styles = StyleSheet.create({
     height: 50,
     resizeMode: 'contain',
   },
-  /* Sort By Dropdown */
-  SortBy: {
+  /* Sort By Dropdown Styles */
+  sortBy: {
     flex: 1,
   },
   /* Location Card Styles */
