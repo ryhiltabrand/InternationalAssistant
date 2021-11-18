@@ -42,7 +42,7 @@ export class DisplayList extends Component {
     });
   }
 
-  //shows what property is being sorted by in dropdown
+  //shows what property is being sorted by in dropdown 
   setValue = (callback) => {
     console.debug('set Value')
     this.setState(state => (
@@ -50,6 +50,7 @@ export class DisplayList extends Component {
       { value: callback(state.value) }
       )
     );
+    /* setFilter(callback) */
   }
 
   //not needed due to not changing what inside of dropdown
@@ -177,16 +178,18 @@ export class DisplayList extends Component {
             </Pressable>
           </View>
         </View>
-        <View style={styles.sortBy}>
+        {/* <View style={styles.sortBy}> */}
           <DropDownPicker
+            style={styles.sortBy}
             open={this.state.open}
             value={this.state.value}
             items={this.state.items}
             setOpen={this.setOpen}
             setValue={this.setValue}
             setItems={this.setItems}
+            dropDownContainerStyle={styles.sortByDropdown}
           />
-        </View>
+        {/* </View> */}
         {/* Define list of places */}
         <View style={styles.locationList}>
           <FlatList
@@ -249,7 +252,13 @@ const styles = StyleSheet.create({
   },
   /* Sort By Dropdown Styles */
   sortBy: {
-    flex: 1,
+    //flex: 1,
+     height: 20,
+     width: 107
+  },
+  sortByDropdown: {
+    //flex: 1,
+     width: 107
   },
   /* Location Card Styles */
   locationList: {
