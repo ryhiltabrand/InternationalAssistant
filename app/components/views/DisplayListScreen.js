@@ -137,9 +137,14 @@ export class DisplayList extends Component {
   locationCard = ({ item }) => (
 
     //crazy looking multi-layer ternary operation for backgroundColor
-
-    <View style={styles.locationCard}>
-
+    <View style={[
+      styles.locationCard, 
+      this.state.locationList[item].category === 'Restaurant' ? styles.restaurantLocationCard :
+      this.state.locationList[item].category === 'Park' ? styles.parkLocationCard :
+      this.state.locationList[item].category === 'Communal' ? styles.communalLocationCard :
+      this.state.locationList[item].category == 'Worship' ? styles.worshipLocationCard :
+      styles.unkownLocationCard
+    ]}>
       <Text style={styles.titleText}>
         {this.state.locationList[item].name}
       </Text>
@@ -153,10 +158,10 @@ export class DisplayList extends Component {
         {/* Return to Map Viewer */}
         <View style={styles.topMenuBar}>
           <View style={styles.categoryBarSection}>
-            <Pressable onPress={() => { this.matchLocations() }}>
+            <Pressable onPress={() => { this.getLocations() }}>
               <Text style={styles.filterButton}> All </Text>
             </Pressable>
-            <Pressable onPress={() => { this.matchLocations("category", "Resturant") }}>
+            <Pressable onPress={() => { this.matchLocations("category", "Restaurant") }}>
               <Image source={require("../../assets/locations/chicken-leg.png")} style={styles.filterButton} />
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Worship") }}>
@@ -195,7 +200,8 @@ export class DisplayList extends Component {
           <FlatList
             data={Object.keys(this.state.locationList)}
             renderItem={this.locationCard}
-          //keyExtractor={place => place.name}
+            fadingEdgeLength={15}
+            keyExtractor={place => place.name}
           />
         </View>
       </View>
@@ -262,16 +268,33 @@ const styles = StyleSheet.create({
   },
   /* Location Card Styles */
   locationList: {
-    flex: 10
+    flex: 10,
+    //padding: 2,
+    //marginTop: 5,
   },
   locationCard: {
     //flex: 1,
     padding: 30,
     marginVertical: 12,
     marginHorizontal: 16,
-    backgroundColor: '#cc0000ff',
+    // backgroundColor: '#cc0000ff',
     borderWidth: 2,
     //justifyContent: 'space-around'
+  },
+  restaurantLocationCard: {
+    backgroundColor: '#cc0000ff'
+  },
+  worshipLocationCard: {
+    backgroundColor: '#3c78d8ff'
+  },
+  parkLocationCard: {
+    backgroundColor: '#6aa84fff'
+  },
+  communalLocationCard: {
+    backgroundColor: '#674ea7ff'
+  },
+  unkownLocationCard: {
+    backgroundColor: '#ffffffff'
   },
   title: {
     fontSize: 32
