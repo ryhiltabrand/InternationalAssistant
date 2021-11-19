@@ -3,14 +3,15 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   Image,
   FlatList,
-  Pressable
+  Pressable,
+  ImageBackground
 } from "react-native";
 import React, { Component } from 'react';
 import firebase from "../../utilities/firebase";
 import DropDownPicker from 'react-native-dropdown-picker';
+import { regionFlag } from "../../utilities/regionFlagFinder";
 
 //console.log("This is opening DisplayList");
 
@@ -138,16 +139,35 @@ export class DisplayList extends Component {
 
     //crazy looking multi-layer ternary operation for backgroundColor
     <View style={[
-      styles.locationCard, 
+      styles.locationCard,
       this.state.locationList[item].category === 'Restaurant' ? styles.restaurantLocationCard :
-      this.state.locationList[item].category === 'Park' ? styles.parkLocationCard :
-      this.state.locationList[item].category === 'Communal' ? styles.communalLocationCard :
-      this.state.locationList[item].category == 'Worship' ? styles.worshipLocationCard :
-      styles.unkownLocationCard
+        this.state.locationList[item].category === 'Park' ? styles.parkLocationCard :
+          this.state.locationList[item].category === 'Communal' ? styles.communalLocationCard :
+            this.state.locationList[item].category == 'Worship' ? styles.worshipLocationCard :
+              styles.unkownLocationCard
     ]}>
-      <Text style={styles.titleText}>
-        {this.state.locationList[item].name}
-      </Text>
+      <View style={styles.locationCardTop}>
+        <View style={styles.locationTitleSection}>
+          <Text style={styles.locationTitle}>
+            {this.state.locationList[item].name}
+          </Text>
+        </View>
+        <View style={styles.locatiotnRatingSection}>
+          <ImageBackground source={require('../../assets/locations/locationCard/star.png')} style={styles.locationRatingStar}>
+            {/* This needs to be the average of the ratings. Change function when created*/}
+            <Text style={styles.locationRating}> {this.state.locationList[item].rating} </Text>
+          </ImageBackground>
+        </View>
+        <View style={styles.locationRegionSection}>
+          {/* Need function to grab user info base off name. database.js does have it but by UID*/}
+          <Image source={regionFlag(this.state.locationList[item].contributor)} style={styles.locationRegion} />
+        </View>
+      </View>
+      <View style={styles.locationCardBottom}>
+        <View style={styles.locationContributorSection}>
+          <Text style={styles.locationContributor}> Founded by {this.state.locationList[item].contributor} </Text>
+        </View>
+      </View>
     </View>
   )
 
@@ -162,24 +182,24 @@ export class DisplayList extends Component {
               <Text style={styles.filterButton}> All </Text>
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Restaurant") }}>
-              <Image source={require("../../assets/locations/chicken-leg.png")} style={styles.filterButton} />
+              <Image source={require("../../assets/locations/categoryBar/chicken-leg.png")} style={styles.filterButton} />
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Worship") }}>
-              <Image source={require("../../assets/locations/pray.png")} style={styles.filterButton} />
+              <Image source={require("../../assets/locations/categoryBar/pray.png")} style={styles.filterButton} />
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Park"); }}>
-              <Image source={require("../../assets/locations/park.png")} style={styles.filterButton} />
+              <Image source={require("../../assets/locations/categoryBar/park.png")} style={styles.filterButton} />
             </Pressable>
-            <Pressable onPress={() => { this.matchLocations("category", "Communial") }}>
-              <Image source={require("../../assets/locations/group.png")} style={styles.filterButton} />
+            <Pressable onPress={() => { this.matchLocations("category", "Communal") }}>
+              <Image source={require("../../assets/locations/categoryBar/group.png")} style={styles.filterButton} />
             </Pressable>
             <Pressable onPress={() => { /* user input function */ }}>
-              <Image source={require("../../assets/locations/magnifying-glass.png")} style={styles.filterButton} />
+              <Image source={require("../../assets/locations/categoryBar/magnifying-glass.png")} style={styles.filterButton} />
             </Pressable>
           </View>
           <View style={styles.mapSection}>
             <Pressable onPress={() => { this.props.navigation.navigate('MapViewer'); }}>
-              <Image source={require("../../assets/locations/map.png")} style={styles.mapButton} />
+              <Image source={require("../../assets/locations/categoryBar/map.png")} style={styles.mapButton} />
             </Pressable>
           </View>
         </View>
@@ -274,12 +294,11 @@ const styles = StyleSheet.create({
   },
   locationCard: {
     //flex: 1,
-    padding: 30,
-    marginVertical: 12,
-    marginHorizontal: 16,
-    // backgroundColor: '#cc0000ff',
+    padding: 10,
+    marginVertical: 15,
+    marginHorizontal: 15,
     borderWidth: 2,
-    //justifyContent: 'space-around'
+    height: 75,
   },
   restaurantLocationCard: {
     backgroundColor: '#cc0000ff'
@@ -296,10 +315,52 @@ const styles = StyleSheet.create({
   unkownLocationCard: {
     backgroundColor: '#ffffffff'
   },
-  title: {
-    fontSize: 32
+  locationCardTop: {
+    //flex: 1,
+    flexDirection: 'row',
   },
-  subtitle: {
-    fontSize: 18
-  }
+  locationTitleSection: {
+    flex: 2,
+    alignItems: 'flex-start',
+  },
+  locationTitle: {
+    fontSize: 17,
+    color: 'white'
+  },
+  locationRatingSection: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  locationRatingStar: {
+    justifyContent: 'center',
+    width: 45,
+    height: 45,
+  },
+  locationRating: {
+    //resizeMode: 'contain',
+    textAlign: 'center',
+    fontSize: 15,
+    marginBottom: 5
+  },
+  locationRegionSection: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  locationRegion: {
+    resizeMode: 'contain',
+    width: 45,
+    height: 45,
+  },
+  locationCardBottom: {
+    //flex: 1,
+  },
+  locationContributorSection: {
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  locationContributor: {
+    fontSize: 12,
+    color: 'white',
+    textAlign: 'center',
+  },
 });
