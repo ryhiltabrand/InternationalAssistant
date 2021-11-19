@@ -165,7 +165,7 @@ export class DisplayList extends Component {
       </View>
       <View style={styles.locationCardBottom}>
         <View style={styles.locationContributorSection}>
-          <Text style={styles.locationContributor}> Founded by {this.state.locationList[item].contributor} </Text>
+          <Text style={styles.locationContributor}>Founded by {this.state.locationList[item].contributor}</Text>
         </View>
       </View>
     </View>
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     //marginTop: 5,
   },
   locationCard: {
-    //flex: 1,
+    flex: 1,
     padding: 10,
     marginVertical: 15,
     marginHorizontal: 15,
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffffff'
   },
   locationCardTop: {
-    //flex: 1,
+    flex: 1,
     flexDirection: 'row',
   },
   locationTitleSection: {
@@ -352,15 +352,14 @@ const styles = StyleSheet.create({
     height: 45,
   },
   locationCardBottom: {
-    //flex: 1,
+    flex: .3,
   },
   locationContributorSection: {
-    flex: 1,
+    //flex: 1,
     alignItems: 'flex-start',
   },
   locationContributor: {
-    fontSize: 12,
+    fontSize: 14,
     color: 'white',
-    textAlign: 'center',
   },
 });
