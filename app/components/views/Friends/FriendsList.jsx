@@ -12,7 +12,7 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
-import deletefriends from "./../shardedComponents/removefriends"
+import deletefriends from "../../shardedComponents/removefriends"
 
 LogBox.ignoreLogs(["Setting a timer"]);
 

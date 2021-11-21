@@ -2,7 +2,6 @@ import * as React from "react";
 import {
   Text,
   View,
-  Button,
   TouchableOpacity,
   Modal,
   StyleSheet,
@@ -15,7 +14,8 @@ import { SearchBar } from "react-native-elements";
 import SelectDropdown from "react-native-select-dropdown";
 import { color, cos } from "react-native-reanimated";
 import firebase from "firebase";
-import updatefriends from "../shardedComponents/Addfriends";
+import updatefriends from "../../shardedComponents/Addfriends";
+import {Picker} from '@react-native-picker/picker';
 
 export default class FriendsSearchScreen extends React.Component {
   constructor(props) {
@@ -78,9 +78,31 @@ export default class FriendsSearchScreen extends React.Component {
       }
     }
     //console.log(criteria);
+    if (Object.keys(criteria).length > 0) {
+      for (let i = 0; i < Object.keys(criteria).length; i++) {
+        if (Object.keys(criteria)[i] == "language") {
+          Friendquery = Friendquery.where(
+            "language",
+            "array-contains",
+            Object.values(criteria)[i]
+          );
+        } else {
+          Friendquery = Friendquery.where(
+            Object.keys(criteria)[i],
+            "==",
+            Object.values(criteria)[i]
+          );
+        }
+      }
+      console.log(Friendquery)
+    } else {
+      console.log("invalid Search");
+      alert("you suck");
+    }
 
-    if (Object.keys(criteria).length == 5) {
+    /*if (Object.keys(criteria).length == 5) {
       //console.log(Object.keys(criteria));
+
       Friendquery = Friendquery.where(
         Object.keys(criteria)[0],
         "==",
@@ -125,7 +147,7 @@ export default class FriendsSearchScreen extends React.Component {
       );
     } else {
       console.log("invalid Search");
-    }
+    }*/
     //console.log(criteria.length)
     if (Object.keys(criteria).length >= 1) {
       Friendquery = Friendquery.get().then((snap) => {
@@ -230,6 +252,12 @@ export default class FriendsSearchScreen extends React.Component {
               this.updatetype(selectedItem);
             }}
           />
+          {/*<Picker selectedValue={selectedItem} style={{height:50, width:150}} onValueChange={(itemValue, ItemIndex)=>{
+            setSelectedItem(itemValue)
+          }}>
+            <Picker.Item label='j' value='j' />
+            <Picker.Item label='g' value='g' />
+          </Picker>*/}
         </View>
         <View>
           <Text> Language: </Text>
@@ -300,16 +328,18 @@ export default class FriendsSearchScreen extends React.Component {
                   <View style={styles.box}>
                     <Image style={styles.image} source={{ uri: item.pic }} />
                     <Text style={styles.name}>{item.name}</Text>
-                    <TouchableOpacity onPress={() => {
-                      updatefriends(item.uid)
-                    }}><Text>Add</Text></TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        updatefriends(item.uid);
+                      }}
+                    >
+                      <Text>Add</Text>
+                    </TouchableOpacity>
                   </View>
                 </TouchableOpacity>
               );
             }}
           />
-
-          
         </Modal>
       </View>
     );

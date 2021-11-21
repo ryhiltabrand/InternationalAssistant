@@ -1,4 +1,4 @@
-import FriendMatcher from "../shardedComponents/friendmatch";
+import FriendMatcher from "./../../shardedComponents/friendmatch";
 import * as React from "react";
 import {
   StyleSheet,
