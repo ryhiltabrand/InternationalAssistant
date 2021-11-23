@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Button, SafeAreaView, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -9,29 +9,30 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 const HelpScreen = () => {
   return (
-    
-      <View style={{ flex: 10, justifyContent: "center", alignItems: "center" }}>
-        <Tabs>
-        <Text>Help Is Here!</Text>
-        </Tabs>
-      </View>
-    
+      <MyTabs />
+        
   );
 };
-
+/*
+ <SafeAreaView style={styles.container}>
+        <View style={styles.body}>
+        <Tabs />
+        </View>
+      </SafeAreaView>
+  );
+  */
 const Tab = createMaterialTopTabNavigator();
 
-const Tabs = () => {
+/*const Tabs = () => {
   return (
     <Tab.Navigator
-      //initialRouteName=""
+      sceneContainerStyle={{ position: "absolute" }}
+      initialRouteName="MyRequest"
       screenOptions={({ route }) => ({
         tabBarIconStyle: { display: "none" },
         tabBarLabelStyle: {
-          fontWeight: "700",
-          fontSize: 15,
-          padding: 20,
-          
+          fontSize: 20,
+          padding: 0,
         },
         tabBarActiveTintColor: "black",
         tabBarInactiveTintColor: "black",
@@ -42,44 +43,66 @@ const Tabs = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="MyRequests" component={MyRequest} />
-      <Tab.Screen name="AllRequests" component={AllRequest} />
+      <Tab.Screen name="My Requests" component={MyRequest} />
+      <Tab.Screen name="All Requests" component={AllRequest} />
     </Tab.Navigator>
   );
-};
+};*/
+
+
+function MyTabs() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="My Requests" component={MyRequest} />
+      <Tab.Screen name="All Requests" component={AllRequest} />
+    </Tab.Navigator>
+  );
+}
 
 const HelpStack = createNativeStackNavigator();
 
 const HelpStackScreen = ({ navigation }) => (
-  <HelpStack.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: "#ADD8E6",
-      },
-      headerTintColor: "#000000",
-      headerTitleStyle: {
-        fontWeight: "bold",
-      },
-    }}
-  >
-    <HelpStack.Screen
-      name="HelpScreen"
-      component={HelpScreen}
-      options={{
-        title: "Help",
-        headerTitleAlign: "center",
-        headerLeft: () => (
-          <FontAwesome5.Button
-            name="bars"
-            size={25}
-            color="#000000"
-            backgroundColor="#ADD8E6"
-            onPress={() => navigation.openDrawer()}
-          ></FontAwesome5.Button>
-        ),
+  <>
+    <HelpStack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#ADD8E6",
+        },
+        headerShown:true,
+        headerTintColor: "#000000",
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
       }}
-    />
-  </HelpStack.Navigator>
+    >
+      <HelpStack.Screen
+        name="HelpScreen"
+        component={HelpScreen}
+        options={{
+          title: "Help",
+          headerTitleAlign: "center",
+          headerLeft: () => (
+            <FontAwesome5.Button
+              name="bars"
+              size={25}
+              color="#000000"
+              backgroundColor="#ADD8E6"
+              onPress={() => navigation.openDrawer()}
+            ></FontAwesome5.Button>
+          ),
+        }}
+      />
+    </HelpStack.Navigator>
+  </>
 );
-
+const styles = StyleSheet.create({
+  container: {
+    
+    flexDirection: "column",
+  },
+  body: {
+    flex:1,
+    margin: 30
+  }
+});
 export default HelpStackScreen;

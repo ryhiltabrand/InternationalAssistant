@@ -58,12 +58,12 @@ function getProfilePicture() {
 }
 //}
 
-console.log("Print waht inside profilescreen ", currentUserInfo);
+//console.log("Print waht inside profilescreen ", currentUserInfo);
 
 const ProfileScreen = () => {
 
 
-  console.log("Print waht inside profilescreen ", currentUserInfo);
+  //console.log("Print waht inside profilescreen ", currentUserInfo);
   return (
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>

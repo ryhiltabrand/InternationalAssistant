@@ -38,13 +38,15 @@ class AllRequest extends React.Component {
     render() {
       return (
         <View style={styles.body}>
-          <Text>Hello</Text>
+          <Text>Hello2</Text>
         </View>
       );
     }
   }
   const styles = StyleSheet.create({
-    
+    body: {
+      
+    }
   });
   
   export default AllRequest;

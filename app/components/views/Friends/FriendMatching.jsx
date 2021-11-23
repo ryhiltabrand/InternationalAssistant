@@ -12,6 +12,7 @@ import {
   Modal,
 } from "react-native";
 import firebase from "firebase";
+import updatefriends from './../../shardedComponents/Addfriends'
 
 class FriendsMatchScreen extends React.Component {
   constructor(props) {

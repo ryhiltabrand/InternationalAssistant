@@ -55,9 +55,9 @@ export class LoginScreen extends Component {
         .then((res) => {
           firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-              console.log(user.uid);
+              //console.log(user.uid);
               let User = Loc();
-              console.log(User[1], User[2])
+              //console.log(User[1], User[2])
 
               EventRegister.emit('auth', user.uid)
             } else {
