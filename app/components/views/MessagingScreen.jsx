@@ -1,101 +1,30 @@
 import * as React from "react";
-import { 
-  Text, 
-  View, 
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  LogBox,
-} from "react-native";
+import ChatScreen from "./ChatScreen";
+import {useState} from 'react';
+import { MessageListScreen } from "./MessageListScreen";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import firebase from "firebase";
+import { createStackNavigator } from "@react-navigation/stack";
 
 
-class MessageScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-    };
-  }
-  componentDidMount() {
-    this.DirectMessages();
-  }
-  componentWillUnmount() {}
-
-  clearState = () => {
-    this.setState({
-      data: [],
-    });
-  };
-
-  DirectMessages = async() =>{
-    OtherUser= []
-    const currentUser = firebase.auth().currentUser.uid
-    RecRef= await firebase.firestore().collectionGroup("DirectMessaging")
-    .where("RecieverID", "==", currentUser).get()
-    RecRef.docs.map((doc) =>{
-      OtherUser.push(doc.data().SenderID)
-    })
-    SenRef = await firebase.firestore().collectionGroup("DirectMessaging")
-    .where("SenderID", "==", currentUser).get()
-    SenRef.docs.map((doc) =>{
-      OtherUser.push(doc.data().RecieverID)
-    })
-    for (var i =0; i<OtherUser.length; i++){
-      DMquery= await firebase.firestore().collection("users")
-      .where("UID", "==", OtherUser[i])
-      .get()
-      DMquery.docs.map((doc)=> {
-        const name = doc.get("name");
-        const profpic = doc.get("profilepicture");
-        let user = { uid: OtherUser[i], name: name, pic: profpic};
-        this.setState({
-          data: [...this.state.data, user],
-        })
-      })
-    }
-  }
-
-render(){
-    return (
-      <View style={styles.body}>
-        <FlatList
-          styles={styles.container}
-          enableEmptySections={true}
-          data={this.state.data}
-          keyExtractor={(item) => {
-            return item.name;
-          }}
-          renderItem={({ item }) => {
-            return(
-              <TouchableOpacity>
-                <View style={styles.box}>
-                  <Image style={styles.image} source={{uri : item.pic}} />
-                  <Text style={styles.name}>{item.name}</Text>
-                </View>
-              </TouchableOpacity>);
-          }}
-          />
-      </View>
-    )
+const Stack = createStackNavigator();
+function NavStack(){
+  return(
+    <Stack.Navigator initialRouteName="MessageListScreen">
+         <Stack.Screen name="MessageListScreen" component={MessageListScreen} options={{ headerShown: false }} />
+         <Stack.Screen name="ChatScreen" component={ChatScreen} options={({route}) => ({
+           title: route.params.name,
+           headerTitleAlign: "center",
+           headerBackTitleVisible: false,
+         })} />
+         </Stack.Navigator>
+    );
 }
 
-/*
-  render(){
-    return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Button
-          onPress={() => console.log("hello")}
-          title="Welcome to Messages"
-        />{" "}
-      </View>
+const MessageScreen = ({navigation}) =>{
+  return(
+    <NavStack />
     );
-  }
-  */
 }
 
   const MessageStack = createNativeStackNavigator();
@@ -118,32 +47,4 @@ render(){
           }} />
   </MessageStack.Navigator>
   ); 
-  const styles = StyleSheet.create({
-    image: {
-      width: 60,
-      height: 60,
-    },
-  
-    box: {
-      padding: 5,
-      marginTop: 5,
-      marginBottom: 5,
-      backgroundColor: "#FFFFFF",
-      flexDirection: "row",
-      shadowColor: "black",
-      shadowOpacity: 0.2,
-      shadowOffset: {
-        height: 1,
-        width: -2,
-      },
-      elevation: 2,
-    },
-    name: {
-      color: "#20B2AA",
-      fontSize: 22,
-      alignSelf: "center",
-      marginLeft: 10,
-      textAlign: "center",
-    },
-  });
 export default MessageStackScreen;
