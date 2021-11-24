@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   Pressable,
+  TouchableOpacity,
   ImageBackground
 } from "react-native";
 import React, { Component } from 'react';
@@ -20,7 +21,9 @@ export class DisplayList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      //Flatlist 
       locationList: [],
+      selectedLocationCard: null,
       //Drop down for SortBy
       sortBy: null,
       open: false,
@@ -116,13 +119,14 @@ export class DisplayList extends Component {
       .catch(error => console.log(error))
   }
 
-  setSortBy = (property) => {
-    console.debug('the property given ', property);
-    console.debug('Before dropdown change:  ', this.state.sortBy);
-    this.setState({ sortBy: property }, () => {
-      console.debug('Inside setState ', this.state.sortBy);
-    });
-  }
+  // unused function to setup sortBy dropdown
+  // setSortBy = (property) => {
+  //   console.debug('the property given ', property);
+  //   console.debug('Before dropdown change:  ', this.state.sortBy);
+  //   this.setState({ sortBy: property }, () => {
+  //     console.debug('Inside setState ', this.state.sortBy);
+  //   });
+  // }
 
   //rerender after mounting
   componentDidMount() {
@@ -133,50 +137,69 @@ export class DisplayList extends Component {
   }
 
 
+  //Change border color to selected
+  // setSelectedLocation = item => {
+  //   this.state.selectedLocationCard = this.state.locationList[item].name === this.state.selectedLocationCard ? styles.notSelectedLocationCard : styles.selectedLocationCard;
+  //   // console.debug('The borderColor ', borderColor)
+  //   console.debug('the selected item at render is ', this.state.selectedLocationCard)
+
+  //   console.debug('the value being inputed is ', this.state.locationList[item].name)
+  //   this.setState(
+  //     { selectedLocationCard: this.state.locationList[item].name },
+  //   )
+  // }
 
 
-  locationCard = ({ item }) => (
 
-    //crazy looking multi-layer ternary operation for backgroundColor
-    <View style={[
-      styles.locationCard,
-      this.state.locationList[item].category === 'Restaurant' ? styles.restaurantLocationCard :
-        this.state.locationList[item].category === 'Park' ? styles.parkLocationCard :
-          this.state.locationList[item].category === 'Communal' ? styles.communalLocationCard :
-            this.state.locationList[item].category == 'Worship' ? styles.worshipLocationCard :
-              styles.unkownLocationCard
-    ]}>
-      <View style={styles.locationCardTop}>
-        <View style={styles.locationTitleSection}>
-          <Text style={styles.locationTitle}>
-            {this.state.locationList[item].name}
-          </Text>
+  LocationCard = ({ item }) => (
+
+    // change when trying to figure out how to change bordercolor
+    //      <Pressable onPress={() => { this.setSelectedLocation(item)}} styles={[styles.notSelectedLocationCard ,this.state.selectedLocationCard]}> */}
+    <Pressable onPress={() => { console.debug('You have press this card ', this.state.locationList[item].name) }}>
+      {/* crazy looking multi-layer ternary operation for backgroundColor */}
+      <View
+        style={[
+          styles.locationCard,
+          this.state.locationList[item].category === 'Restaurant' ? styles.restaurantLocationCard :
+            this.state.locationList[item].category === 'Park' ? styles.parkLocationCard :
+              this.state.locationList[item].category === 'Communal' ? styles.communalLocationCard :
+                this.state.locationList[item].category == 'Worship' ? styles.worshipLocationCard :
+                  styles.unkownLocationCard,
+        ]}>
+        <View style={styles.locationCardTop}>
+          <View style={styles.locationTitleSection}>
+            <Text style={styles.locationTitle}>
+              {this.state.locationList[item].name}
+            </Text>
+          </View>
+          <View style={styles.locatiotnRatingSection}>
+            <ImageBackground source={require('../../assets/locations/locationCard/star.png')} style={styles.locationRatingStar}>
+              {/* This needs to be the average of the ratings. Change function when created*/}
+              <Text style={styles.locationRating}> {this.state.locationList[item].rating} </Text>
+            </ImageBackground>
+          </View>
+          <View style={styles.locationRegionSection}>
+            {/* Need function to grab user info base off name. database.js does have it but by UID*/}
+            <Image source={regionFlag(this.state.locationList[item].contributor)} style={styles.locationRegion} />
+          </View>
         </View>
-        <View style={styles.locatiotnRatingSection}>
-          <ImageBackground source={require('../../assets/locations/locationCard/star.png')} style={styles.locationRatingStar}>
-            {/* This needs to be the average of the ratings. Change function when created*/}
-            <Text style={styles.locationRating}> {this.state.locationList[item].rating} </Text>
-          </ImageBackground>
-        </View>
-        <View style={styles.locationRegionSection}>
-          {/* Need function to grab user info base off name. database.js does have it but by UID*/}
-          <Image source={regionFlag(this.state.locationList[item].contributor)} style={styles.locationRegion} />
+        <View style={styles.locationCardBottom}>
+          <View style={styles.locationContributorSection}>
+            <Text style={styles.locationContributor}>Founded by {this.state.locationList[item].contributor}</Text>
+          </View>
         </View>
       </View>
-      <View style={styles.locationCardBottom}>
-        <View style={styles.locationContributorSection}>
-          <Text style={styles.locationContributor}>Founded by {this.state.locationList[item].contributor}</Text>
-        </View>
-      </View>
-    </View>
+    </Pressable>
   )
 
   render() {
     //console.log(this.state.locationList[0].name)
+
     return (
       <View style={styles.mainContainer}>
         {/* Return to Map Viewer */}
         <View style={styles.topMenuBar}>
+          {/* menu bar to filter by category */}
           <View style={styles.categoryBarSection}>
             <Pressable onPress={() => { this.getLocations() }}>
               <Text style={styles.filterButton}> All </Text>
@@ -219,9 +242,11 @@ export class DisplayList extends Component {
         <View style={styles.locationList}>
           <FlatList
             data={Object.keys(this.state.locationList)}
-            renderItem={this.locationCard}
+            renderItem={this.LocationCard}
+            // Not needed due to not changing border colors atm
+            // extraData={this.state.selectedLocationCard}
+            keyExtractor={(item) => this.state.locationList[item].name}
             fadingEdgeLength={15}
-            keyExtractor={place => place.name}
           />
         </View>
       </View>
@@ -295,8 +320,8 @@ const styles = StyleSheet.create({
   locationCard: {
     flex: 1,
     padding: 10,
-    marginVertical: 15,
-    marginHorizontal: 15,
+    marginVertical: 8,
+    marginHorizontal: 10,
     borderWidth: 2,
     height: 75,
   },
@@ -313,7 +338,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#674ea7ff'
   },
   unkownLocationCard: {
-    backgroundColor: '#ffffffff'
+    backgroundColor: 'white'
+  },
+  selectedLocationCard: {
+    borderColor: 'orange'
+  },
+  notSelectedLocationCard: {
+    borderColor: 'black'
   },
   locationCardTop: {
     flex: 1,
