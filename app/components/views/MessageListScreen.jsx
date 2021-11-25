@@ -34,15 +34,14 @@ export class MessageListScreen extends Component {
   DirectMessages = async() =>{
     OtherUser= []
     const currentUser = firebase.auth().currentUser.uid
-    RecRef= await firebase.firestore().collectionGroup("DirectMessaging")
-    .where("RecieverID", "==", currentUser).get()
+    RecRef= await firebase.firestore().collection("DirectMessaging")
+    .where("Users", 'array-contains', currentUser).get()
     RecRef.docs.map((doc) =>{
-      OtherUser.push(doc.data().SenderID)
-    })
-    SenRef = await firebase.firestore().collectionGroup("DirectMessaging")
-    .where("SenderID", "==", currentUser).get()
-    SenRef.docs.map((doc) =>{
-      OtherUser.push(doc.data().RecieverID)
+      for(i=0; i< doc.data().Users.length;i++){
+        if(doc.data().Users[i] != currentUser){
+          OtherUser.push(doc.data().Users[i])
+        }
+      }
     })
     for (var i =0; i<OtherUser.length; i++){
       DMquery= await firebase.firestore().collection("users")
@@ -75,6 +74,7 @@ render(){
             return(
               <TouchableOpacity onPress={() => this.props.navigation.navigate("ChatScreen",{
                 name : item.name,
+                uid: item.uid,
               })}>
                 <View style={styles.box}>
                   <Image style={styles.image} source={{uri : item.pic}} />

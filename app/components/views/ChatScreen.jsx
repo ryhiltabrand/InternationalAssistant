@@ -14,43 +14,93 @@ import {
     Platform,
   } from "react-native";
   import { FontAwesome5 } from "@expo/vector-icons";
-  import FontAwesome from 'react-native-vector-icons/FontAwesome';
   import { GiftedChat, Bubble, Send } from 'react-native-gifted-chat';
   import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+  import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ChatScreen = () => {
+const ChatScreen = ({route}) => {
   const [messages, setMessages] = useState([]);
-
+  const [user, setUser] = useState(null)
+  const {name, uid} = route.params;
+  var id;
   useEffect(() => {
-    setMessages([
-      {
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-      {
-        _id: 2,
-        text: 'Hello world',
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-    ]);
-  }, []);
+    readUser()
+     MessageGrab().then(() =>{
+      const messageRef = firebase.firestore().collection("DirectMessaging")
+      .doc(id).collection("Messages")
+      const unsubcribe = messageRef.onSnapshot((querySnapshot) =>{
+          const messagesFirestore = querySnapshot
+          .docChanges()
+          .filter(({type}) => type === 'added')
+          .map(({doc}) =>{
+            const message = doc.data()
+            return{...message, createdAt: message.createdAt.toDate()}
+          })
+          .sort((a,b) => b.createdAt.getTime() - a.createdAt.getTime())
+          appendMessages(messagesFirestore)
+      })
+      return () => unsubcribe()
+      
 
-  const onSend = useCallback((messages = []) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages),
-    );
+
+     })
   }, []);
+  const appendMessages = useCallback(
+    (messages) => {
+        setMessages((previousMessages) => GiftedChat.append(previousMessages, messages))
+    },
+    [messages]
+)
+async function readUser() {
+  const userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
+  const doc = await userRef.get()
+  usertest =  {
+    _id: doc.data().UID,
+    name: doc.data().name,
+    avatar: doc.data().profilepicture,
+  }
+  if (usertest) {
+    console.log(usertest)
+      setUser(usertest)
+  }
+}
+//Need to make user object from data from Firebase and then set it up with Firebase and then set it up to save with firebase
+  MessageGrab = async() =>{
+    const currentUser = firebase.auth().currentUser.uid;
+    const ids = [currentUser, uid]
+    ids.sort()
+    TestRef = await firebase.firestore().collection("DirectMessaging")
+    .where("Users", "in", [ids])
+    .get()
+    TestRef.docs.map((doc) =>{
+      id = doc.id;
+    })
+
+  }
+
+  const onSend = useCallback((messages) => {
+    setMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, messages))
+  }, 
+  [messages]
+  );
+  async function handleSend(messages) {
+    console.log(messages)
+    const currentUser = firebase.auth().currentUser.uid;
+    const ids = [currentUser, uid]
+    ids.sort()
+    TestRef = await firebase.firestore().collection("DirectMessaging")
+    .where("Users", "in", [ids])
+    .get()
+    TestRef.docs.map((doc) =>{
+      id = doc.id;
+    })
+    console.log(id)
+    const messageRef = firebase.firestore().collection("DirectMessaging")
+      .doc(id).collection("Messages")
+    const writes = messages.map((m) => messageRef.add(m))
+    await Promise.all(writes)
+}
 
   const renderSend = (props) => {
     return (
@@ -97,11 +147,10 @@ const ChatScreen = () => {
   return (
     <GiftedChat
       messages={messages}
-      onSend={(messages) => onSend(messages)}
-      user={{
-        _id: 1,
-      }}
+      onSend={handleSend}
+      user={user}
       renderBubble={renderBubble}
+      showUserAvatar
       alwaysShowSend
       renderSend={renderSend}
       scrollToBottom

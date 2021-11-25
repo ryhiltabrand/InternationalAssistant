@@ -21,7 +21,7 @@ function NavStack(){
     );
 }
 
-const MessageScreen = ({navigation}) =>{
+const MessageScreen = () =>{
   return(
     <NavStack />
     );
