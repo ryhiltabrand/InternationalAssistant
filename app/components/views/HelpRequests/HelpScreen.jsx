@@ -6,48 +6,25 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MyRequest from "./MyRequest";
 import AllRequest from "./AllRequests";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-
+import { createStackNavigator } from "@react-navigation/stack";
+import IndividualRequest from './IndividualRequests'
+const Stack = createStackNavigator();
+function NavStack() {
+    return (
+      <Stack.Navigator initialRouteName="HelpScreen">
+         <Stack.Screen name="HelpScreen" component={HelpScreen} options={{ headerShown: false }} />
+         <Stack.Screen name="IndividualRequest" component={IndividualRequest} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    );
+  }
 const HelpScreen = () => {
   return (
       <MyTabs />
         
   );
 };
-/*
- <SafeAreaView style={styles.container}>
-        <View style={styles.body}>
-        <Tabs />
-        </View>
-      </SafeAreaView>
-  );
-  */
-const Tab = createMaterialTopTabNavigator();
 
-/*const Tabs = () => {
-  return (
-    <Tab.Navigator
-      sceneContainerStyle={{ position: "absolute" }}
-      initialRouteName="MyRequest"
-      screenOptions={({ route }) => ({
-        tabBarIconStyle: { display: "none" },
-        tabBarLabelStyle: {
-          fontSize: 20,
-          padding: 0,
-        },
-        tabBarActiveTintColor: "black",
-        tabBarInactiveTintColor: "black",
-        tabBarStyle: { position: "absolute" },
-        tabBarShowLabel: true,
-        tabBarActiveBackgroundColor: "#1E90FF",
-        tabBarInactiveBackgroundColor: "#ADD8E6",
-        headerShown: false,
-      })}
-    >
-      <Tab.Screen name="My Requests" component={MyRequest} />
-      <Tab.Screen name="All Requests" component={AllRequest} />
-    </Tab.Navigator>
-  );
-};*/
+const Tab = createMaterialTopTabNavigator();
 
 
 function MyTabs() {
@@ -77,7 +54,7 @@ const HelpStackScreen = ({ navigation }) => (
     >
       <HelpStack.Screen
         name="HelpScreen"
-        component={HelpScreen}
+        component={NavStack}
         options={{
           title: "Help",
           headerTitleAlign: "center",
@@ -95,14 +72,5 @@ const HelpStackScreen = ({ navigation }) => (
     </HelpStack.Navigator>
   </>
 );
-const styles = StyleSheet.create({
-  container: {
-    
-    flexDirection: "column",
-  },
-  body: {
-    flex:1,
-    margin: 30
-  }
-});
+
 export default HelpStackScreen;

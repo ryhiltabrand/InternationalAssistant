@@ -189,7 +189,7 @@ class MyRequest extends React.Component {
           }}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => { this.props.navigation.navigate('IndividualRequest', {Name: item.Name}); }}>
                 <View style={styles.box}>
                   <View style={styles.firstLine}>
                     <Image style={styles.image} source={{ uri: item.Pic }} />
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   fifthLine: {
-    flex: 4,
+    flex: 5,
     flexDirection: "row",
   },
   name: {
