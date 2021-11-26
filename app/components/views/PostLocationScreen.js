@@ -18,6 +18,7 @@
  } from "react-native";
  import { Component } from 'react';
  import firebase from "../../utilities/firebase";
+ import { getCurrentUserUID } from "../../utilities/currentUser.js";
 
  export class PostLocationScreen extends Component {
 
@@ -60,7 +61,8 @@
        address: this.state.location_address,
        contributor: this.state.location_contributor,
        category: this.state.location_category, //Resturant
-       rating: this.state.location_rating //1-5 stars
+       rating: this.state.location_rating, //1-5 stars
+       uid: getCurrentUserUID()
       })
   }
 
