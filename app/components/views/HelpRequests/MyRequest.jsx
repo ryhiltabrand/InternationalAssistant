@@ -5,6 +5,7 @@ import {
   View,
   Image,
   ScrollView,
+  TextInput,
   TouchableOpacity,
   FlatList,
   LogBox,
@@ -13,7 +14,8 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
-import AddEvent from "./../../shardedComponents/Help/addEvent"
+import AddEvent from "./../../shardedComponents/Help/addEvent";
+import DropDownPicker from "react-native-dropdown-picker";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
@@ -22,47 +24,28 @@ class MyRequest extends React.Component {
     super(props);
     this.state = {
       modalVisible: false,
-      data: [
-        {
-          pic: "https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg",
-          name: "Nishil",
-          time: "1h ago",
-          request:
-            "I need help with your mom. fkjnhsdlfja sdfdsf asdl;kfj dsfj asdlfj ;lasdkf",
-          comments: 1,
-          requesters: 2,
-        },
-        {
-          pic: "https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg",
-          name: "Ryan Hiltabrand",
-          time: "1h ago",
-          request:
-            "I need help with your mom. fkjnhsdlfja sdfdsf asdl;kfj dsfj asdlfj ;lasdkf",
-          comments: 1,
-          requesters: 2,
-        },
-        {
-          pic: "https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg",
-          name: "Alex",
-          time: "1h ago",
-          request:
-            "I need help with your mom. fkjnhsdlfja sdfdsf asdl;kfj dsfj asdlfj ;lasdkf",
-          comments: 1,
-          requesters: 2,
-        },
-        {
-          pic: "https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg",
-          name: "Lee",
-          time: "1h ago",
-          request:
-            "I need help with your mom. fkjnhsdlfja sdfdsf asdl;kfj dsfj asdlfj ;lasdkf",
-          comments: 1,
-          requesters: 2,
-        },
+      data: [],
+      Request: "",
+      Amount: null,
+      open: false,
+      openL: false,
+      Language: null,
+      Languages: [
+        { label: "English", value: "English" },
+        { label: "Spanish", value: "Spanish" },
+      ],
+      Campus: null,
+      Campuses: [
+        { label: "Old Dominion University", value: "Old Dominion University" },
+        { label: "Any Campus", value: "Any" },
       ],
     };
+    this.setLanguage = this.setLanguage.bind(this);
+    this.setCampus = this.setCampus.bind(this);
   }
-  componentDidMount() {}
+  componentDidMount() {
+    this.MyRequests();
+  }
   componentWillUnmount() {}
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
@@ -73,17 +56,130 @@ class MyRequest extends React.Component {
       data: [],
     });
   };
+  updateInputVal = (val, prop) => {
+    const state = this.state;
+    state[prop] = val;
+    this.setState(state);
+  };
+  setOpen = (open) => {
+    console.debug("opens dropdown");
+    this.setState({
+      open,
+    });
+  };
+  setOpenL = (open) => {
+    console.debug("opens dropdown");
+    this.setState({
+      openL: open,
+    });
+  };
 
+  setLanguage(callback) {
+    console.debug("set Value");
+    this.setState(
+      (state) => (
+        console.debug("the value being inputed is ", callback(state.value)),
+        { Language: callback(state.value) }
+      )
+    );
+  }
+  setCampus(callback) {
+    console.debug("set Value");
+    this.setState(
+      (state) => (
+        console.debug("the value being inputed is ", callback(state.value)),
+        { Campus: callback(state.value) }
+      )
+    );
+  }
+  onChangedAmount(text) {
+    let newText = "";
+    let numbers = "0123456789";
+
+    for (var i = 0; i < text.length; i++) {
+      if (numbers.indexOf(text[i]) > -1) {
+        newText = newText + text[i];
+      } else {
+        // your call back function
+        alert("please enter numbers only");
+      }
+    }
+    this.setState({ Amount: newText });
+  }
+  uploadRequest() {
+    if (
+      this.state.Amount == null ||
+      this.state.Campus == null ||
+      this.state.Language == null ||
+      this.state.Request == null
+    ) {
+      alert("Could not create the request make sure you inputted everything!");
+    } else {
+      AddEvent(
+        this.state.Request,
+        this.state.Amount,
+        this.state.Language,
+        this.state.Campus
+      );
+    }
+  }
+  MyRequests = async () => {
+    const usersRef = await firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+    const doc = await usersRef.get();
+    var name = doc.data().name;
+    var pic = doc.data().profilepicture;
+
+    RequestsQuery = await firebase
+      .firestore()
+      .collection("Requests")
+      .where("RequesterUID", "==", firebase.auth().currentUser.uid)
+      .get();
+    RequestsQuery.docs.map((doc) => {
+      var ruid = doc.get("RequesterUID");
+      var huid = doc.get("HelperUID");
+      var description = doc.get("Description");
+      var campus = doc.get("Campus");
+      var status = doc.get("Completed");
+      var helpersAmount = doc.get("HelperAmount");
+      var language = doc.get("PreferedLanguage");
+      var comments = doc.get("Comments");
+      var date = doc.get("CreationTime");
+
+      let Request = {
+        Pic: pic,
+        Name: name,
+        Date: date,
+        Description: description,
+        Campus: campus,
+        Status: status,
+        AmountOfHelpers: helpersAmount,
+        Languages: language,
+        Comments: comments,
+        Helpers: huid,
+      };
+      console.log(Request);
+      this.setState({
+        data: [...this.state.data, Request],
+      });
+    });
+  };
   render() {
     const { modalVisible } = this.state;
+    const { open, openL, Language, Campus } = this.state;
     return (
       <View style={styles.body}>
-        <TouchableOpacity onPress={()=>{
-          //AddEvent();
-          this.setModalVisible(true);
-        }}>
-          <Text style={{textAlign:"center"}}>Add</Text>
+        <TouchableOpacity
+          onPress={() => {
+            //AddEvent();
+            this.setModalVisible(true);
+          }}
+        >
+          <Text style={{ textAlign: "center" }}>Add</Text>
         </TouchableOpacity>
+        
         <FlatList
           style={styles.scrollView}
           enableEmptySections={true}
@@ -96,28 +192,24 @@ class MyRequest extends React.Component {
               <TouchableOpacity>
                 <View style={styles.box}>
                   <View style={styles.firstLine}>
-                    <Image style={styles.image} source={{ uri: item.pic }} />
+                    <Image style={styles.image} source={{ uri: item.Pic }} />
 
-                    <Text style={styles.name}>{item.name}</Text>
-                    <Text style={styles.time}>{item.time}</Text>
+                    <Text style={styles.name}>{item.Name}</Text>
+                    <Text style={styles.time}>{item.Date}</Text>
                   </View>
 
                   <View style={styles.secondLine}>
-                    <Text numberOfLines={5} style={styles.request}>
-                      {item.request}
-                    </Text>
+                    <Text style={styles.request}>{item.Description}</Text>
                   </View>
-                  <View numberOfLines={5}>
-                    <Text>{item.comments}</Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        console.log("hi");
-                      }}
-                    >
-                      <Text style={styles.remove}>
-                        Remove
-                      </Text>
-                    </TouchableOpacity>
+                  <View style={styles.thirdLine}>
+                    <Text>Prefered Language: {item.Languages}</Text>
+                  </View>
+                  <View style={styles.forthLine}>
+                    <Text>Campus: {item.Campus}</Text>
+                  </View>
+                  <View style={styles.fifthLine}>
+                    <Text>Requested Helpers: {item.AmountOfHelpers}</Text>
+                    <Text style={{paddingLeft:5}}>Comments: {Object.keys(item.Comments).length}</Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -134,13 +226,71 @@ class MyRequest extends React.Component {
           }}
         >
           <TouchableOpacity
-            style={[styles.button, styles.buttonClose]}
+            style={styles.SumbitBtn}
             onPress={() => {
               this.setModalVisible(!modalVisible);
               //this.clearState();
             }}
           >
-            <Text>Back to Search</Text>
+            <Text style={styles.SumbitBtnText}>Back to Search</Text>
+          </TouchableOpacity>
+          <Text>Enter the following information to create a request</Text>
+          <TextInput
+            multiline
+            numberOfLines={4}
+            onChangeText={(val) => this.updateInputVal(val, "Request")}
+            placeholder="Type out your Request here"
+            maxLength={256}
+            style={{
+              padding: 10,
+              borderColor: "black",
+              borderStyle: "solid",
+              borderWidth: 3,
+            }}
+          />
+          <Text>Amount of people</Text>
+          <TextInput
+            style={styles.textInput}
+            keyboardType="numeric"
+            onChangeText={(text) => this.onChangedAmount(text)}
+            value={this.state.Amount}
+            style={{
+              paddingLeft: 10,
+              borderColor: "black",
+              borderStyle: "solid",
+              borderWidth: 3,
+            }}
+            maxLength={1} //setting limit of input
+          />
+          <Text> Prefered Language: </Text>
+          <DropDownPicker
+            open={openL}
+            value={Language}
+            items={this.state.Languages}
+            setOpen={this.setOpenL}
+            setValue={this.setLanguage}
+            zIndex={3000}
+            zIndexInverse={1000}
+          />
+          <Text> On Campus: </Text>
+
+          <DropDownPicker
+            open={open}
+            value={Campus}
+            items={this.state.Campuses}
+            setOpen={this.setOpen}
+            setValue={this.setCampus}
+            zIndex={2000}
+            zIndexInverse={2000}
+          />
+
+          <TouchableOpacity
+            onPress={() => {
+              this.uploadRequest();
+            }}
+            style={styles.SumbitBtn}
+          >
+            <Text style={styles.SumbitBtnText}>Sumbit</Text>
           </TouchableOpacity>
         </Modal>
       </View>
@@ -153,6 +303,21 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
   },
+  SumbitBtn: {
+    width: "80%",
+    backgroundColor: "blue",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 5,
+    marginLeft: 30,
+  },
+  SumbitBtnText: {
+    color: "white",
+    fontSize: 15,
+  },
+
   box: {
     padding: 13,
     marginTop: 5,
@@ -184,8 +349,17 @@ const styles = StyleSheet.create({
   secondLine: {
     flex: 2,
   },
-  ThirdLine: {
+  thirdLine: {
     flex: 3,
+    flexDirection: "row",
+  },
+  forthLine: {
+    flex: 4,
+    flexDirection: "row",
+  },
+  fifthLine: {
+    flex: 4,
+    flexDirection: "row",
   },
   name: {
     color: "#000000",
@@ -217,6 +391,18 @@ const styles = StyleSheet.create({
   remove: {
     color: "#000000",
     fontSize: 14,
+  },
+  inputView: {
+    width: "80%",
+    backgroundColor: "#465881",
+    height: 30,
+    marginBottom: 20,
+    justifyContent: "center",
+    padding: 20,
+  },
+  inputText: {
+    height: 50,
+    color: "white",
   },
 });
 

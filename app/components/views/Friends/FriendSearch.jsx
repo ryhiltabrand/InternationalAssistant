@@ -16,6 +16,8 @@ import { color, cos } from "react-native-reanimated";
 import firebase from "firebase";
 import updatefriends from "../../shardedComponents/Addfriends";
 import {Picker} from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
+
 
 export default class FriendsSearchScreen extends React.Component {
   constructor(props) {
@@ -28,12 +30,40 @@ export default class FriendsSearchScreen extends React.Component {
       campus: null,
       modalVisible: false,
       data: [],
+      open: false,
+      value: 'campus',
+      Campus : [{label: 'On', value: 'on'}, {label: 'Off', value: 'off'}],
     };
+    this.setValue = this.setValue.bind(this);
   }
   componentDidMount() {
     this.clearState();
   }
   componentWillUnmount() {}
+
+  setOpen = (open) => {
+    console.debug('opens dropdown')
+    this.setState({
+      open
+    });
+  }
+
+
+  setValue(callback) {
+    console.debug('set Value')
+    this.setState(state => (
+      console.debug('the value being inputed is ', callback(state.value)),
+      { value: callback(state.value) }
+    )
+    );
+
+  }
+
+  /*setItems(callback) {
+    this.setState(state => ({
+      items: callback(state.items)
+    }));
+  }*/
 
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
@@ -47,7 +77,9 @@ export default class FriendsSearchScreen extends React.Component {
       language: null,
       campus: null,
       data: [],
+     
     });
+
   };
   data = async (Uid) => {
     userRef = firebase.firestore().collection("users").doc(Uid);
@@ -100,55 +132,7 @@ export default class FriendsSearchScreen extends React.Component {
       alert("you suck");
     }
 
-    /*if (Object.keys(criteria).length == 5) {
-      //console.log(Object.keys(criteria));
-
-      Friendquery = Friendquery.where(
-        Object.keys(criteria)[0],
-        "==",
-        Object.values(criteria)[0]
-      )
-        .where(Object.keys(criteria)[1], "==", Object.values(criteria)[1])
-        .where(Object.keys(criteria)[2], "==", Object.values(criteria)[2])
-        .where(Object.keys(criteria)[3], "==", Object.values(criteria)[3])
-        .where(Object.keys(criteria)[4], "==", Object.values(criteria)[4]);
-    } else if (Object.keys(criteria).length == 4) {
-      console.log(Object.keys(criteria));
-      Friendquery = Friendquery.where(
-        Object.keys(criteria)[0],
-        "==",
-        Object.values(criteria)[0]
-      )
-        .where(Object.keys(criteria)[1], "==", Object.values(criteria)[1])
-        .where(Object.keys(criteria)[2], "==", Object.values(criteria)[2])
-        .where(Object.keys(criteria)[3], "==", Object.values(criteria)[3]);
-    } else if (Object.keys(criteria).length == 3) {
-      console.log(Object.keys(criteria));
-      Friendquery = Friendquery.where(
-        Object.keys(criteria)[0],
-        "==",
-        Object.values(criteria)[0]
-      )
-        .where(Object.keys(criteria)[1], "==", Object.values(criteria)[1])
-        .where(Object.keys(criteria)[2], "==", Object.values(criteria)[2]);
-    } else if (Object.keys(criteria).length == 2) {
-      console.log(Object.keys(criteria));
-      Friendquery = Friendquery.where(
-        Object.keys(criteria)[0],
-        "==",
-        Object.values(criteria)[0]
-      ).where(Object.keys(criteria)[1], "==", Object.values(criteria)[1]);
-    } else if (Object.keys(criteria).length == 1) {
-      console.log(Object.keys(criteria));
-      Friendquery = Friendquery.where(
-        Object.keys(criteria)[0],
-        "==",
-        Object.values(criteria)[0]
-      );
-    } else {
-      console.log("invalid Search");
-    }*/
-    //console.log(criteria.length)
+  
     if (Object.keys(criteria).length >= 1) {
       Friendquery = Friendquery.get().then((snap) => {
         console.log(snap.size);
@@ -169,6 +153,7 @@ export default class FriendsSearchScreen extends React.Component {
     } else {
       this.setState({ country: count });
     }
+    
   };
   updatetype = (type) => {
     if (type == "Any") {
@@ -190,11 +175,12 @@ export default class FriendsSearchScreen extends React.Component {
     } else {
       this.setState({ campus: campus });
     }
+    console.log(this.state.campus)
   };
 
   render() {
     const { modalVisible } = this.state;
-
+    const { open, value } = this.state;
     const countries = [
       "Any",
       "Brazil",
@@ -252,12 +238,7 @@ export default class FriendsSearchScreen extends React.Component {
               this.updatetype(selectedItem);
             }}
           />
-          {/*<Picker selectedValue={selectedItem} style={{height:50, width:150}} onValueChange={(itemValue, ItemIndex)=>{
-            setSelectedItem(itemValue)
-          }}>
-            <Picker.Item label='j' value='j' />
-            <Picker.Item label='g' value='g' />
-          </Picker>*/}
+          
         </View>
         <View>
           <Text> Language: </Text>
@@ -271,13 +252,23 @@ export default class FriendsSearchScreen extends React.Component {
         </View>
         <View>
           <Text> On Campus: </Text>
-          <SelectDropdown
+          <DropDownPicker
+            open={open}
+            value={value}
+            items={this.state.Campus}
+            setOpen={this.setOpen}
+            setValue={this.setValue}
+            onChangeValue={(selectedItem) => {
+              this.updatecampus(selectedItem);
+            }}
+          />
+          {/*<SelectDropdown
             dropdownStyle={{ color: "blue" }}
             data={Campus}
             onSelect={(selectedItem) => {
               this.updatecampus(selectedItem);
             }}
-          />
+          />*/}
         </View>
         <TouchableOpacity
           style={{ marginLeft: 150, marginTop: 25 }}

@@ -81,8 +81,8 @@ class FriendsListScreen extends React.Component {
             return (
               <TouchableOpacity>
                 <View style={styles.box}>
-                  <Image style={styles.image} source={{ uri: item.pic }} />
-                  <Text style={styles.name}>{item.name}</Text>
+                  <Image style={styles.image} source={{ uri: item.Pic }} />
+                  <Text style={styles.name}>{item.Name}</Text>
                   <TouchableOpacity onPress={() => {
                       deletefriends(item.uid)
                     }}><Text>Remove</Text></TouchableOpacity>
