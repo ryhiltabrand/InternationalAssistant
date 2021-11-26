@@ -12,6 +12,7 @@ import {
 import React, { Component } from 'react';
 import firebase from "../../utilities/firebase";
 import DropDownPicker from 'react-native-dropdown-picker';
+import Dialog from "react-native-dialog";
 import { regionFlag } from "../../utilities/regionFlagFinder";
 
 //console.log("This is opening DisplayList");
@@ -32,7 +33,10 @@ export class DisplayList extends Component {
         { label: 'Distance', value: 'distance' },
         { label: 'Name', value: 'name' },
         { label: 'Rating', value: 'rating' }
-      ]
+      ],
+      //search box
+      visible: false,
+      searchQuery: null
     };
     this.setValue = this.setValue.bind(this);
   }
@@ -149,7 +153,48 @@ export class DisplayList extends Component {
   //   )
   // }
 
+  setSearchQuery = (query) => {
+    this.setState({ 
+      searchQuery: query
+    })
+  }
 
+  showSearchBox = () => {
+    this.setState({ 
+      visible: true 
+    });
+  };
+
+  cancelSearchBox = () => {
+    this.setState({ 
+      visible: false 
+    });  };
+
+  searchLocation = () => {
+    console.debug('inside search locations the searchQuery is ', this.state.searchQuery)
+    //change later for more better search function
+    this.matchLocations('name', this.state.searchQuery)
+    this.setState({ 
+      visible: false 
+    });
+  };
+
+  // searchInputDialog = () => {
+  //   console.debug('goes inside searchInputDialog')
+  //   return (
+  //     <View style={styles.container}>
+  //       <Button title="Show dialog" onPress={showDialog} />
+  //       <Dialog.Container visible={visible}>
+  //         <Dialog.Title>Account delete</Dialog.Title>
+  //         <Dialog.Description>
+  //           Do you want to delete this account? You cannot undo this action.
+  //         </Dialog.Description>
+  //         <Dialog.Button label="Cancel" onPress={handleCancel} />
+  //         <Dialog.Button label="Delete" onPress={handleDelete} />
+  //       </Dialog.Container>
+  //     </View>
+  //   )
+  // }
 
   LocationCard = ({ item }) => (
 
@@ -160,11 +205,11 @@ export class DisplayList extends Component {
       <View
         style={[
           styles.locationCard,
-          this.state.locationList[item].category === 'Restaurant' ? styles.restaurantLocationCard :
-            this.state.locationList[item].category === 'Park' ? styles.parkLocationCard :
-              this.state.locationList[item].category === 'Communal' ? styles.communalLocationCard :
-                this.state.locationList[item].category == 'Worship' ? styles.worshipLocationCard :
-                  styles.unkownLocationCard,
+          this.state.locationList[item].category === 'Restaurant' ? styles.restaurant :
+            this.state.locationList[item].category === 'Park' ? styles.park :
+              this.state.locationList[item].category === 'Communal' ? styles.communal :
+                this.state.locationList[item].category == 'Worship' ? styles.worship :
+                  styles.unkown,
         ]}>
         <View style={styles.locationCardTop}>
           <View style={styles.locationTitleSection}>
@@ -202,22 +247,43 @@ export class DisplayList extends Component {
           {/* menu bar to filter by category */}
           <View style={styles.categoryBarSection}>
             <Pressable onPress={() => { this.getLocations() }}>
-              <Text style={styles.filterButton}> All </Text>
+              <View style={[styles.filterButtonSection, styles.allFilterButton]}>
+                <Text style={[styles.filterButtonImage]}> All </Text>
+              </View>
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Restaurant") }}>
-              <Image source={require("../../assets/locations/categoryBar/chicken-leg.png")} style={styles.filterButton} />
+              <View style={[styles.filterButtonSection, , styles.restaurant]}>
+                <Image source={require("../../assets/locations/categoryBar/chicken-leg.png")} style={[styles.filterButtonImage]} />
+              </View>
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Worship") }}>
-              <Image source={require("../../assets/locations/categoryBar/pray.png")} style={styles.filterButton} />
+              <View style={[styles.filterButtonSection, , styles.worship]}>
+                <Image source={require("../../assets/locations/categoryBar/pray.png")} style={[styles.filterButtonImage]} />
+              </View>
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Park"); }}>
-              <Image source={require("../../assets/locations/categoryBar/park.png")} style={styles.filterButton} />
+              <View style={[styles.filterButtonSection, styles.park]}>
+                <Image source={require("../../assets/locations/categoryBar/park.png")} style={[styles.filterButtonImage]} />
+              </View>
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Communal") }}>
-              <Image source={require("../../assets/locations/categoryBar/group.png")} style={styles.filterButton} />
+              <View style={[styles.filterButtonSection, , styles.communal]}>
+                <Image source={require("../../assets/locations/categoryBar/group.png")} style={[styles.filterButtonImage]} />
+              </View>
             </Pressable>
-            <Pressable onPress={() => { /* user input function */ }}>
-              <Image source={require("../../assets/locations/categoryBar/magnifying-glass.png")} style={styles.filterButton} />
+            <Pressable onPress={() => { this.showSearchBox() }}>
+              <View style={[styles.filterButtonSection, styles.searchFilterButton]}>
+                <Image source={require("../../assets/locations/categoryBar/magnifying-glass.png")} style={[styles.filterButtonImage]} />
+              </View>
+              <Dialog.Container visible={this.state.visible} onBackdropPress={this.cancelSearchBox}>
+                <Dialog.Title>Location Search</Dialog.Title>
+                <Dialog.Description>
+                  Please enter name, region, or rating.
+                </Dialog.Description>
+                <Dialog.Input  onChangeText={this.setSearchQuery} />
+                <Dialog.Button label="Cancel" onPress={this.cancelSearchBox} />
+                <Dialog.Button label="Search" onPress={this.searchLocation} />
+              </Dialog.Container>
             </Pressable>
           </View>
           <View style={styles.mapSection}>
@@ -266,6 +332,22 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: '#fff9e8ff'
   },
+  //global styles
+  restaurant: {
+    backgroundColor: '#cc0000ff'
+  },
+  worship: {
+    backgroundColor: '#3c78d8ff'
+  },
+  park: {
+    backgroundColor: '#6aa84fff'
+  },
+  communal: {
+    backgroundColor: '#674ea7ff',
+  },
+  unkown: {
+    backgroundColor: 'white'
+  },
   /* Top Menu Bar Styles */
   topMenuBar: {
     flex: 1,
@@ -277,22 +359,40 @@ const styles = StyleSheet.create({
   },
   categoryBarSection: {
     flex: 2,
-    padding: 3,
-    justifyContent: 'space-around',
+    //padding: 3,
+    //justifyContent: 'space-evenly',
     flexDirection: 'row',
-  },
-  filterButton: {
-    flex: 1,
-    width: 25,
     height: 25,
+
+
+  },
+  filterButtonSection: {
+    flex: 1,
+    width: 40,
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  filterButtonImage: {
+    flex: 1,
+    // width: 25,
+    // height: 25,
+    aspectRatio: .75,
+    alignSelf: 'center',
     resizeMode: 'contain',
-    alignSelf: 'flex-start'
+  },
+  allFilterButton: {
+    backgroundColor: '#e69138ff',
+  },
+  searchFilterButton: {
+    backgroundColor: '#6fa8dcff',
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5,
   },
   mapSection: {
     flex: 1,
     padding: 3,
-    width: 50,
-    height: 50,
+    // width: 50,
+    // height: 50,
     alignItems: 'flex-end',
   },
   mapButton: {
@@ -325,27 +425,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     height: 75,
   },
-  restaurantLocationCard: {
-    backgroundColor: '#cc0000ff'
-  },
-  worshipLocationCard: {
-    backgroundColor: '#3c78d8ff'
-  },
-  parkLocationCard: {
-    backgroundColor: '#6aa84fff'
-  },
-  communalLocationCard: {
-    backgroundColor: '#674ea7ff'
-  },
-  unkownLocationCard: {
-    backgroundColor: 'white'
-  },
-  selectedLocationCard: {
-    borderColor: 'orange'
-  },
-  notSelectedLocationCard: {
-    borderColor: 'black'
-  },
+  // Will be used when bordercolor base off select will be used
+  // selectedLocationCard: {
+  //   borderColor: 'orange'
+  // },
+  // notSelectedLocationCard: {
+  //   borderColor: 'black'
+  // },
   locationCardTop: {
     flex: 1,
     flexDirection: 'row',
