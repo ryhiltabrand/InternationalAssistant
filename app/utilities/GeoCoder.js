@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 
-
-/*Converts street names to lat and long coords */
-export class GeoCoder extends Component {
+/*Converts street names to latitude and longitude Coordinates */
+export class CoordConverter extends Component {
 
   constructor(props) {
+  super(props);
   this.state = {
-    location: null,
     markerPosition: {
       latitude: 0,
       longitude: 0
@@ -16,7 +15,7 @@ export class GeoCoder extends Component {
    };
   }
 
-   //Not finsihed 
+  //Converts an address to Coordinates
   ConvertCoords(value) {
 
     Geocoder.init("AIzaSyDmGQcOZNNjq6NFMES1ppUJkO0jVHnhCbI");
@@ -28,30 +27,30 @@ export class GeoCoder extends Component {
       //Print out the location string
       console.log(geometry);
   
-      //Convert the json to a float varible 
+      //Convert the json to a float variable 
       var lat = parseFloat(geometry.location.lat);
       var long = parseFloat(geometry.location.lng);
       console.log("Latitude: ", lat);
       console.log("Longitude: ", long);
     
-      var region = {
+      //Store the variables in the markerPosition state for Converter
+      this.state.markerPosition = {
         latitude: lat,
         longitude: long
-      };
-      this.setState({ markerPosition: region });
+      };   
     })
     .catch(error => console.warn(error));
    }  
 
-   //Not finsihed 
+   //Prints the Coordinates stored in markerPosition
    printlocation = () =>
    {
-    let lat = JSON.stringify(this.location.lat);
-    let long = JSON.stringify(this.location.lng);
-    console.log("Latitude: ", lat);
-    console.log("Longitude: ", long);
+    console.log("--------------------- Print Coordinates ---------------------");
+    console.log("Latitude: ", this.state.markerPosition.latitude);
+    console.log("Longitude: ", this.state.markerPosition.longitude);
    }
 
+   //Test the converter
    ConvertCoords_Test = () =>
    {
      Geocoder.init("AIzaSyDmGQcOZNNjq6NFMES1ppUJkO0jVHnhCbI");
