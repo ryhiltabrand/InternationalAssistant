@@ -78,12 +78,6 @@ async function readUser() {
 
   }
 
-  const onSend = useCallback((messages) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages))
-  }, 
-  [messages]
-  );
   async function handleSend(messages) {
     console.log(messages)
     const currentUser = firebase.auth().currentUser.uid;
