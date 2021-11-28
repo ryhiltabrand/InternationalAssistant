@@ -10,11 +10,12 @@ import {
   FlatList,
   LogBox,
   Modal,
+  Button
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
-import AddEvent from "./../../shardedComponents/Help/addEvent";
+import AddEvent from "../../shardedComponents/Help/AddRequest";
 import DropDownPicker from "react-native-dropdown-picker";
 
 LogBox.ignoreLogs(["Setting a timer"]);
@@ -121,6 +122,7 @@ class MyRequest extends React.Component {
         this.state.Language,
         this.state.Campus
       );
+      
     }
   }
   MyRequests = async () => {
@@ -147,6 +149,7 @@ class MyRequest extends React.Component {
       var language = doc.get("PreferedLanguage");
       var comments = doc.get("Comments");
       var date = doc.get("CreationTime");
+      var applicants = doc.get("Applicants")
 
       let Request = {
         Pic: pic,
@@ -159,6 +162,7 @@ class MyRequest extends React.Component {
         Languages: language,
         Comments: comments,
         Helpers: huid,
+        Applicants: applicants
       };
       console.log(Request);
       this.setState({
@@ -171,14 +175,8 @@ class MyRequest extends React.Component {
     const { open, openL, Language, Campus } = this.state;
     return (
       <View style={styles.body}>
-        <TouchableOpacity
-          onPress={() => {
-            //AddEvent();
-            this.setModalVisible(true);
-          }}
-        >
-          <Text style={{ textAlign: "center" }}>Add</Text>
-        </TouchableOpacity>
+        
+        <Button title="Add" onPress={() => this.setModalVisible(true)} />
         
         <FlatList
           style={styles.scrollView}
@@ -189,11 +187,22 @@ class MyRequest extends React.Component {
           }}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity onPress={() => { this.props.navigation.navigate('IndividualRequest', {Name: item.Name}); }}>
+              <TouchableOpacity onPress={() => { this.props.navigation.navigate('IndividualRequest', 
+              {
+               Name: item.Name,
+               Pic: item.Pic,
+               AmountRequested: item.AmountOfHelpers,
+               Applicants: item.Applicants,
+               Campus: item.Campus,
+               Comments: item.Comments,
+               Date: item.Date,
+               Description: item.Description,
+               Helpers: item.Helpers,
+               Language: item.Language,
+              }) }}>
                 <View style={styles.box}>
                   <View style={styles.firstLine}>
                     <Image style={styles.image} source={{ uri: item.Pic }} />
-
                     <Text style={styles.name}>{item.Name}</Text>
                     <Text style={styles.time}>{item.Date}</Text>
                   </View>
@@ -209,7 +218,10 @@ class MyRequest extends React.Component {
                   </View>
                   <View style={styles.fifthLine}>
                     <Text>Requested Helpers: {item.AmountOfHelpers}</Text>
-                    <Text style={{paddingLeft:5}}>Comments: {Object.keys(item.Comments).length}</Text>
+                    <Text style={{paddingLeft:5}}>Applicants: {item.Applicants.length}</Text>
+                  </View>
+                  <View style={styles.fifthLine}>
+                    <Text>Comments: {Object.keys(item.Comments).length}</Text>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -286,7 +298,23 @@ class MyRequest extends React.Component {
 
           <TouchableOpacity
             onPress={() => {
-              this.uploadRequest();
+              //this.uploadRequest();
+              if (
+                this.state.Amount == null ||
+                this.state.Campus == null ||
+                this.state.Language == null ||
+                this.state.Request == null
+              ) {
+                alert("Could not create the request make sure you inputted everything!");
+              } else {
+                AddEvent(
+                  this.state.Request,
+                  this.state.Amount,
+                  this.state.Language,
+                  this.state.Campus
+                );
+                this.setModalVisible(!modalVisible);
+              }
             }}
             style={styles.SumbitBtn}
           >

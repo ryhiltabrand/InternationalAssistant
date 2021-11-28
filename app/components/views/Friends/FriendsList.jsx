@@ -12,7 +12,7 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
-import deletefriends from "../../shardedComponents/removefriends"
+import deletefriends from "../../shardedComponents/Friends/removefriends"
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
@@ -81,8 +81,8 @@ class FriendsListScreen extends React.Component {
             return (
               <TouchableOpacity>
                 <View style={styles.box}>
-                  <Image style={styles.image} source={{ uri: item.Pic }} />
-                  <Text style={styles.name}>{item.Name}</Text>
+                  <Image style={styles.image} source={{ uri: item.pic }} />
+                  <Text style={styles.name}>{item.name}</Text>
                   <TouchableOpacity onPress={() => {
                       deletefriends(item.uid)
                     }}><Text>Remove</Text></TouchableOpacity>

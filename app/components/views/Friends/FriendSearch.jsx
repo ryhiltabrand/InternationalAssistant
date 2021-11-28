@@ -14,7 +14,7 @@ import { SearchBar } from "react-native-elements";
 import SelectDropdown from "react-native-select-dropdown";
 import { color, cos } from "react-native-reanimated";
 import firebase from "firebase";
-import updatefriends from "../../shardedComponents/Addfriends";
+import updatefriends from "../../shardedComponents/Friends/Addfriends";
 import {Picker} from '@react-native-picker/picker';
 import DropDownPicker from 'react-native-dropdown-picker';
 

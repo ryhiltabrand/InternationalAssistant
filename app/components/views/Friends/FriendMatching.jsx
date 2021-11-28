@@ -1,4 +1,4 @@
-import FriendMatcher from "./../../shardedComponents/friendmatch";
+import FriendMatcher from "../../shardedComponents/Friends/friendmatch";
 import * as React from "react";
 import {
   StyleSheet,
@@ -12,7 +12,7 @@ import {
   Modal,
 } from "react-native";
 import firebase from "firebase";
-import updatefriends from './../../shardedComponents/Addfriends'
+import updatefriends from '../../shardedComponents/Friends/Addfriends'
 
 class FriendsMatchScreen extends React.Component {
   constructor(props) {

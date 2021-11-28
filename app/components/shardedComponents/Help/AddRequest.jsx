@@ -9,14 +9,15 @@ export default function AddEvent(Request, Amount, Language, Campus) {
     // define the current users
     firebase.firestore().collection('Requests').add({
             RequesterUID: Uid,
-            HelperUID: null,
+            HelpersUID: [],
             Completed: false,
             Description: Request,
             HelperAmount: Amount,
             PreferedLanguage: Language,
             Campus: Campus,
             Comments: {},
-            CreationTime: Date()
+            CreationTime: Date(),
+            Applicants: []
         })
   };
 
