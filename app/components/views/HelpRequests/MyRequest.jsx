@@ -146,8 +146,8 @@ class MyRequest extends React.Component {
     }
   }
   MyRequests = async () => {
-    console.log(firebase.auth().currentUser.uid)
-    const usersRef = await firebase
+    //console.log(firebase.auth().currentUser.uid)
+    const usersRef = firebase
       .firestore()
       .collection("users")
       .doc(firebase.auth().currentUser.uid);
@@ -350,7 +350,12 @@ class MyRequest extends React.Component {
                   } else {
                     Month = d.getMonth()+1
                   }
-                  var Day = d.getDate()
+                  var Day = ''
+                  if (Number(d.getDate()) < 10){
+                    Day = "0"+(d.getDate()+1)
+                  } else {
+                    Day = d.getDate()+1
+                  }
                   var Year = d.getFullYear()
                   var Date = Year+"-"+Month+"-"+Day
                   this.setState({ Day: Date });
