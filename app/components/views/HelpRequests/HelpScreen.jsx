@@ -8,12 +8,15 @@ import AllRequest from "./AllRequests";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from "@react-navigation/stack";
 import IndividualRequest from './IndividualRequests'
+import OthersRequests from "./OthersRequests";
+
 const Stack = createStackNavigator();
 function NavStack() {
     return (
       <Stack.Navigator initialRouteName="HelpScreen1">
          <Stack.Screen name="HelpScreen1" component={HelpScreen} options={{ headerShown: false }} />
          <Stack.Screen name="IndividualRequest" component={IndividualRequest} options={{ headerShown: false }} />
+         <Stack.Screen name="OthersRequests" component={OthersRequests} options={{ headerShown: false }} />
       </Stack.Navigator>
     );
   }

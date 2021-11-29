@@ -343,7 +343,7 @@ AllRequests2 = async (date,
             return (
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.navigate("IndividualRequest", {
+                  this.props.navigation.navigate("OthersRequests", {
                     Name: item.Name,
                     Pic: item.Pic,
                     AmountRequested: item.AmountOfHelpers,
