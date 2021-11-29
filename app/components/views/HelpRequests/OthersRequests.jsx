@@ -1,5 +1,6 @@
 import { Modal, Text, View, Pressable,TextInput, Button, StyleSheet, Image } from "react-native";
 import React, {TouchableOpacity, useState} from "react";
+import ApplyForRequest from "./../../shardedComponents/Help/ApplyForRequest"
 
 export default function OthersRequests({ route, navigation }) {
   /* 2. Get the param */
@@ -14,6 +15,7 @@ export default function OthersRequests({ route, navigation }) {
     Description,
     Helpers,
     Language,
+    DocID
   } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   return (
@@ -53,7 +55,7 @@ export default function OthersRequests({ route, navigation }) {
       <View style >
         <Button
           title="Apply"
-          onPress={}
+          onPress={() => ApplyForRequest(DocID)}
         />
       </View>
       <Modal

@@ -231,9 +231,9 @@ class AllRequest extends React.Component {
     var comments;
     var date;
     var applicants;
-    var name;
-    var pic;
+    var DocID;
     RequestsQuery.docs.map((doc) => {
+      DocID = doc.id
       ruid = doc.get("RequesterUID");
       huid = doc.get("HelperUID");
       description = doc.get("Description");
@@ -248,7 +248,7 @@ class AllRequest extends React.Component {
       //name = doc.get("Name")
       //pic = doc.get("Pic")
 
-     let Request = {
+     /*let Request = {
         Pic: pic,
         Name: name,
         Date: date,
@@ -261,7 +261,7 @@ class AllRequest extends React.Component {
         Helpers: huid,
         Applicants: applicants,
       };
-      console.log(Request);
+      console.log(Request);*/
       /*this.setState({
         Date: date,
         Description: description,
@@ -286,7 +286,8 @@ class AllRequest extends React.Component {
         comments,
         huid,
         applicants,
-        ruid);
+        ruid, 
+        DocID);
     })
     
   };
@@ -300,7 +301,8 @@ AllRequests2 = async (date,
   comments,
   huid,
   applicants,
-  ruid) => {
+  ruid,
+  DocID) => {
 
     console.log("f", ruid)
     const usersRef = firebase
@@ -323,6 +325,7 @@ AllRequests2 = async (date,
       Comments: comments,
       Helpers: huid,
       Applicants: applicants,
+      DocID: DocID
     };
     this.setState({
       data: [...this.state.data, Request],
@@ -354,6 +357,7 @@ AllRequests2 = async (date,
                     Description: item.Description,
                     Helpers: item.Helpers,
                     Language: item.Language,
+                    DocID: item.DocID
                   });
                 }}
               >
