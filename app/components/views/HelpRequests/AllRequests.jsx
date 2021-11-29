@@ -33,7 +33,7 @@ class AllRequest extends React.Component {
 
   }
   componentDidMount() {
-    this.AllRequests();
+    //this.AllRequests();
   }
   componentWillUnmount() {}
   setModalVisible = (visible) => {
@@ -70,7 +70,7 @@ class AllRequest extends React.Component {
       var helpersAmount = doc.get("HelperAmount");
       var language = doc.get("PreferedLanguage");
       var comments = doc.get("Comments");
-      var date = doc.get("CreationTime");
+      var date = doc.get("CompletionTime");
       var applicants = doc.get("Applicants")
 
       let Request = {

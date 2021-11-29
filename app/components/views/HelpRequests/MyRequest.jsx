@@ -146,6 +146,7 @@ class MyRequest extends React.Component {
     }
   }
   MyRequests = async () => {
+    console.log(firebase.auth().currentUser.uid)
     const usersRef = await firebase
       .firestore()
       .collection("users")
@@ -153,7 +154,6 @@ class MyRequest extends React.Component {
     const doc = await usersRef.get();
     var name = doc.data().name;
     var pic = doc.data().profilepicture;
-
     RequestsQuery = await firebase
       .firestore()
       .collection("Requests")
@@ -194,6 +194,7 @@ class MyRequest extends React.Component {
   render() {
     const { modalVisible } = this.state;
     const { open, openL, Language, Campus } = this.state;
+    
     return (
       <View style={styles.body}>
         <Button title="Add" onPress={() => this.setModalVisible(true)} />
@@ -271,6 +272,16 @@ class MyRequest extends React.Component {
           >
             <Text style={styles.SumbitBtnText}>Back to Search</Text>
           </TouchableOpacity>
+          <Text> When does it need to be Completed </Text>
+          <Button
+            title="Select Date"
+            onPress={() => this.setDateVisible(true)}
+          />
+          <Button
+            title="Select Time"
+            onPress={() => this.setTimeVisible(true)}
+          />
+          <Text>Date: {this.state.Day} Time: {this.state.Time}</Text>
           <Text>Enter the following information to create a request</Text>
           <TextInput
             multiline
@@ -321,15 +332,7 @@ class MyRequest extends React.Component {
             zIndexInverse={2000}
           />
 
-          <Text> When does it need to be Completed </Text>
-          <Button
-            title="Select Date"
-            onPress={() => this.setDateVisible(true)}
-          />
-          <Button
-            title="Select Time"
-            onPress={() => this.setTimeVisible(true)}
-          />
+          
           {this.state.showDatePicker && (
             <DateTimePicker
               value={this.state.Date}
@@ -369,8 +372,19 @@ class MyRequest extends React.Component {
                   onChange(d);
                 } else {
                   this.setTimeClose(false);
-                  var Hours = d.getHours();
-                  var Mins = d.getMinutes();
+                  var Hours = '';
+                  if (Number(d.getHours() < 10)){
+                    Hours = "0"+d.getHours();
+                  } else {
+                    Hours = d.getHours();
+                  }
+                    
+                  var Mins = "";
+                  if (Number(d.getMinutes() < 10)){
+                    Mins = "0"+d.getMinutes();
+                  } else {
+                    Mins = d.getMinutes();
+                  }
                   var Time = Hours+":"+Mins+":00"
                   this.setState({ Time: Time});
                   console.log(Time)
