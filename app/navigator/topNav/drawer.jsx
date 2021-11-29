@@ -5,10 +5,12 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
   ProfileStackScreen,
   SettingsStackScreen,
+  FriendsStackScreen
 } from "./../../components/views/index";
 import Tabs from "../bottomNav/tabs";
 import DrawerCustom from "./drawerView";
 import LoginScreen from "../../components/views/loginScreen";
+import MessageStackScreen from "../../components/views/MessagingScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -37,7 +39,8 @@ const DrawerN = () => {
       <Drawer.Screen name="Homes" component={Tabs} />
       <Drawer.Screen name="Profile" component={ProfileStackScreen} />
       <Drawer.Screen name="Settings" component={SettingsStackScreen} />
-      
+      <Drawer.Screen name="Friends" component={FriendsStackScreen} />
+      <Drawer.Screen name="Messager" component={MessageStackScreen} />
     </Drawer.Navigator>
   );
 };

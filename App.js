@@ -1,8 +1,6 @@
 /**
  * f21-Blue
- * Created by Marquel
- *
- *
+ * 
  *
  */
 
@@ -14,10 +12,6 @@ import signupScreen from "./app/components/views/signupScreen";
 import ForgotScreen from "./app/components/views/forgotScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import DrawerN from "./app/navigator/topNav/drawer";
-import LandingScreen from "./app/navigator/LandingScreen";
-
-import firebase from "firebase";
-
 import { EventRegister } from "react-native-event-listeners";
 
 const Stack = createStackNavigator();
