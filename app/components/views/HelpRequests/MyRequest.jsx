@@ -10,13 +10,14 @@ import {
   FlatList,
   LogBox,
   Modal,
-  Button
+  Button,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
 import AddEvent from "../../shardedComponents/Help/AddRequest";
 import DropDownPicker from "react-native-dropdown-picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
@@ -40,6 +41,11 @@ class MyRequest extends React.Component {
         { label: "Old Dominion University", value: "Old Dominion University" },
         { label: "Any Campus", value: "Any" },
       ],
+      Date: new Date(),
+      Day: null,
+      Time: null,
+      showDatePicker: false,
+      showTimePicker: false,
     };
     this.setLanguage = this.setLanguage.bind(this);
     this.setCampus = this.setCampus.bind(this);
@@ -52,6 +58,18 @@ class MyRequest extends React.Component {
     this.setState({ modalVisible: visible });
   };
 
+  setDateVisible = (visible) => {
+    this.setState({ showDatePicker: visible });
+  };
+  setTimeVisible = (visible) => {
+    this.setState({ showTimePicker: visible });
+  };
+  setDateClose = (visible) => {
+    this.setState({ showDatePicker: visible });
+  };
+  setTimeClose = (visible) => {
+    this.setState({ showTimePicker: visible });
+  };
   clearState = () => {
     this.setState({
       data: [],
@@ -74,7 +92,10 @@ class MyRequest extends React.Component {
       openL: open,
     });
   };
-
+  
+  setDate(date) {
+    this.setState({ Date: date });
+  }
   setLanguage(callback) {
     console.debug("set Value");
     this.setState(
@@ -122,7 +143,6 @@ class MyRequest extends React.Component {
         this.state.Language,
         this.state.Campus
       );
-      
     }
   }
   MyRequests = async () => {
@@ -148,9 +168,10 @@ class MyRequest extends React.Component {
       var helpersAmount = doc.get("HelperAmount");
       var language = doc.get("PreferedLanguage");
       var comments = doc.get("Comments");
-      var date = doc.get("CreationTime");
-      var applicants = doc.get("Applicants")
-
+      var date = doc.get("CompletionTime");
+      var applicants = doc.get("Applicants");
+      date = date.toDate();
+      //var DateN = new Date(date);
       let Request = {
         Pic: pic,
         Name: name,
@@ -162,9 +183,9 @@ class MyRequest extends React.Component {
         Languages: language,
         Comments: comments,
         Helpers: huid,
-        Applicants: applicants
+        Applicants: applicants,
       };
-      console.log(Request);
+      
       this.setState({
         data: [...this.state.data, Request],
       });
@@ -175,9 +196,8 @@ class MyRequest extends React.Component {
     const { open, openL, Language, Campus } = this.state;
     return (
       <View style={styles.body}>
-        
         <Button title="Add" onPress={() => this.setModalVisible(true)} />
-        
+
         <FlatList
           style={styles.scrollView}
           enableEmptySections={true}
@@ -187,24 +207,27 @@ class MyRequest extends React.Component {
           }}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity onPress={() => { this.props.navigation.navigate('IndividualRequest', 
-              {
-               Name: item.Name,
-               Pic: item.Pic,
-               AmountRequested: item.AmountOfHelpers,
-               Applicants: item.Applicants,
-               Campus: item.Campus,
-               Comments: item.Comments,
-               Date: item.Date,
-               Description: item.Description,
-               Helpers: item.Helpers,
-               Language: item.Language,
-              }) }}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate("IndividualRequest", {
+                    Name: item.Name,
+                    Pic: item.Pic,
+                    AmountRequested: item.AmountOfHelpers,
+                    Applicants: item.Applicants,
+                    Campus: item.Campus,
+                    Comments: item.Comments,
+                    Date: item.Date,
+                    Description: item.Description,
+                    Helpers: item.Helpers,
+                    Language: item.Language,
+                  });
+                }}
+              >
                 <View style={styles.box}>
                   <View style={styles.firstLine}>
                     <Image style={styles.image} source={{ uri: item.Pic }} />
                     <Text style={styles.name}>{item.Name}</Text>
-                    <Text style={styles.time}>{item.Date}</Text>
+                    <Text style={styles.time}>{item.Date.getMonth()+"-"+item.Date.getDate()+" @ "+item.Date.getHours()+":"+item.Date.getMinutes()}</Text>
                   </View>
 
                   <View style={styles.secondLine}>
@@ -218,7 +241,9 @@ class MyRequest extends React.Component {
                   </View>
                   <View style={styles.fifthLine}>
                     <Text>Requested Helpers: {item.AmountOfHelpers}</Text>
-                    <Text style={{paddingLeft:5}}>Applicants: {item.Applicants.length}</Text>
+                    <Text style={{ paddingLeft: 5 }}>
+                      Applicants: {item.Applicants.length}
+                    </Text>
                   </View>
                   <View style={styles.fifthLine}>
                     <Text>Comments: {Object.keys(item.Comments).length}</Text>
@@ -296,6 +321,65 @@ class MyRequest extends React.Component {
             zIndexInverse={2000}
           />
 
+          <Text> When does it need to be Completed </Text>
+          <Button
+            title="Select Date"
+            onPress={() => this.setDateVisible(true)}
+          />
+          <Button
+            title="Select Time"
+            onPress={() => this.setTimeVisible(true)}
+          />
+          {this.state.showDatePicker && (
+            <DateTimePicker
+              value={this.state.Date}
+              mode="date"
+              display="default"
+              onChange={(e, d) => {
+                if (Platform.OS === "ios") {
+                  this.setState({ Day: d });
+                  onChange(d);
+                } else {
+                  this.setDateClose(false);
+                  var Month = ''
+                  if (Number(d.getMonth()+1) < 11){
+                    Month = "0"+(d.getMonth()+1)
+                  } else {
+                    Month = d.getMonth()+1
+                  }
+                  var Day = d.getDate()
+                  var Year = d.getFullYear()
+                  var Date = Year+"-"+Month+"-"+Day
+                  this.setState({ Day: Date });
+                  console.log(Date)
+                  
+                }
+              }}
+              style={{ backgroundColor: "white" }}
+            />
+          )}
+          {this.state.showTimePicker && (
+            <DateTimePicker
+              value={this.state.Date}
+              mode="time"
+              display="default"
+              onChange={(e, d) => {
+                if (Platform.OS === "ios") {
+                  this.setState({ Time: d });
+                  onChange(d);
+                } else {
+                  this.setTimeClose(false);
+                  var Hours = d.getHours();
+                  var Mins = d.getMinutes();
+                  var Time = Hours+":"+Mins+":00"
+                  this.setState({ Time: Time});
+                  console.log(Time)
+                }
+              }}
+              style={{ backgroundColor: "white" }}
+            />
+          )}
+
           <TouchableOpacity
             onPress={() => {
               //this.uploadRequest();
@@ -303,15 +387,22 @@ class MyRequest extends React.Component {
                 this.state.Amount == null ||
                 this.state.Campus == null ||
                 this.state.Language == null ||
-                this.state.Request == null
+                this.state.Request == null || this.state.Day == null || this.state.Time == null
               ) {
-                alert("Could not create the request make sure you inputted everything!");
+                alert(
+                  "Could not create the request make sure you inputted everything!"
+                );
               } else {
+                var dateTime = this.state.Day +"T"+ this.state.Time+"Z";
+                console.log(dateTime)
+                var date = new Date(dateTime)
+                console.log(date)
                 AddEvent(
                   this.state.Request,
                   this.state.Amount,
                   this.state.Language,
-                  this.state.Campus
+                  this.state.Campus,
+                  date
                 );
                 this.setModalVisible(!modalVisible);
               }

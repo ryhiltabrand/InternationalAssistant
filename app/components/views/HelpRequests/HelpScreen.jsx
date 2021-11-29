@@ -11,8 +11,8 @@ import IndividualRequest from './IndividualRequests'
 const Stack = createStackNavigator();
 function NavStack() {
     return (
-      <Stack.Navigator initialRouteName="HelpScreen">
-         <Stack.Screen name="HelpScreen" component={HelpScreen} options={{ headerShown: false }} />
+      <Stack.Navigator initialRouteName="HelpScreen1">
+         <Stack.Screen name="HelpScreen1" component={HelpScreen} options={{ headerShown: false }} />
          <Stack.Screen name="IndividualRequest" component={IndividualRequest} options={{ headerShown: false }} />
       </Stack.Navigator>
     );

@@ -1,6 +1,6 @@
 import firebase from "firebase";
 
-export default function AddEvent(Request, Amount, Language, Campus) {
+export default function AddEvent(Request, Amount, Language, Campus, time) {
   
 
   const event = async () => {
@@ -16,7 +16,7 @@ export default function AddEvent(Request, Amount, Language, Campus) {
             PreferedLanguage: Language,
             Campus: Campus,
             Comments: {},
-            CreationTime: Date(),
+            CompletionTime: time,
             Applicants: []
         })
   };
