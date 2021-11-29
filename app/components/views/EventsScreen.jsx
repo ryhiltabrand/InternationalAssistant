@@ -1,40 +1,73 @@
 import * as React from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Button, SafeAreaView, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import eventRecommendation, { eventmatcher, getInfo, gettinguserinfo } from "./../../utilities/eventmatching"
-import gettingeventinfo from "./../../utilities/eventmatching";
-import FriendMatcher from "./../../utilities/eventmatching";
-import EventMatcher from "./../../utilities/eventmatching";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import EventMatcher from "../../utilities/eventmatching";
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createStackNavigator } from "@react-navigation/stack";
+import { StackRouter } from "react-navigation";
+import MyEvents from "./events/MyEvents";
 
+const Nstack = createStackNavigator();
+const NavStack = () => {
+  return (
+    <Nstack.Navigator FRouteName="EventScreen">
+        <Nstack.Screen name="EventScreen" component={EventsScreen} options={{ headerShown: false}} />
+        <Nstack.Screen name="Events" component={MyEvents} options={{ headerShown: false}} />
+    </Nstack.Navigator>
+  );
+}
 const EventsScreen = () => {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Events!</Text>
-        <Button onPress = { EventMatcher } title = "event"/>
     </View>
   );
 }
 
-const EStack = createNativeStackNavigator();
-  const EventStackScreen = ({navigation}) => (
-    <EStack.Navigator screenOptions={{
-            headerStyle: {
-            backgroundColor: '#ADD8E6',
-            },
-            headerTintColor: '#000000',
-            headerTitleStyle: {
-            fontWeight: 'bold'
-            }
-        }}>
-            <EStack.Screen name="EventScreen" component={EventsScreen} options={{
-            title:'Events',
-            headerTitleAlign:"center",
-            headerLeft: () => (
-                <FontAwesome5.Button name="bars" size={25} color="#000000" backgroundColor="#ADD8E6" onPress={() => navigation.openDrawer()}></FontAwesome5.Button>
-            )
-            }} />
-    </EStack.Navigator>
-    ); 
+const Tab = createMaterialTopTabNavigator(); 
 
-export default EventStackScreen;
+function EventTabs () {
+  return(
+    <Tab.Navigator>
+      <Tab.Screen name="Recommended Events" component={MyEvents}/>
+    </Tab.Navigator>
+  );
+}
+
+const EventStack = createMaterialTopTabNavigator();
+
+const EventStackScreen = ({ navigation }) => (
+  <>
+    <EventStack.Navigator
+      screenOptions={{
+        headerStyle: {backgroundColor: "ADD8E6",},
+          headershown:true,
+          headerTintColor: "000000",
+          headerTitleStyle: {fontweight: "bold",},
+      }}
+    >
+    <EventStack.Screen  
+      name="Event Screen"
+      component={NavStack}
+      options={{
+        title:"Events", 
+        headerTitleAlign: "center",
+        headerLeft:()=> (
+          <FontAwesome5.Button  
+            name="bars"           
+            size={25}
+            color="000000"
+            backgroundColor="#ADD8E6"
+            onPress={() => navigation.openDrawer()}
+            >
+            </FontAwesome5.Button>
+          ),
+        }}
+      />
+    </EventStack.Navigator>
+  </>
+);
+
+export default EventStackScreen; 
