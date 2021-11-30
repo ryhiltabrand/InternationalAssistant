@@ -3,8 +3,8 @@ import { View, ScrollView, TouchableOpacity, Image, TouchableHighlight, ImageEdi
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useNavigationState } from '@react-navigation/core';
 import { FontAwesome5 } from "@expo/vector-icons";
-import { getCurrentUserUID } from '../../utilities/currentUser';
-import * as database from '../../utilities/database';
+//import { getCurrentUserUID } from './../../utilities/currentUser';
+import * as database from './../../../utilities/database';
 
 
 // console.log("the routes in profile screen", route)
