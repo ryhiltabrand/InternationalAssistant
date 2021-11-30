@@ -2,10 +2,12 @@ import firebase from 'firebase';
 
 
 export default function filtercat(type){
+    
+    var locList = []
 
     const filterbytype = async() =>{
 
-        var locList = []
+        
 
         const snapshot = await firebase.firestore().collection('Locations').where(
             "category", "==", type).orderBy('rating','desc').get();
@@ -18,8 +20,12 @@ export default function filtercat(type){
         snapshot.forEach(doc=> {
             locList.push(doc.data());
         })
-        // console.log(locList)
+        
     }
-
-    filterbytype()
+    
+    return filterbytype().then(()=>{
+        console.log(locList)
+        return locList;
+    })
+    // filterbytype()
 }
