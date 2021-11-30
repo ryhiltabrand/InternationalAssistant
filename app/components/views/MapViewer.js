@@ -21,7 +21,7 @@ import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 import * as Location from "expo-location";
 
 import { CoordConverter } from "../../utilities/GeoCoder";
-import { DisplayList } from "../views/DisplayListScreen"
+import { DisplayList } from "./DisplayListScreen"
 import { GeoFinder } from "../../utilities/GeoFinder";
 
 const { width, height } = Dimensions.get("window");
