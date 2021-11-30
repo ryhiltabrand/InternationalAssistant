@@ -20,7 +20,9 @@ import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 
 import * as Location from "expo-location";
 
-import Geolocation from 'react-native-geolocation-service';
+import { CoordConverter } from "../../utilities/GeoCoder";
+import { DisplayList } from "../views/DisplayListScreen"
+import { GeoFinder } from "../../utilities/GeoFinder";
 
 const { width, height } = Dimensions.get("window");
 
@@ -29,6 +31,12 @@ const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export class MapViewer extends Component {
+
+  constructor(props) {
+    super(props);
+    this.Coord = new CoordConverter();
+  }
+
   state = {
     location: null,
     loadingMap: false,
@@ -45,10 +53,19 @@ export class MapViewer extends Component {
       latitudeDelta: LATITUDE_DELTA, //0
       longitudeDelta: LONGITUDE_DELTA, //0
     },
+    markerDescription:
+    {
+      name: "",
+      address: "",
+      contributor: "",
+      category: "",
+      rating: "",
+      rating: 0
+    },
     markerPosition: {
       latitude: 0,
       longitude: 0,
-    },
+    }
   };
 
   componentDidUpdate() {
@@ -74,7 +91,8 @@ export class MapViewer extends Component {
 
     var lat = parseFloat(location.coords.latitude);
     var long = parseFloat(location.coords.longitude);
-    console.log(lat, long, "nishil is a bitch")
+    console.log("Latitude: ", lat);
+    console.log("Longitude: ", long);
 
     var region = {
       latitude: lat,
@@ -86,11 +104,42 @@ export class MapViewer extends Component {
     this.setState({ positionState: region });
     this.setState({ markerPosition: region });
   };
+
+  //Print the list of items
+  PrintItem()
+  {
+      console.log("---------- Print the Item from the list --------------------");
+      console.log(this.state.markerDescription.name);
+      console.log(this.state.markerDescription.address);
+      console.log(this.state.markerDescription.contributor);
+      console.log(this.state.markerDescription.category);
+      console.log(this.state.markerDescription.rating);
+  
+      console.log("----------- Print the coorinates of an item --------------------");
+      console.log("Latitude: ",this.state.markerPosition.latitude);
+      console.log("Longitude: ", this.state.markerPosition.longitude);
+  
+  }
+  
+  //Converts the address string to coordinates
+  AddresstoCoordinates() {
+
+
+      this.Coord.ConvertCoords(this.state.markerDescription.address);
+
+      //Store the Coordinates from the class... into the markerPosition state for MApViewer
+      this.state.markerPosition = {
+        latitude: this.Coord.state.markerPosition.latitude,
+        longitude: this.Coord.state.markerPosition.longitude
+      };
+     
+  }  
+
   render() {
     let text = JSON.stringify(this.state.location);
     let error = JSON.stringify(this.state.errorMessage);
-    console.log(text);
-    console.log(error);
+   // console.log(text);
+   // console.log(error);
     return (
       <>
         <View style={{ marginTop: 10, flex: 1 }}>
