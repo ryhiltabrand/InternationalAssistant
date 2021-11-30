@@ -16,7 +16,6 @@ import {
   import { FontAwesome5 } from "@expo/vector-icons";
   import { GiftedChat, Bubble, Send } from 'react-native-gifted-chat';
   import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-  import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ChatScreen = ({route}) => {
   const [messages, setMessages] = useState([]);

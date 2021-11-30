@@ -1,10 +1,10 @@
 import EventStackScreen from "./EventsScreen"
-import HelpStackScreen from "./HelpScreen"
+import HelpStackScreen from "./HelpRequests/HelpScreen"
 import HomeStackScreen from "./HomeScreen"
 import LocationStackScreen from "./LocationsScreen"
 import QAStackScreen from "./QandAScreen"
 import ProfileStackScreen from "./ProfileScreen"
 import SettingsStackScreen from "./Settings"
-import FriendsStackScreen from "./FriendsScreen"
+import FriendsStackScreen from "./Friends/FriendsScreen"
 
 export {EventStackScreen, HelpStackScreen, HomeStackScreen, LocationStackScreen, QAStackScreen, ProfileStackScreen, SettingsStackScreen, FriendsStackScreen}
