@@ -18,34 +18,49 @@
  } from "react-native";
  import { Component } from 'react';
  import firebase from "../../utilities/firebase";
+ import DropDownPicker from 'react-native-dropdown-picker';
+ import {getCurrentUserName, getCurrentUserCountry} from '../../utilities/currentUser'
 
  export class PostLocationScreen extends Component {
 
   constructor(props){
     super(props);
     this.state={
-      location_name: '',
+      location_name: getCurrentUserName(),
       location_address: '',
       location_contributor: '',
       location_category: '',
-      location_rating: ''
-    }
+      location_rating: '',
+      user_country: getCurrentUserCountry(),
+      open: false,
+      value: null,
+      items: [
+        {label: 'Restaurant', value: 'Restaurant'},
+        {label: 'Park', value: 'Park'},
+        {label: 'Communal', value: 'Communal'},
+        {label: 'Worship', value: 'Worship'}
+      ]
+    };
+
+    this.setValue = this.setValue.bind(this);
   }
 
-  componentDidMount() {
-    console.log('mounted')
-    firebase.firestore().collection('Locations')
-      .get()
-      .then( snapshot => {
-     const locations = []
-     snapshot.forEach( doc => {
-       const data = doc.data()
-       locations.push(data) 
-     })
-     this.setState({ locations: locations })
-     })
-     .catch( error => console.log(error))
-  } 
+  setOpen = (open) => {
+    console.debug('opens dropdown')
+    this.setState({
+      open
+    });
+  }
+
+  setValue(callback) {
+    
+    this.setState(state => (console.log('the value being inputed is ', callback(state.value)),{
+      value: callback(state.value)
+    }));
+    
+    this.updateInputVal(this.state.value, 'location_name');
+    console.log("2 This value is being inputed", this.state.location_category);
+  }
 
   updateInputVal = (val, prop) => {
     const state = this.state;
@@ -60,7 +75,8 @@
        address: this.state.location_address,
        contributor: this.state.location_contributor,
        category: this.state.location_category,
-       rating: this.state.location_rating
+       rating: this.state.location_rating,
+       user_country: this.state.user_country
       })
   }
 
@@ -105,14 +121,14 @@
   render(){ 
     return (
        <View style={styles.container}>  
-       
+
          <Text style={styles.titleText}>Enter a location to share with others.</Text> 
 
          <View style={styles.inputView} >
               <TextInput  
                 style={styles.inputText}
                 placeholder="Name" 
-                placeholderTextColor="white"
+                placeholderTextColor="black"
                 onChangeText={(val) => this.updateInputVal(val, 'location_name')}/>
          </View>
         
@@ -120,7 +136,7 @@
               <TextInput  
                 style={styles.inputText}
                 placeholder="Address" 
-                placeholderTextColor="white"
+                placeholderTextColor="black"
                 onChangeText={(val) => this.updateInputVal(val, 'location_address')}/>
           </View>
         
@@ -128,54 +144,96 @@
               <TextInput  
                 style={styles.inputText}
                 placeholder="Contributor" 
-                placeholderTextColor="white"
+                placeholderTextColor="black"
                 onChangeText={(val) => this.updateInputVal(val, 'location_contributor')}/>
           </View>
 
-          <View style={styles.inputView} >
+          <DropDownPicker
+          open={this.state.open}
+          value={this.state.value}
+          items={this.state.items}
+          setOpen={this.setOpen}
+          setValue={this.setValue}
+          placeholder="Select a Category"
+          onChangeItem={item => console.log(item.label, item.value)}
+          //onChangeItem={item => this.updateInputVal(item, 'location_category')}
+          style={styles.ScrollView}
+          dropDownContainerStyle={styles.sortByDropdown}
+          />
+
+          <this.CustomRatingBar/>
+        
+          <TouchableOpacity onPress= {() => this.uploadLocation()} style={styles.SumbitBtn}>
+              <Text style={styles.SumbitBtnText}>Submit</Text>
+          </TouchableOpacity>
+          
+          <View style={styles.mapSection}>
+            <TouchableOpacity onPress={() => { this.props.navigation.navigate('MapViewer'); }}>
+              <Image source={require("../../assets/locations/categoryBar/map.png")} style={styles.mapBtn} />
+            </TouchableOpacity>
+          </View>
+
+       </View>
+        );
+    };
+  }
+
+/*   <View style={styles.inputView} >
               <TextInput  
                 style={styles.inputText}
                 placeholder="Category" 
                 placeholderTextColor="white"
                 onChangeText={(val) => this.updateInputVal(val, 'location_category')}/>
           </View>
-
-          <this.CustomRatingBar/>
-        
-          <TouchableOpacity onPress= {() => this.uploadLocation()} style={styles.SumbitBtn}>
-              <Text style={styles.SumbitBtnText}>Sumbit</Text>
-          </TouchableOpacity>
-        
-          <TouchableOpacity onPress={() => this.props.navigation.navigate("MapViewer")} style={styles.backBtn}>
-              <Text style={styles.backText}>Back to MapViewer</Text>
-          </TouchableOpacity>
-       </View>
-        );
-    };
-  }
+*/
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: 'white'
+      backgroundColor: '#fff9e8ff'
     },
     titleText:{
+      fontSize:15,
       color:"black",
       padding:30
     },
     inputView:{
       width:"80%",
-      backgroundColor:"#465881",
       height:30,
       marginBottom:20,
+      borderColor: "orange",
+      borderRadius: 5,
+      borderWidth: 1,
       justifyContent:"center",
-      padding:20
+      padding:20,
+    },
+    ScrollView:{
+      width:"80%",
+      backgroundColor:"#fff9e8ff",
+      height:40,
+      borderColor: "orange",
+      borderRadius: 5,
+      borderWidth: 1,
+      marginBottom:20,
+      marginLeft: 39,
+      justifyContent:"center",
+    },
+    sortByDropdown:{
+      width:"80%",
+      backgroundColor:"#fff9e8ff",
+      borderColor: "orange",
+      borderRadius: 5,
+      borderWidth: 1,
+      marginBottom:20,
+      marginLeft: 39,
+      justifyContent:"center",
     },
     inputText:{
+      fontSize:15,
       height:50,
-      color:"white"
+      color:"black"
     },
     SumbitBtn:{
       width:"80%",
@@ -216,5 +274,18 @@
       width: 40,
       height: 40,
       resizeMode: 'cover'
-    }
+    },
+    mapSection: {
+      flex: 1,
+      top: 20,
+      right: 10,
+      alignSelf: 'flex-end',
+      position: 'absolute', // add if dont work with above
+    },
+    mapBtn: {
+      flex: 1,
+      width: 40,
+      height: 40,
+      resizeMode: 'contain',
+    },
   });

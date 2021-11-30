@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
+  Image,
   Dimensions,
 } from "react-native";
 
@@ -22,7 +23,7 @@ import * as Location from "expo-location";
 
 import { CoordConverter } from "../../utilities/GeoCoder";
 import { DisplayList } from "../views/DisplayListScreen"
-import { GeoFinder } from "../../utilities/GeoFinder";
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -34,7 +35,6 @@ export class MapViewer extends Component {
 
   constructor(props) {
     super(props);
-    this.Coord = new CoordConverter();
   }
 
   state = {
@@ -65,7 +65,7 @@ export class MapViewer extends Component {
     markerPosition: {
       latitude: 0,
       longitude: 0,
-    }
+    },
   };
 
   componentDidUpdate() {
@@ -76,6 +76,69 @@ export class MapViewer extends Component {
 
   componentDidMount() {
     this.getLocation();
+  }
+
+  //Print the list of items
+  PrintItem()
+  {
+    console.log("------------ Print Item --------------------");
+    console.log("------------ Item from the list --------------------");
+    console.log(this.state.markerDescription.name);
+    console.log(this.state.markerDescription.address);
+    console.log(this.state.markerDescription.contributor);
+    console.log(this.state.markerDescription.category);
+    console.log(this.state.markerDescription.rating);
+
+    console.log("----------- Print the converted coorinates from item --------------------");
+    console.log("Latitude: ",this.state.markerPosition.latitude);
+    console.log("Longitude: ", this.state.markerPosition.longitude);
+
+  }
+
+  //Converts the address string to coordinates
+  AddresstoCoordinates() {
+    let Coord = new CoordConverter();
+
+    Coord.ConvertCoords(this.state.markerDescription.address);
+
+    markerPosition = {
+      latitude: Coord.state.markerPosition.latitude,
+      longitude: Coord.state.markerPosition.longitude
+    };
+   }  
+
+   Selector()
+   {
+    
+   }
+
+   //Button 1 - Restaurant
+   //Button 2 - Park
+   //Button 3 - Communal
+   //Button 4 - Worship
+   //        
+   SideButtons(){
+    return (
+    <View style={styles.btncontainer} >
+
+        <TouchableOpacity onPress={() => {this.props.navigation.navigate("DisplayList")}}>
+          <Image style={ styles.image } source={require("../../assets/chicken-leg.png")}/>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={()=>{alert("you clicked me")}}>
+          <Image style={ styles.image } source={require("../../assets/group.png")}/>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={()=>{alert("you clicked me")}}>
+          <Image style={ styles.image } source={require("../../assets/park.png")}/>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={()=>{alert("you clicked me")}}>
+          <Image style={ styles.image } source={require("../../assets/pray.png")}/>
+        </TouchableOpacity>
+
+    </View>
+    )
   }
 
   getLocation = async () => {
@@ -91,8 +154,7 @@ export class MapViewer extends Component {
 
     var lat = parseFloat(location.coords.latitude);
     var long = parseFloat(location.coords.longitude);
-    console.log("Latitude: ", lat);
-    console.log("Longitude: ", long);
+    console.log(lat, long, "nishil is a bitch")
 
     var region = {
       latitude: lat,
@@ -104,42 +166,11 @@ export class MapViewer extends Component {
     this.setState({ positionState: region });
     this.setState({ markerPosition: region });
   };
-
-  //Print the list of items
-  PrintItem()
-  {
-      console.log("---------- Print the Item from the list --------------------");
-      console.log(this.state.markerDescription.name);
-      console.log(this.state.markerDescription.address);
-      console.log(this.state.markerDescription.contributor);
-      console.log(this.state.markerDescription.category);
-      console.log(this.state.markerDescription.rating);
-  
-      console.log("----------- Print the coorinates of an item --------------------");
-      console.log("Latitude: ",this.state.markerPosition.latitude);
-      console.log("Longitude: ", this.state.markerPosition.longitude);
-  
-  }
-  
-  //Converts the address string to coordinates
-  AddresstoCoordinates() {
-
-
-      this.Coord.ConvertCoords(this.state.markerDescription.address);
-
-      //Store the Coordinates from the class... into the markerPosition state for MApViewer
-      this.state.markerPosition = {
-        latitude: this.Coord.state.markerPosition.latitude,
-        longitude: this.Coord.state.markerPosition.longitude
-      };
-     
-  }  
-
   render() {
     let text = JSON.stringify(this.state.location);
     let error = JSON.stringify(this.state.errorMessage);
-   // console.log(text);
-   // console.log(error);
+    console.log(text);
+    console.log(error);
     return (
       <>
         <View style={{ marginTop: 10, flex: 1 }}>
@@ -150,10 +181,22 @@ export class MapViewer extends Component {
               longitude: -76.31042,
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
-            }}
-          ></MapView>
+            }}> 
+           <MapView.Marker coordinate={{latitude: 36.88639, longitude: -76.31042}}/>
+          </MapView>
 
           <Marker coordinate={this.state.markerPosition} />
+         
+          
+          <Marker
+            coordinate={this.state.markerPosition}
+            //debug
+            title={"title"}
+            description={"description"}
+
+            // title={this.state.markerDescription.name}
+            //description={"description"}
+         />
 
           <GooglePlacesAutocomplete
             placeholder="Search"
@@ -186,8 +229,9 @@ export class MapViewer extends Component {
             }}
           />
 
-          <Marker coordinate={this.state.searchPosition} />
         </View>
+
+
         <View style={styles.btncontainer}>
           <TouchableOpacity
             style={styles.listBtn}
@@ -197,6 +241,7 @@ export class MapViewer extends Component {
           >
             <FontAwesome5 name={"list-alt"} size={50} color={"black"} />
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.PostBtn}
             onPress={() => {
@@ -205,6 +250,12 @@ export class MapViewer extends Component {
           >
             <AntDesign name={"addfile"} size={50} color={"black"} />
           </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => {this.Selector()}}>
+          <Image style={ styles.image } source={require("../../assets/chicken-leg.png")}/>
+        </TouchableOpacity>
+
+    
         </View>
       </>
     );
@@ -231,5 +282,17 @@ const styles = StyleSheet.create({
     padding: 1,
     marginTop: 20,
     position: "absolute",
+  },
+  Btn1: {
+    borderRadius: 40,
+    padding: 1,
+    marginTop: 40,
+    marginBottom: 10,
+    position: "absolute",
+  },
+  image: {
+    height:32,
+    width: 32,
+    borderRadius: 12
   },
 });
