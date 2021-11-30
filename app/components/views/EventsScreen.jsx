@@ -12,17 +12,15 @@ import MyEvents from "./events/MyEvents";
 const Nstack = createStackNavigator();
 const NavStack = () => {
   return (
-    <Nstack.Navigator FRouteName="EventScreen">
+    <Nstack.Navigator initialRouteName="EventScreen">
         <Nstack.Screen name="EventScreen" component={EventsScreen} options={{ headerShown: false}} />
-        <Nstack.Screen name="Events" component={MyEvents} options={{ headerShown: false}} />
+        <Nstack.Screen name="Events" component={EventTabs} options={{ headerShown: false}} />
     </Nstack.Navigator>
   );
 }
 const EventsScreen = () => {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Events!</Text>
-    </View>
+    <EventTabs />
   );
 }
 
@@ -32,37 +30,42 @@ function EventTabs () {
   return(
     <Tab.Navigator>
       <Tab.Screen name="Recommended Events" component={MyEvents}/>
+      <Tab.Screen name="Campus Events" component={MyEvents}/>
+      <Tab.Screen name="Local Events" component={MyEvents}/>
     </Tab.Navigator>
   );
 }
 
-const EventStack = createMaterialTopTabNavigator();
+const EventStack = createNativeStackNavigator();
 
 const EventStackScreen = ({ navigation }) => (
   <>
     <EventStack.Navigator
       screenOptions={{
-        headerStyle: {backgroundColor: "ADD8E6",},
-          headershown:true,
-          headerTintColor: "000000",
-          headerTitleStyle: {fontweight: "bold",},
+        headerStyle: {
+          backgroundColor: "#ADD8E6",
+        },
+        headerShown:true,
+        headerTintColor: "#000000",
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
       }}
     >
-    <EventStack.Screen  
-      name="Event Screen"
-      component={NavStack}
-      options={{
-        title:"Events", 
-        headerTitleAlign: "center",
-        headerLeft:()=> (
-          <FontAwesome5.Button  
-            name="bars"           
-            size={25}
-            color="000000"
-            backgroundColor="#ADD8E6"
-            onPress={() => navigation.openDrawer()}
-            >
-            </FontAwesome5.Button>
+      <EventStack.Screen
+        name="EventScreen"
+        component={NavStack}
+        options={{
+          title: "Events",
+          headerTitleAlign: "center",
+          headerLeft: () => (
+            <FontAwesome5.Button
+              name="bars"
+              size={25}
+              color="#000000"
+              backgroundColor="#ADD8E6"
+              onPress={() => navigation.openDrawer()}
+            ></FontAwesome5.Button>
           ),
         }}
       />
