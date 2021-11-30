@@ -1,4 +1,4 @@
-import EventStackScreen from "./EventsScreen"
+import EventStackScreen from "./IAevents/EventsScreen"
 import HelpStackScreen from "./HelpRequests/HelpScreen"
 import HomeStackScreen from "./HomeScreen"
 import LocationStackScreen from "./LocationsScreen"

@@ -3,17 +3,17 @@ import { Text, View, Button, SafeAreaView, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import EventMatcher from "../../utilities/eventmatching";
+import EventMatcher from "../../shardedComponents/IAEvents/eventmatching";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from "@react-navigation/stack";
 import { StackRouter } from "react-navigation";
-import MyEvents from "./events/MyEvents";
+import MyEvents from "./MyEvents";
 
 const Nstack = createStackNavigator();
 const NavStack = () => {
   return (
-    <Nstack.Navigator initialRouteName="EventScreen">
-        <Nstack.Screen name="EventScreen" component={EventsScreen} options={{ headerShown: false}} />
+    <Nstack.Navigator initialRouteName="EventScreen1">
+        <Nstack.Screen name="EventScreen1" component={EventsScreen} options={{ headerShown: false}} />
         <Nstack.Screen name="Events" component={EventTabs} options={{ headerShown: false}} />
     </Nstack.Navigator>
   );
