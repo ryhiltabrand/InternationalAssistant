@@ -25,6 +25,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 export class GeoFinder extends Component {
 
   constructor(props) {
+  super(props);
   this.state = {
     location: null,
     loadingMap: false,
