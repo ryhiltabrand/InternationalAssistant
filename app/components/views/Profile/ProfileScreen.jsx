@@ -3,8 +3,8 @@ import { View, ScrollView, TouchableOpacity, Image, TouchableHighlight, ImageEdi
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useNavigationState } from '@react-navigation/core';
 import { FontAwesome5 } from "@expo/vector-icons";
-import { getCurrentUserUID } from '../../utilities/currentUser';
-import * as database from '../../utilities/database';
+//import { getCurrentUserUID } from './../../utilities/currentUser';
+import * as database from './../../../utilities/database';
 
 
 // console.log("the routes in profile screen", route)
@@ -58,15 +58,15 @@ function getProfilePicture() {
 }
 //}
 
-console.log("Print waht inside profilescreen ", currentUserInfo);
+//console.log("Print waht inside profilescreen ", currentUserInfo);
 
 const ProfileScreen = () => {
 
 
-  console.log("Print waht inside profilescreen ", currentUserInfo);
+  //console.log("Print waht inside profilescreen ", currentUserInfo);
   return (
     <View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      
 
         <View style={{ alignItems: 'center' }}>
           <Image source={{uri: getProfilePicture()}}
@@ -121,7 +121,7 @@ const ProfileScreen = () => {
         }}>
           <Text style={{ fontSize: 13, fontWeight: 'bold', padding: 10, }}>{"Country: " + getCountry()} </Text>
         </View>
-      </ScrollView>
+      
     </View>
 
   );

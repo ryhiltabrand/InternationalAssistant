@@ -10,12 +10,6 @@ import FriendsMatchScreen from "./FriendMatching";
 const FriendsScreen = () => {
   return (
     <Tabs>
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Button
-          onPress={() => console.log("hello")}
-          title="Welcome to Firends"
-        />{" "}
-      </View>
     </Tabs>
   );
 };
