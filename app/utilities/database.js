@@ -111,7 +111,7 @@ export class UsersCollection {
         //return docSnap.then;
         return docRef.get().then(function(doc) {
             if (doc.exists) {
-                console.log("From getter: ", doc.data())
+                //console.log("From getter: ", doc.data())
                return doc.data();
             }
             // else {

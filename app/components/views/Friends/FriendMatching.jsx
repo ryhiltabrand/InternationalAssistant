@@ -1,3 +1,4 @@
+import FriendMatcher from "../../shardedComponents/Friends/friendmatch";
 import * as React from "react";
 import {
   StyleSheet,
@@ -8,67 +9,61 @@ import {
   TouchableOpacity,
   FlatList,
   LogBox,
+  Modal,
 } from "react-native";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
-import deletefriends from "./../shardedComponents/removefriends"
+import updatefriends from '../../shardedComponents/Friends/Addfriends'
 
-LogBox.ignoreLogs(["Setting a timer"]);
-
-class FriendsListScreen extends React.Component {
+class FriendsMatchScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
+      
     };
   }
   componentDidMount() {
-    this.Loc();
+    this.Recomendations()
   }
   componentWillUnmount() {}
 
-  clearState = () => {
+  
+  data = async (Uid) => {
+    userRef = firebase.firestore().collection("users").doc(Uid);
+    const doc = await userRef.get();
+    //console.log(doc.data())
+    var name = doc.data().name;
+    var profpic = doc.data().profilepicture;
+    let friend = { uid: Uid, name: name, pic: profpic };
     this.setState({
-      data: [],
+      data: [...this.state.data, friend],
     });
   };
 
-  Loc = async () => {
-    const usersRef = firebase
-      .firestore()
-      .collection("users")
-      .doc(firebase.auth().currentUser.uid);
-
-    const doc = await usersRef.get();
-    var fl = doc.data().FriendsList;
-    var f1A = Object.keys(fl);
-    for (var i = 0; i < f1A.length; i++) {
-      Friendquery = await firebase
-        .firestore()
-        .collection("users")
-        .where("UID", "==", f1A[i])
-        .get();
-      Friendquery.docs.map((doc) => {
-        const name = doc.get("name");
-        const profpic = doc.get("profilepicture");
-        let friend = { uid: f1A[i], name: name, pic: profpic };
-        this.setState({
-          data: [...this.state.data, friend],
-        });
-      });
-    }
+  Recomendations = async () => {
+    FriendMatcher().then((results) => {
+      for (var i = 0; i < results.length; i++) {
+        console.log(results[i])
+        this.data(results[i]);
+      }
+    });
   };
+
   render() {
+   
     return (
+        
       <View style={styles.body}>
-        <TouchableOpacity
+          <TouchableOpacity
           onPress={() => {
-            this.clearState();
-            this.Loc();
+            this.setState({data: []})
+            this.Recomendations();
+            if (this.state.data.length == 0){
+              alert("No More")
+            }
           }}
         >
-          <Text>Refresh</Text>
+          <Text>Retry</Text>
         </TouchableOpacity>
         <FlatList
           style={styles.container}
@@ -84,13 +79,15 @@ class FriendsListScreen extends React.Component {
                   <Image style={styles.image} source={{ uri: item.pic }} />
                   <Text style={styles.name}>{item.name}</Text>
                   <TouchableOpacity onPress={() => {
-                      deletefriends(item.uid)
-                    }}><Text>Remove</Text></TouchableOpacity>
+                      updatefriends(item.uid)
+                    }}><Text>Add</Text></TouchableOpacity>
                 </View>
               </TouchableOpacity>
             );
           }}
         />
+        
+        
       </View>
     );
   }
@@ -124,4 +121,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FriendsListScreen;
+export default FriendsMatchScreen;

@@ -19,11 +19,11 @@ import {
   ActivityIndicator,
   Button,
 } from "react-native";
-import bgImage from '../../assets/bgImage.jpg';
+import bgImage from './../../../assets/bgImage.jpg';
 import { Component } from 'react';
-import firebase from "../../utilities/firebase";
-import { getCurrentUserUID } from '../../utilities/currentUser';
-import * as database from '../../utilities/database';
+import firebase from "../../../utilities/firebase";
+import { getCurrentUserUID } from '../../../utilities/currentUser';
+import * as database from '../../../utilities/database';
 export class signupScreen extends Component {
   constructor(props) {
     super(props);
