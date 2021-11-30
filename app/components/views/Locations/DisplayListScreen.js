@@ -10,12 +10,11 @@ import {
   ImageBackground
 } from "react-native";
 import React, { Component } from 'react';
-import firebase from "../../utilities/firebase";
+import firebase from "../../../utilities/firebase";
 import DropDownPicker from 'react-native-dropdown-picker';
 import Dialog from "react-native-dialog";
-import { regionFlag } from "../../utilities/regionFlagFinder";
-
-import { MapViewer } from "../views/MapViewer";
+import { regionFlag } from "./../../../utilities/regionFlagFinder"
+import { MapViewer } from "./MapViewer";
 
 //console.log("This is opening DisplayList");
 
@@ -245,7 +244,7 @@ export class DisplayList extends Component {
             </Text>
           </View>
           <View style={styles.locatiotnRatingSection}>
-            <ImageBackground source={require('../../assets/locations/locationCard/star.png')} style={styles.locationRatingStar}>
+            <ImageBackground source={require('./../../../assets/locations/locationCard/star.png')} style={styles.locationRatingStar}>
               {/* This needs to be the average of the ratings. Change function when created*/}
               <Text style={styles.locationRating}> {this.state.locationList[item].rating} </Text>
             </ImageBackground>
@@ -280,27 +279,27 @@ export class DisplayList extends Component {
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Restaurant") }}>
               <View style={[styles.filterButtonSection, , styles.restaurant]}>
-                <Image source={require("../../assets/locations/categoryBar/chicken-leg.png")} style={[styles.filterButtonImage]} />
+                <Image source={require("./../../../assets/locations/categoryBar/chicken-leg.png")} style={[styles.filterButtonImage]} />
               </View>
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Worship") }}>
               <View style={[styles.filterButtonSection, , styles.worship]}>
-                <Image source={require("../../assets/locations/categoryBar/pray.png")} style={[styles.filterButtonImage]} />
+                <Image source={require("./../../../assets/locations/categoryBar/pray.png")} style={[styles.filterButtonImage]} />
               </View>
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Park"); }}>
               <View style={[styles.filterButtonSection, styles.park]}>
-                <Image source={require("../../assets/locations/categoryBar/park.png")} style={[styles.filterButtonImage]} />
+                <Image source={require("./../../../assets/locations/categoryBar/park.png")} style={[styles.filterButtonImage]} />
               </View>
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Communal") }}>
               <View style={[styles.filterButtonSection, , styles.communal]}>
-                <Image source={require("../../assets/locations/categoryBar/group.png")} style={[styles.filterButtonImage]} />
+                <Image source={require("./../../../assets/locations/categoryBar/group.png")} style={[styles.filterButtonImage]} />
               </View>
             </Pressable>
             <Pressable onPress={() => { this.showSearchBox() }}>
               <View style={[styles.filterButtonSection, styles.searchFilterButton]}>
-                <Image source={require("../../assets/locations/categoryBar/magnifying-glass.png")} style={[styles.filterButtonImage]} />
+                <Image source={require("./../../../assets/locations/categoryBar/magnifying-glass.png")} style={[styles.filterButtonImage]} />
               </View>
               <Dialog.Container visible={this.state.visible} onBackdropPress={this.cancelSearchBox}>
                 <Dialog.Title>Location Search</Dialog.Title>
@@ -315,7 +314,7 @@ export class DisplayList extends Component {
           </View>
           <View style={styles.mapSection}>
             <Pressable onPress={() => { this.props.navigation.navigate('MapViewer'); }}>
-              <Image source={require("../../assets/locations/categoryBar/map.png")} style={styles.mapButton} />
+              <Image source={require("./../../../assets/locations/categoryBar/map.png")} style={styles.mapButton} />
             </Pressable>
           </View>
         </View>

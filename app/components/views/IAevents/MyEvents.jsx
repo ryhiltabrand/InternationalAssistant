@@ -16,6 +16,8 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
 import DropDownPicker from "react-native-dropdown-picker";
+import EventMatcher from "./../../shardedComponents/IAEvents/eventmatching";
+
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
@@ -27,7 +29,7 @@ class MyEvents extends React.Component {
     };
   }
   componentDidMount() {
-    this.MyEvents();
+    EventMatcher();
   }
   componentWillUnmount() {}
   

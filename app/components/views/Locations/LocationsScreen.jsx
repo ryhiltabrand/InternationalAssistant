@@ -3,10 +3,9 @@ import { Text, View, TextInput, Button } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createStackNavigator } from "@react-navigation/stack";
-import { MapViewer } from "../views/MapViewer";
-import { DisplayList } from "../views/DisplayListScreen";
-import { PostLocationScreen } from "../views/PostLocationScreen";
-
+import { MapViewer } from "./MapViewer";
+import { DisplayList } from "./DisplayListScreen";
+import { PostLocationScreen } from "./PostLocationScreen"
 const Stack = createStackNavigator();
 function NavStack() {
     return (

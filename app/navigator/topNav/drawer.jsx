@@ -9,8 +9,8 @@ import {
 } from "./../../components/views/index";
 import Tabs from "../bottomNav/tabs";
 import DrawerCustom from "./drawerView";
-import LoginScreen from "../../components/views/loginScreen";
-import MessageStackScreen from "../../components/views/MessagingScreen";
+import LoginScreen from "../../components/views/Login/loginScreen";
+import MessageStackScreen from "../../components/views/Message/MessagingScreen";
 import firebase from "firebase"
 
 const Drawer = createDrawerNavigator();

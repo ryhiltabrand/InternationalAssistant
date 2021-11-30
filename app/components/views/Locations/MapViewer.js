@@ -21,8 +21,10 @@ import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 
 import * as Location from "expo-location";
 
-import { CoordConverter } from "../../utilities/GeoCoder";
-import { DisplayList } from "../views/DisplayListScreen"
+
+import { CoordConverter } from "./../../../utilities/GeoCoder";
+import { DisplayList } from "./DisplayListScreen"
+
 
 
 const { width, height } = Dimensions.get("window");
@@ -121,21 +123,21 @@ export class MapViewer extends Component {
     return (
     <View style={styles.btncontainer} >
 
-        <TouchableOpacity onPress={() => {this.props.navigation.navigate("DisplayList")}}>
-          <Image style={ styles.image } source={require("../../assets/chicken-leg.png")}/>
+        {/*<TouchableOpacity onPress={() => {this.props.navigation.navigate("DisplayList")}}>
+          <Image style={ styles.image } source={require("")}/>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={()=>{alert("you clicked me")}}>
-          <Image style={ styles.image } source={require("../../assets/group.png")}/>
+          <Image style={ styles.image } source={require("")}/>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={()=>{alert("you clicked me")}}>
-          <Image style={ styles.image } source={require("../../assets/park.png")}/>
+          <Image style={ styles.image } source={require("")}/>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={()=>{alert("you clicked me")}}>
-          <Image style={ styles.image } source={require("../../assets/pray.png")}/>
-        </TouchableOpacity>
+          <Image style={ styles.image } source={require("")}/>
+    </TouchableOpacity>*/}
 
     </View>
     )
@@ -251,9 +253,9 @@ export class MapViewer extends Component {
             <AntDesign name={"addfile"} size={50} color={"black"} />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => {this.Selector()}}>
+         {/* <TouchableOpacity onPress={() => {this.Selector()}}>
           <Image style={ styles.image } source={require("../../assets/chicken-leg.png")}/>
-        </TouchableOpacity>
+          </TouchableOpacity>*/}
 
     
         </View>

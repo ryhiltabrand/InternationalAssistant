@@ -17,9 +17,9 @@
    Image
  } from "react-native";
  import { Component } from 'react';
- import firebase from "../../utilities/firebase";
+ import firebase from "firebase";
  import DropDownPicker from 'react-native-dropdown-picker';
- import {getCurrentUserName, getCurrentUserCountry} from '../../utilities/currentUser'
+ import {getCurrentUserName, getCurrentUserCountry} from './../../../utilities/currentUser'
 
  export class PostLocationScreen extends Component {
 
@@ -83,8 +83,9 @@
    CustomRatingBar = () => {
     const [defaultRating, setdefaultRating] = useState(2);
     const [maxRating, setmaxRating] = useState([1,2,3,4,5]);
-    const starImgFilled = '../../assets/star_filled.png';
-    const starImgCorner = '../../assets/star_corner.png';
+    //const starImgFilled = '../../assets/star_filled.png';
+    const starImgFilled = './../../../assets/star_filled.png';
+    const starImgCorner = './../../../assets/star_corner.png';
     this.state.location_rating = defaultRating;
     return (
       <View style={styles.customRatingBarStyle} >
@@ -169,7 +170,7 @@
           
           <View style={styles.mapSection}>
             <TouchableOpacity onPress={() => { this.props.navigation.navigate('MapViewer'); }}>
-              <Image source={require("../../assets/locations/categoryBar/map.png")} style={styles.mapBtn} />
+              <Image source={require("./../../../assets/locations/categoryBar/map.png")} style={styles.mapBtn} />
             </TouchableOpacity>
           </View>
 

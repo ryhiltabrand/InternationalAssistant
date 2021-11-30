@@ -3,7 +3,6 @@ import { Text, View, Button } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useNavigationState } from '@react-navigation/core';
-import filtercat from "../shardedComponents/mapfilter";
 
 //console.log(useNavigationState)
 
