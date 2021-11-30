@@ -60,11 +60,10 @@ async function readUser() {
     avatar: doc.data().profilepicture,
   }
   if (usertest) {
-    console.log(usertest)
       setUser(usertest)
   }
 }
-//Need to make user object from data from Firebase and then set it up with Firebase and then set it up to save with firebase
+
   MessageGrab = async() =>{
     const currentUser = firebase.auth().currentUser.uid;
     const ids = [currentUser, uid]
@@ -79,7 +78,6 @@ async function readUser() {
   }
 
   async function handleSend(messages) {
-    console.log(messages)
     const currentUser = firebase.auth().currentUser.uid;
     const ids = [currentUser, uid]
     ids.sort()
@@ -89,7 +87,6 @@ async function readUser() {
     TestRef.docs.map((doc) =>{
       id = doc.id;
     })
-    console.log(id)
     const messageRef = firebase.firestore().collection("DirectMessaging")
       .doc(id).collection("Messages")
     const writes = messages.map((m) => messageRef.add(m))
@@ -137,6 +134,7 @@ async function readUser() {
       <FontAwesome5 name={'arrow-down'} size={22} />
     );
   }
+
 
   return (
     <GiftedChat
