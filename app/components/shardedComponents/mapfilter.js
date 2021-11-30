@@ -18,7 +18,7 @@ export default function filtercat(type){
         snapshot.forEach(doc=> {
             locList.push(doc.data());
         })
-        console.log(locList)
+        // console.log(locList)
     }
 
     filterbytype()
