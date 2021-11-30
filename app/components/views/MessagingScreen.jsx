@@ -1,16 +1,31 @@
 import * as React from "react";
-import { Text, View, Button } from "react-native";
+import ChatScreen from "./ChatScreen";
+import {useState} from 'react';
+import { MessageListScreen } from "./MessageListScreen";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
 
 
-const MessageScreen = () => {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>SendMessages!</Text>
-      </View>
+const Stack = createStackNavigator();
+function NavStack(){
+  return(
+    <Stack.Navigator initialRouteName="MessageListScreen">
+         <Stack.Screen name="MessageListScreen" component={MessageListScreen} options={{ headerShown: false }} />
+         <Stack.Screen name="ChatScreen" component={ChatScreen} options={({route}) => ({
+           title: route.params.name,
+           headerTitleAlign: "center",
+           headerBackTitleVisible: false,
+         })} />
+         </Stack.Navigator>
     );
-  }
+}
+
+const MessageScreen = () =>{
+  return(
+    <NavStack />
+    );
+}
 
   const MessageStack = createNativeStackNavigator();
   const MessageStackScreen = ({navigation}) => (
@@ -23,7 +38,7 @@ const MessageScreen = () => {
           fontWeight: 'bold'
           }
       }}>
-          <MessageStack.Screen name="LocationScreen" component={MessageScreen} options={{
+          <MessageStack.Screen name="MessageScreen" component={MessageScreen} options={{
           title:'Messaging',
           headerTitleAlign:"center",
           headerLeft: () => (
