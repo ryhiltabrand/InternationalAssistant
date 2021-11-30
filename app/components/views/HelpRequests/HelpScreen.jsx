@@ -3,44 +3,47 @@ import { Text, View, Button, SafeAreaView, StyleSheet } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import EventMatcher from "../../utilities/eventmatching";
+import MyRequest from "./MyRequest";
+import AllRequest from "./AllRequests";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from "@react-navigation/stack";
-import { StackRouter } from "react-navigation";
-import MyEvents from "./events/MyEvents";
+import IndividualRequest from './IndividualRequests'
+import OthersRequests from "./OthersRequests";
 
-const Nstack = createStackNavigator();
-const NavStack = () => {
+const Stack = createStackNavigator();
+function NavStack() {
+    return (
+      <Stack.Navigator initialRouteName="HelpScreen1">
+         <Stack.Screen name="HelpScreen1" component={HelpScreen} options={{ headerShown: false }} />
+         <Stack.Screen name="IndividualRequest" component={IndividualRequest} options={{ headerShown: false }} />
+         <Stack.Screen name="OthersRequests" component={OthersRequests} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    );
+  }
+const HelpScreen = () => {
   return (
-    <Nstack.Navigator initialRouteName="EventScreen">
-        <Nstack.Screen name="EventScreen" component={EventsScreen} options={{ headerShown: false}} />
-        <Nstack.Screen name="Events" component={EventTabs} options={{ headerShown: false}} />
-    </Nstack.Navigator>
+      <MyTabs />
+        
   );
-}
-const EventsScreen = () => {
+};
+
+const Tab = createMaterialTopTabNavigator();
+
+
+function MyTabs() {
   return (
-    <EventTabs />
-  );
-}
-
-const Tab = createMaterialTopTabNavigator(); 
-
-function EventTabs () {
-  return(
     <Tab.Navigator>
-      <Tab.Screen name="Recommended Events" component={MyEvents}/>
-      <Tab.Screen name="Campus Events" component={MyEvents}/>
-      <Tab.Screen name="Local Events" component={MyEvents}/>
+      <Tab.Screen name="My Requests" component={MyRequest} />
+      <Tab.Screen name="All Requests" component={AllRequest} />
     </Tab.Navigator>
   );
 }
 
-const EventStack = createNativeStackNavigator();
+const HelpStack = createNativeStackNavigator();
 
-const EventStackScreen = ({ navigation }) => (
+const HelpStackScreen = ({ navigation }) => (
   <>
-    <EventStack.Navigator
+    <HelpStack.Navigator
       screenOptions={{
         headerStyle: {
           backgroundColor: "#ADD8E6",
@@ -52,11 +55,11 @@ const EventStackScreen = ({ navigation }) => (
         },
       }}
     >
-      <EventStack.Screen
-        name="EventScreen"
+      <HelpStack.Screen
+        name="HelpScreen"
         component={NavStack}
         options={{
-          title: "Events",
+          title: "Help",
           headerTitleAlign: "center",
           headerLeft: () => (
             <FontAwesome5.Button
@@ -69,8 +72,8 @@ const EventStackScreen = ({ navigation }) => (
           ),
         }}
       />
-    </EventStack.Navigator>
+    </HelpStack.Navigator>
   </>
 );
 
-export default EventStackScreen; 
+export default HelpStackScreen;

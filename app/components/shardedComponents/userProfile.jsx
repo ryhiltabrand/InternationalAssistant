@@ -13,7 +13,7 @@ const Loc = async () => {
       snap.docs.map((doc) => {
         const name = doc.get("name");
         const profpic = doc.get("profilepicture");
-        console.log(name, profpic)
+        //console.log(name, profpic)
         return [name, profpic];
       });
     });
