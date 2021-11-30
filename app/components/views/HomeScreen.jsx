@@ -17,6 +17,10 @@ const HomeScreen = () => {
         onPress={() => console.log("hello")}
         title="you are home"
       />
+      <Button
+        onPress={() => filtercat('Restaurant','name')}
+        title="fake"
+      />
     </View>
   )
 }
