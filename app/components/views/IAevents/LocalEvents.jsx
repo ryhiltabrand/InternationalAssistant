@@ -21,20 +21,11 @@ import EventMatcher from "./../../shardedComponents/IAEvents/eventmatching";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
-class MyEvents extends React.Component {
+export default class LocalEvents extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       eventsDatabase:[],
-      modalVisible: false,
-      Language: null,
-      Languages: [
-        { label: "English", value: "English" },
-        { label: "Spanish", value: "Spanish" },
-        { label: "French", value: "French" },
-        { label: "Indian", value: "Indian" },
-        { label: "Chinese", value: "Chinese" },
-      ],
 
     };
   }
@@ -161,5 +152,3 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
-
-export default MyEvents;
