@@ -28,12 +28,11 @@ export default function filtercat(type,sortformat){
         
         }
 
-        if (sortformat == 'name'){
+        if (sortformat == 'alpha'){
 
-            // will filter by the type of location, and then sort by rating
+            // will filter by the type of location, and then sort by alphab
         var snapshot = await firebase.firestore().collection('Locations').where(
-            "category", "==", type).orderBy('name','desc').get();
-        
+            "category", "==", type).orderBy('name','asce').get();
         // this is for All category, it will display all locations
         if (type == 'All'){
             var snapshot = await firebase.firestore().collection('Locations').orderBy('name','desc').get()

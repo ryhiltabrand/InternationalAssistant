@@ -3,6 +3,7 @@ import { Text, View, Button } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useNavigationState } from '@react-navigation/core';
+import filtercat from "../../shardedComponents/mapfilter";
 
 //console.log(useNavigationState)
 
@@ -14,7 +15,7 @@ const HomeScreen = () => {
         title="you are home"
       />
       <Button
-        onPress={() => filtercat('Restaurant','name')}
+        onPress={() => filtercat('All','alpha')}
         title="fake"
       />
     </View>
