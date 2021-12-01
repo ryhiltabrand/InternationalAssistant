@@ -86,7 +86,57 @@ class MyQuestion extends React.Component {
 
       };
       
+      this.setState({
+        data: [...this.state.data, Request],
+      });
+    });
+  };
+  render() {
+    const { modalVisible } = this.state;
+    
+    return (
+      <View style={styles.body}>
+        <Button title="Post Question" onPress={() => this.setModalVisible(true)} />
 
+        <FlatList
+          style={styles.scrollView}
+          enableEmptySections={true}
+          data={this.state.data}
+          keyExtractor={(item) => {
+            return item.name;
+          }}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate("IndividualRequest", {
+                    Name: item.Name,
+                    Answers: item.Answers,
+                    Question: item.Question,
+                  });
+                }}
+              >
+                <View style={styles.box}>
+                  <View style={styles.firstLine}>
+                    <Text style={styles.name}>{item.Name}</Text>
+                  </View>
+
+                  <View style={styles.secondLine}>
+                    <Text style={styles.request}>{item.Question}</Text>
+                  </View>
+                  <View style={styles.fifthLine}>
+                    <Text>Answers: {Object.keys(item.Answers).length}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+        />
+
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   image: {
