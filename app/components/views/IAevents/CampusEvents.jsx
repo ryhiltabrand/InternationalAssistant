@@ -40,13 +40,13 @@ export default class CampusEvents extends React.Component {
             .doc(firebase.auth().currentUser.uid);
         const doc = await usersRef.get();
         var UsersCampus = doc.data().university;
-        EventQuery = await firebase
+        const EventsQuery = await firebase
             .firestore()
             .collection("Events")
             .where("Campus", "==", UsersCampus)
             .get();
-            //console.log(UsersCampus)
-        RequestsQuery.docs.map((doc) => {
+        //console.log(UsersCampus)
+        EventsQuery.docs.map((doc) => {
             var address = doc.get("Address");
             var campus = doc.get("Campus");
             var description = doc.get("Description");
@@ -63,19 +63,19 @@ export default class CampusEvents extends React.Component {
                 Address: address,
                 Campus: campus,
                 Description: description,
-                EID: EID, 
+                EID: EID,
                 Loc: loc,
-                Name: name, 
+                Name: name,
                 Country: country,
                 Dislikes: dislikes,
                 Language: language,
-                Likes: likes, 
+                Likes: likes,
                 Photo: photo,
                 Type: type,
             };
-            //console.log(Event)
+            console.log(Event)
             this.setState({
-            eventsDatabase: [...this.state.eventsDatabase, Event]
+                eventsDatabase: [...this.state.eventsDatabase, Event]
             })
         })
     }
@@ -83,7 +83,50 @@ export default class CampusEvents extends React.Component {
     render() {
         return (
             <View style={styles.body}>
+                <FlatList
+                    style={styles.scrollView}
+                    enableEmptySections={true}
+                    data={this.state.eventsDatabase}
+                    keyExtractor={(item) => {
+                        return item.name;
+                    }}
+                    renderItem={({ item }) => {
+                        return (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.navigate("Campus Events", {
+                                        Name: item.Name,
+                                        Campus: item.Campus,
+                                        Description: item.Description,
+                                        Address: item.Address,
+                                        Language: item.Language,
+                                    });
+                                }}
+                            >
+                                <View style={styles.box}>
+                                    <View style={styles.firstLine}>
+                                        <Text style={styles.name}>{item.Name}</Text>
+                                    </View>
 
+                                    <View style={styles.secondLine}>
+                                        <Text style={styles.event}>{item.Description}</Text>
+                                    </View>
+                                    <View style={styles.thirdLine}>
+                                        <Text>Language: {item.Language}</Text>
+                                    </View>
+                                    <View style={styles.forthLine}>
+                                        <Text>Campus: {item.Campus}</Text>
+                                    </View>
+                                    <View style={styles.fifthLine}>
+                                        <Text>Address: {item.Address} </Text>
+                                    </View>
+                                    <View style={styles.fifthLine}>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                        );
+                    }}
+                />
             </View>
         );
     }
@@ -165,7 +208,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         textAlign: "right",
     },
-    request: {
+    event: {
         color: "#000000",
         fontSize: 14,
         marginTop: 3,
