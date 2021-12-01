@@ -132,7 +132,61 @@ class MyQuestion extends React.Component {
             );
           }}
         />
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            this.setModalVisible(!modalVisible);
+          }}
+        >
+          <TouchableOpacity
+            style={styles.SumbitBtn}
+            onPress={() => {
+              this.setModalVisible(!modalVisible);
+              //this.clearState();
+            }}
+          >
+            <Text style={styles.SumbitBtnText}>Go Back</Text>
+          </TouchableOpacity>
+      
+          <TextInput
+            multiline
+            numberOfLines={4}
+            onChangeText={(val) => this.updateInputVal(val, "Question")}
+            placeholder="Type out your Question here"
+            maxLength={256}
+            style={{
+              padding: 10,
+              borderColor: "black",
+              borderStyle: "solid",
+              borderWidth: 3,
+            }}
+          />
+          
 
+          <TouchableOpacity
+            onPress={() => {
+              if (
+                this.state.Question == null 
+              ) {
+                alert(
+                  "Please enter a question"
+                );
+              } else {
+                AddEvent(
+                  this.state.Question,
+
+                );
+                this.setModalVisible(!modalVisible);
+              }
+            }}
+            style={styles.SumbitBtn}
+          >
+            <Text style={styles.SumbitBtnText}>Sumbit</Text>
+          </TouchableOpacity>
+        </Modal>
       </View>
     );
   }
