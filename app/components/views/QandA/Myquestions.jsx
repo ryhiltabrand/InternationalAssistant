@@ -15,7 +15,7 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
-import AddEvent from "../../shardedComponents/Help/AddRequest";
+import AddQuestion from "../../shardedComponents/QandA/postQuestion";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -56,7 +56,7 @@ class MyQuestion extends React.Component {
     ) {
       alert("Make sure you inputted the question");
     } else {
-      AddEvent(
+      AddQuestion(
         this.state.Request,
       );
     }
@@ -68,18 +68,19 @@ class MyQuestion extends React.Component {
       .doc(firebase.auth().currentUser.uid);
     const doc = await usersRef.get();
     var name = doc.data().name;
+    var pic = doc.data().profilepicture;
     RequestsQuery = await firebase
       .firestore()
       .collection("Questions and Answers")
-      .where("posterUID", "==", firebase.auth().currentUser.uid)
+      .where("RequesterUID", "==", firebase.auth().currentUser.uid)
       .get();
     RequestsQuery.docs.map((doc) => {
-      var ruid = doc.get("posterUID");
+      var ruid = doc.get("RequesterUID");
       var huid = doc.get("answererUID");
       var question = doc.get("Question");
       var answers = doc.get("Answers");
-      //var DateN = new Date(date);
       let Request = {
+        Pic: pic,
         Name: name,
         Question: question,
         Answers: answers,
@@ -107,28 +108,16 @@ class MyQuestion extends React.Component {
           }}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.navigate("IndividualRequest", {
-                    Name: item.Name,
-                    Answers: item.Answers,
-                    Question: item.Question,
-                  });
-                }}
-              >
                 <View style={styles.box}>
                   <View style={styles.firstLine}>
+                    <Image style={styles.image} source={{ uri: item.Pic }} />
                     <Text style={styles.name}>{item.Name}</Text>
                   </View>
 
                   <View style={styles.secondLine}>
                     <Text style={styles.request}>{item.Question}</Text>
                   </View>
-                  <View style={styles.fifthLine}>
-                    <Text>Answers: {Object.keys(item.Answers).length}</Text>
-                  </View>
                 </View>
-              </TouchableOpacity>
             );
           }}
         />
@@ -154,7 +143,7 @@ class MyQuestion extends React.Component {
           <TextInput
             multiline
             numberOfLines={4}
-            onChangeText={(val) => this.updateInputVal(val, "Question")}
+            onChangeText={(val) => this.updateInputVal(val, "Request")}
             placeholder="Type out your Question here"
             maxLength={256}
             style={{
@@ -169,14 +158,14 @@ class MyQuestion extends React.Component {
           <TouchableOpacity
             onPress={() => {
               if (
-                this.state.Question == null 
+                this.state.Request == null 
               ) {
                 alert(
                   "Please enter a question"
                 );
               } else {
-                AddEvent(
-                  this.state.Question,
+                AddQuestion(
+                  this.state.Request,
 
                 );
                 this.setModalVisible(!modalVisible);
@@ -184,7 +173,7 @@ class MyQuestion extends React.Component {
             }}
             style={styles.SumbitBtn}
           >
-            <Text style={styles.SumbitBtnText}>Sumbit</Text>
+            <Text style={styles.SumbitBtnText}>Submit</Text>
           </TouchableOpacity>
         </Modal>
       </View>
@@ -245,14 +234,6 @@ const styles = StyleSheet.create({
   },
   thirdLine: {
     flex: 3,
-    flexDirection: "row",
-  },
-  forthLine: {
-    flex: 4,
-    flexDirection: "row",
-  },
-  fifthLine: {
-    flex: 5,
     flexDirection: "row",
   },
   name: {
