@@ -117,6 +117,9 @@ class MyQuestion extends React.Component {
                   <View style={styles.secondLine}>
                     <Text style={styles.request}>{item.Question}</Text>
                   </View>
+                  <View style={styles.fifthLine}>
+                    <Text>Answers: {Object.keys(item.Answers).length}</Text>
+                  </View>
                 </View>
             );
           }}
