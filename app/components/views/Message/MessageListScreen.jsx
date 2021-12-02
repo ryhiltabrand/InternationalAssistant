@@ -14,7 +14,6 @@ import {
   Touchable,
 } from "react-native";
 import firebase from "firebase";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 
 
@@ -24,8 +23,10 @@ export class MessageListScreen extends Component {
     this.state = {
       data: [],
       modalVisible: false,
+      modalvisible: false,
       modalData: [],
       gData: [],
+      id:null,
     };
   }
   componentDidMount() {
@@ -37,11 +38,16 @@ export class MessageListScreen extends Component {
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };
+  setModalvisible = (visible) => {
+    this.setState({ modalvisible: visible });
+  };
 
   clearState = () => {
     this.setState({
       data: [],
       modalData:[],
+      gData:[],
+      id:null,
     });
   };
   
@@ -79,14 +85,13 @@ export class MessageListScreen extends Component {
     const doc = await userRef.get()
     var language = doc.data().language
     for (var i=0; i<language.length; i++){
-      console.log(language[i])
       gChatquery = await firebase.firestore().collection("GroupChats")
       .where(firebase.firestore.FieldPath.documentId(), "==", language[i])
       .get()
       gChatquery.docs.map((doc)  =>{
-        const users = doc.data().users
+        const users = doc.data().Users
         const pic = doc.data().chatPic
-        const id = doc.data().Id
+        const id = doc.id
         let groups = {users: users, pic: pic, id: id}
         this.setState({
           gData:[...this.state.gData, groups],
@@ -152,9 +157,24 @@ export class MessageListScreen extends Component {
     console.log("Worked ", add.id)
   }
 
+  Joinchat = async() =>{
+    docRef= firebase.firestore().collection("GroupChats").doc(this.state.id)
+    const doc = await docRef.get()
+    var Users= doc.data().Users;
+    console.log(Users)
+    Users.push(firebase.auth().currentUser.uid)
+    Users.sort()
+    const add = await firebase.firestore().collection("GroupChats")
+    .doc(this.state.id)
+    .update({
+      Users: Users,
+    })
+  }
+
 
 render(){
   const { modalVisible } = this.state;
+  const { modalvisible} = this.state;
     return (
       <View>
         <TouchableOpacity 
@@ -179,6 +199,7 @@ render(){
           this.setModalVisible(!modalVisible)
           this.clearState()
           this.DirectMessages()
+          this.GroupChats()
         }}
         >
           <Text>Back to Messages</Text>
@@ -204,29 +225,69 @@ render(){
               
           }}
           />
-              
-          
           </Modal>
-          <View>
-            
-          </View>
             <FlatList
             horizontal={true}
             enableEmptySections={true}
             data={this.state.gData}
             keyExtractor={(item)=>{
-              return item.pic;
+              return item.id;
             }}
             renderItem={({ item }) =>{
               return(
                 <TouchableOpacity onPress={() =>{
-                  if(item.users.contains(firebase.auth().currentUser.uid)){
-                    
+                  if(item.users.includes(firebase.auth().currentUser.uid)!=true){
+                    console.log("First",item.id)
+                    this.setState({
+                      id:item.id,
+                      modalvisible: true,
+                    })
+                  }
+                  else{
+                    this.props.navigation.navigate("GroupChat", {
+                      name: item.id,
+                    })
                   }
                 }}>
-                  <View style={{padding:10}}>
+                  <View style={{padding:10}}/>
                   <Image style={styles.gimage} source={{uri : item.pic}}/>
+                  <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalvisible}
+                  onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                    this.setModalvisible(!modalvisible);
+                  }}
+                  >
+                    <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                    <TouchableOpacity 
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => {
+                    this.setModalvisible(!modalvisible)
+                    this.clearState()
+                    this.DirectMessages()
+                    this.GroupChats()
+                  }}
+                  >
+                  <Text>Back to Messages</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                  style={[styles.button,styles.buttonClose]}
+                  onPress={() =>{
+                    this.Joinchat().then(() =>{
+                      this.setModalvisible(!modalvisible)
+                      this.clearState()
+                      this.DirectMessages()
+                      this.GroupChats()
+                    })
+                  }}
+                  >
+                  </TouchableOpacity>
                   </View>
+                  </View>
+                  </Modal>
                   </TouchableOpacity>
               )
             }}
@@ -331,6 +392,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   modalView: {
+    justifyContent:'center',
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
@@ -344,5 +406,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+  },
+  content: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    margin: 20,
   },
 });
