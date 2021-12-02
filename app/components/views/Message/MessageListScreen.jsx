@@ -14,6 +14,8 @@ import {
   Touchable,
 } from "react-native";
 import firebase from "firebase";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 
 export class MessageListScreen extends Component {
@@ -23,10 +25,12 @@ export class MessageListScreen extends Component {
       data: [],
       modalVisible: false,
       modalData: [],
+      gData: [],
     };
   }
   componentDidMount() {
     this.DirectMessages();
+    this.GroupChats();
   }
   componentWillUnmount() {}
 
@@ -44,7 +48,7 @@ export class MessageListScreen extends Component {
 
   DirectMessages = async() =>{
     OtherUser= []
-    const currentUser = firebase.auth().currentUser.uid
+    const currentUser = firebase.auth().currentUser.uid;
     RecRef= await firebase.firestore().collection("DirectMessaging")
     .where("Users", 'array-contains', currentUser).get()
     RecRef.docs.map((doc) =>{
@@ -66,6 +70,28 @@ export class MessageListScreen extends Component {
           data: [...this.state.data, user],
         })
       })
+    }
+  }
+  GroupChats = async() =>{
+    //gChats=[]
+    const currentUser = firebase.auth().currentUser.uid;
+    userRef = firebase.firestore().collection("users").doc(currentUser)
+    const doc = await userRef.get()
+    var language = doc.data().language
+    for (var i=0; i<language.length; i++){
+      console.log(language[i])
+      gChatquery = await firebase.firestore().collection("GroupChats")
+      .where(firebase.firestore.FieldPath.documentId(), "==", language[i])
+      .get()
+      gChatquery.docs.map((doc)  =>{
+        const users = doc.data().users
+        const pic = doc.data().chatPic
+        const id = doc.data().Id
+        let groups = {users: users, pic: pic, id: id}
+        this.setState({
+          gData:[...this.state.gData, groups],
+        })
+    })
     }
   }
   FriendListPuller = async () => {
@@ -116,7 +142,7 @@ export class MessageListScreen extends Component {
       }
     }
   };
-  AddFriend = async (ouid) =>{
+  AddChat = async (ouid) =>{
     Users=[ouid,firebase.auth().currentUser.uid]
     Users.sort()
     data = {
@@ -130,7 +156,7 @@ export class MessageListScreen extends Component {
 render(){
   const { modalVisible } = this.state;
     return (
-      <View style={styles.body}>
+      <View>
         <TouchableOpacity 
         onPress={() => {
           this.FriendListPuller().then(() => this.setModalVisible(true));
@@ -166,7 +192,7 @@ render(){
           }}
           renderItem={({ item }) => {
             return(
-              <TouchableOpacity onPress={() => this.AddFriend(item.uid)}>
+              <TouchableOpacity onPress={() => this.AddChat(item.uid)}>
                 <View style={styles.box}>
                   <Image style={styles.image} source={{uri : item.pic}} />
                   <Text style={styles.name}>{item.name}</Text>
@@ -181,6 +207,30 @@ render(){
               
           
           </Modal>
+          <View>
+            
+          </View>
+            <FlatList
+            horizontal={true}
+            enableEmptySections={true}
+            data={this.state.gData}
+            keyExtractor={(item)=>{
+              return item.pic;
+            }}
+            renderItem={({ item }) =>{
+              return(
+                <TouchableOpacity onPress={() =>{
+                  if(item.users.contains(firebase.auth().currentUser.uid)){
+                    
+                  }
+                }}>
+                  <View style={{padding:10}}>
+                  <Image style={styles.gimage} source={{uri : item.pic}}/>
+                  </View>
+                  </TouchableOpacity>
+              )
+            }}
+            />
         <FlatList
           styles={styles.container}
           enableEmptySections={true}
@@ -228,7 +278,17 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
   },
-
+  gimage: {
+    width: 60,
+    height: 60,
+    marginHorizontal:5,
+    borderColor:'black',
+    borderWidth:2,
+  },
+  gcontainer:{
+    flex:1,
+    marginTop:StatusBar.currentHeight || 0,
+  },
   box: {
     padding: 5,
     marginTop: 5,
