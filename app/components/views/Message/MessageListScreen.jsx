@@ -237,7 +237,6 @@ render(){
               return(
                 <TouchableOpacity onPress={() =>{
                   if(item.users.includes(firebase.auth().currentUser.uid)!=true){
-                    console.log("First",item.id)
                     this.setState({
                       id:item.id,
                       modalvisible: true,
@@ -284,6 +283,7 @@ render(){
                     })
                   }}
                   >
+                  <Text>Join Group Chat</Text>
                   </TouchableOpacity>
                   </View>
                   </View>
