@@ -15,7 +15,7 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
-import AddEvent from "../../shardedComponents/Help/AddRequest";
+import AddRequest from "../../shardedComponents/Help/AddRequest";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -138,7 +138,7 @@ class MyRequest extends React.Component {
     ) {
       alert("Could not create the request make sure you inputted everything!");
     } else {
-      AddEvent(
+      AddRequest(
         this.state.Request,
         this.state.Amount,
         this.state.Language,
@@ -161,8 +161,9 @@ class MyRequest extends React.Component {
       .where("RequesterUID", "==", firebase.auth().currentUser.uid)
       .get();
     RequestsQuery.docs.map((doc) => {
+      var DocID = doc.id
       var ruid = doc.get("RequesterUID");
-      var huid = doc.get("HelperUID");
+      var huid = doc.get("HelpersUID");
       var description = doc.get("Description");
       var campus = doc.get("Campus");
       var status = doc.get("Completed");
@@ -181,10 +182,11 @@ class MyRequest extends React.Component {
         Campus: campus,
         Status: status,
         AmountOfHelpers: helpersAmount,
-        Languages: language,
+        Language: language,
         Comments: comments,
-        Helpers: huid,
+        HelpersUID: huid,
         Applicants: applicants,
+        DocID: DocID
       };
       
       this.setState({
@@ -218,10 +220,12 @@ class MyRequest extends React.Component {
                     Applicants: item.Applicants,
                     Campus: item.Campus,
                     Comments: item.Comments,
-                    Date: item.Date,
                     Description: item.Description,
-                    Helpers: item.Helpers,
+                    HelpersUID: item.HelpersUID,
                     Language: item.Language,
+                    Doc: item.DocID,
+                    Date: item.Date,
+                    
                   });
                 }}
               >
@@ -360,7 +364,7 @@ class MyRequest extends React.Component {
                   var Year = d.getFullYear()
                   var Date = Year+"-"+Month+"-"+Day
                   this.setState({ Day: Date });
-                  console.log(Date)
+                  //console.log(Date)
                   
                 }
               }}
@@ -393,7 +397,7 @@ class MyRequest extends React.Component {
                   }
                   var Time = Hours+":"+Mins+":00"
                   this.setState({ Time: Time});
-                  console.log(Time)
+                  //console.log(Time)
                 }
               }}
               style={{ backgroundColor: "white" }}
@@ -414,10 +418,10 @@ class MyRequest extends React.Component {
                 );
               } else {
                 var dateTime = this.state.Day +"T"+ this.state.Time+"Z";
-                console.log(dateTime)
+                //console.log(dateTime)
                 var date = new Date(dateTime)
-                console.log(date)
-                AddEvent(
+                //console.log(date)
+                AddRequest(
                   this.state.Request,
                   this.state.Amount,
                   this.state.Language,
