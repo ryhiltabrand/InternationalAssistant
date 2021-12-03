@@ -15,7 +15,7 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
-import AddEvent from "../../shardedComponents/Help/AddRequest";
+import AddRequest from "../../shardedComponents/Help/AddRequest";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -50,7 +50,7 @@ class MyRequest extends React.Component {
     this.setLanguage = this.setLanguage.bind(this);
     this.setCampus = this.setCampus.bind(this);
   }
-  
+
   componentDidMount() {
     this.MyRequests();
   }
@@ -93,7 +93,7 @@ class MyRequest extends React.Component {
       openL: open,
     });
   };
-  
+
   setDate(date) {
     this.setState({ Date: date });
   }
@@ -138,7 +138,7 @@ class MyRequest extends React.Component {
     ) {
       alert("Could not create the request make sure you inputted everything!");
     } else {
-      AddEvent(
+      AddRequest(
         this.state.Request,
         this.state.Amount,
         this.state.Language,
@@ -161,8 +161,9 @@ class MyRequest extends React.Component {
       .where("RequesterUID", "==", firebase.auth().currentUser.uid)
       .get();
     RequestsQuery.docs.map((doc) => {
+      var DocID = doc.id;
       var ruid = doc.get("RequesterUID");
-      var huid = doc.get("HelperUID");
+      var huid = doc.get("HelpersUID");
       var description = doc.get("Description");
       var campus = doc.get("Campus");
       var status = doc.get("Completed");
@@ -181,21 +182,39 @@ class MyRequest extends React.Component {
         Campus: campus,
         Status: status,
         AmountOfHelpers: helpersAmount,
-        Languages: language,
+        Language: language,
         Comments: comments,
-        Helpers: huid,
+        HelpersUID: huid,
         Applicants: applicants,
+        DocID: DocID,
       };
-      
+
       this.setState({
         data: [...this.state.data, Request],
       });
     });
   };
+  MyRequestsSnap = async () => {
+    //console.log(firebase.auth().currentUser.uid)
+    const usersRef = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+    const doc = await usersRef.get();
+    var name = doc.data().name;
+    var pic = doc.data().profilepicture;
+    RequestsQuery = await firebase
+      .firestore()
+      .collection("Requests")
+      .where("RequesterUID", "==", firebase.auth().currentUser.uid)
+      .onSnapshot((docs) => {
+        console.log(docs.data())
+      });
+  };
   render() {
     const { modalVisible } = this.state;
     const { open, openL, Language, Campus } = this.state;
-    
+
     return (
       <View style={styles.body}>
         <Button title="Add" onPress={() => this.setModalVisible(true)} />
@@ -218,10 +237,11 @@ class MyRequest extends React.Component {
                     Applicants: item.Applicants,
                     Campus: item.Campus,
                     Comments: item.Comments,
-                    Date: item.Date,
                     Description: item.Description,
-                    Helpers: item.Helpers,
+                    HelpersUID: item.HelpersUID,
                     Language: item.Language,
+                    Doc: item.DocID,
+                    Date: item.Date,
                   });
                 }}
               >
@@ -229,7 +249,15 @@ class MyRequest extends React.Component {
                   <View style={styles.firstLine}>
                     <Image style={styles.image} source={{ uri: item.Pic }} />
                     <Text style={styles.name}>{item.Name}</Text>
-                    <Text style={styles.time}>{item.Date.getMonth()+"-"+item.Date.getDate()+" @ "+item.Date.getHours()+":"+item.Date.getMinutes()}</Text>
+                    <Text style={styles.time}>
+                      {item.Date.getMonth() +
+                        "-" +
+                        item.Date.getDate() +
+                        " @ " +
+                        item.Date.getHours() +
+                        ":" +
+                        item.Date.getMinutes()}
+                    </Text>
                   </View>
 
                   <View style={styles.secondLine}>
@@ -282,7 +310,9 @@ class MyRequest extends React.Component {
             title="Select Time"
             onPress={() => this.setTimeVisible(true)}
           />
-          <Text>Date: {this.state.Day} Time: {this.state.Time}</Text>
+          <Text>
+            Date: {this.state.Day} Time: {this.state.Time}
+          </Text>
           <Text>Enter the following information to create a request</Text>
           <TextInput
             multiline
@@ -333,7 +363,6 @@ class MyRequest extends React.Component {
             zIndexInverse={2000}
           />
 
-          
           {this.state.showDatePicker && (
             <DateTimePicker
               value={this.state.Date}
@@ -345,23 +374,22 @@ class MyRequest extends React.Component {
                   onChange(d);
                 } else {
                   this.setDateClose(false);
-                  var Month = ''
-                  if (Number(d.getMonth()+1) < 11){
-                    Month = "0"+(d.getMonth()+1)
+                  var Month = "";
+                  if (Number(d.getMonth() + 1) < 11) {
+                    Month = "0" + (d.getMonth() + 1);
                   } else {
-                    Month = d.getMonth()+1
+                    Month = d.getMonth() + 1;
                   }
-                  var Day = ''
-                  if (Number(d.getDate()) < 10){
-                    Day = "0"+(d.getDate()+1)
+                  var Day = "";
+                  if (Number(d.getDate()) < 10) {
+                    Day = "0" + (d.getDate() + 1);
                   } else {
-                    Day = d.getDate()+1
+                    Day = d.getDate() + 1;
                   }
-                  var Year = d.getFullYear()
-                  var Date = Year+"-"+Month+"-"+Day
+                  var Year = d.getFullYear();
+                  var Date = Year + "-" + Month + "-" + Day;
                   this.setState({ Day: Date });
-                  console.log(Date)
-                  
+                  //console.log(Date)
                 }
               }}
               style={{ backgroundColor: "white" }}
@@ -378,22 +406,22 @@ class MyRequest extends React.Component {
                   onChange(d);
                 } else {
                   this.setTimeClose(false);
-                  var Hours = '';
-                  if (Number(d.getHours() < 10)){
-                    Hours = "0"+d.getHours();
+                  var Hours = "";
+                  if (Number(d.getHours() < 10)) {
+                    Hours = "0" + d.getHours();
                   } else {
                     Hours = d.getHours();
                   }
-                    
+
                   var Mins = "";
-                  if (Number(d.getMinutes() < 10)){
-                    Mins = "0"+d.getMinutes();
+                  if (Number(d.getMinutes() < 10)) {
+                    Mins = "0" + d.getMinutes();
                   } else {
                     Mins = d.getMinutes();
                   }
-                  var Time = Hours+":"+Mins+":00"
-                  this.setState({ Time: Time});
-                  console.log(Time)
+                  var Time = Hours + ":" + Mins + ":00";
+                  this.setState({ Time: Time });
+                  //console.log(Time)
                 }
               }}
               style={{ backgroundColor: "white" }}
@@ -407,17 +435,19 @@ class MyRequest extends React.Component {
                 this.state.Amount == null ||
                 this.state.Campus == null ||
                 this.state.Language == null ||
-                this.state.Request == null || this.state.Day == null || this.state.Time == null
+                this.state.Request == null ||
+                this.state.Day == null ||
+                this.state.Time == null
               ) {
                 alert(
                   "Could not create the request make sure you inputted everything!"
                 );
               } else {
-                var dateTime = this.state.Day +"T"+ this.state.Time+"Z";
-                console.log(dateTime)
-                var date = new Date(dateTime)
-                console.log(date)
-                AddEvent(
+                var dateTime = this.state.Day + "T" + this.state.Time + "Z";
+                //console.log(dateTime)
+                var date = new Date(dateTime);
+                //console.log(date)
+                AddRequest(
                   this.state.Request,
                   this.state.Amount,
                   this.state.Language,
