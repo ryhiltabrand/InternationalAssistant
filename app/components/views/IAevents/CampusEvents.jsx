@@ -57,7 +57,6 @@ export default class CampusEvents extends React.Component {
             var dislikes = doc.get("dislikes");
             var language = doc.get("language");
             var likes = doc.get("likes");
-            var photo = doc.get("photo");
             var type = doc.get("type");
             let Event = {
                 Address: address,
@@ -70,7 +69,6 @@ export default class CampusEvents extends React.Component {
                 Dislikes: dislikes,
                 Language: language,
                 Likes: likes,
-                Photo: photo,
                 Type: type,
             };
             console.log(Event)

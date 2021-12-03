@@ -1,6 +1,6 @@
 import firebase from "firebase";
 
-export default function AddEvent(Description, Language, Campus, time) {
+export default function AddEvent(Description, language, Campus, Name, Country) {
   
 
   const event = async () => {
@@ -21,11 +21,11 @@ export default function AddEvent(Description, Language, Campus, time) {
             EID: EID,
             Name: Name,
             Country: Country,
-            
-            Language: Language,
-            Comments: {},
-            CompletionTime: time,
-            
+            dislikes: dislikes,
+            language: language,
+            likes: likes,
+            photo: photo,
+            type:type
         })
   };
 
