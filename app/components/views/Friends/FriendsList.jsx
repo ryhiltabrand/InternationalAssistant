@@ -45,6 +45,8 @@ class FriendsListScreen extends React.Component {
 
     const doc = await usersRef.get();
     var fl = doc.data().FriendsList;
+    const friendsTest = doc.get("FriendsList.pjVVqF3X5kOC0ZbXrRunbGS0sLe2")
+    console.log("bitch",friendsTest)
     var f1A = Object.keys(fl);
     var f1V = Object.values(fl);
     var TrueFriends = Object.keys(fl).reduce((o, key) => {

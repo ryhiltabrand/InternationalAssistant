@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import React, { TouchableOpacity, useState, useEffect } from "react";
 import firebase from "firebase";
+import { AcceptRequest, DenyRequest } from "../../shardedComponents/Friends/FriendRequest";
 
 export default function PendingFriends({ route, navigation }) {
   /* 2. Get the param */
@@ -129,6 +130,7 @@ export default function PendingFriends({ route, navigation }) {
                           backgroundColor: "teal",
                         }}
                         onPress={() => {
+                          AcceptRequest(item.uid)
                           console.log(`you approved this bitch ${item.uid}`);
                         }}
                       >
@@ -147,6 +149,7 @@ export default function PendingFriends({ route, navigation }) {
                         backgroundColor: "teal",
                       }}
                         onPress={() => {
+                          DenyRequest(item.uid)
                           console.log(`you denied this bitch ${item.uid}`);
                         }}
                       >
