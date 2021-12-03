@@ -17,16 +17,14 @@ import {
   import { GiftedChat, Bubble, Send } from 'react-native-gifted-chat';
   import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const ChatScreen = ({route}) => {
+const GroupChat = ({route}) => {
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState(null)
-  const {name, uid} = route.params;
-  var id;
+  const {name} = route.params;
   useEffect(() => {
     readUser()
-     MessageGrab().then(() =>{
-      const messageRef = firebase.firestore().collection("DirectMessaging")
-      .doc(id).collection("Messages")
+      const messageRef = firebase.firestore().collection("GroupChats")
+      .doc(name).collection("Messages")
       const unsubcribe = messageRef.onSnapshot((querySnapshot) =>{
           const messagesFirestore = querySnapshot
           .docChanges()
@@ -42,7 +40,6 @@ const ChatScreen = ({route}) => {
       
 
 
-     })
   }, []);
   const appendMessages = useCallback(
     (messages) => {
@@ -63,31 +60,10 @@ async function readUser() {
   }
 }
 
-  MessageGrab = async() =>{
-    const currentUser = firebase.auth().currentUser.uid;
-    const ids = [currentUser, uid]
-    ids.sort()
-    TestRef = await firebase.firestore().collection("DirectMessaging")
-    .where("Users", "in", [ids])
-    .get()
-    TestRef.docs.map((doc) =>{
-      id = doc.id;
-    })
-
-  }
 
   async function handleSend(messages) {
-    const currentUser = firebase.auth().currentUser.uid;
-    const ids = [currentUser, uid]
-    ids.sort()
-    TestRef = await firebase.firestore().collection("DirectMessaging")
-    .where("Users", "in", [ids])
-    .get()
-    TestRef.docs.map((doc) =>{
-      id = doc.id;
-    })
-    const messageRef = firebase.firestore().collection("DirectMessaging")
-      .doc(id).collection("Messages")
+    const messageRef = firebase.firestore().collection("GroupChats")
+      .doc(name).collection("Messages")
     const writes = messages.map((m) => messageRef.add(m))
     await Promise.all(writes)
 }
@@ -150,7 +126,7 @@ async function readUser() {
   );
 };
 
-export default ChatScreen;
+export default GroupChat;
 
 
   const styles= StyleSheet.create({
