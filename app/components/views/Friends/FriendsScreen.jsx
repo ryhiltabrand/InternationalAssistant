@@ -52,6 +52,7 @@ const Tabs = () => {
       <Tab.Screen
         name="FriendsList"
         component={FriendsListScreen}
+        
       />
       <Tab.Screen name="FriendSearch" component={FriendsSearchScreen} />
       <Tab.Screen name="AutoMatching" component={FriendsMatchScreen} />

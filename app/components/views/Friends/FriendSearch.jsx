@@ -181,8 +181,9 @@ export default class FriendsSearchScreen extends React.Component {
     const doc = await userRef.get();
     var name = doc.data().name;
     var profpic = doc.data().profilepicture;
+    var FriendsList = doc.data().FriendsList;
     //console.log(Uid, name, profpic, friend);
-    let friend = { uid: Uid, name: name, pic: profpic };
+    let friend = { uid: Uid, name: name, pic: profpic, Friends: FriendsList };
     this.setState({
       data: [...this.state.data, friend],
     });
@@ -244,7 +245,7 @@ export default class FriendsSearchScreen extends React.Component {
       //console.log("invalid Search");
       alert("none");
     }
-
+    
     if (Object.keys(criteria).length >= 1) {
       Friendquery = Friendquery.get().then((snap) => {
         //console.log(snap.size);
@@ -345,15 +346,25 @@ export default class FriendsSearchScreen extends React.Component {
             }}*/
             />
           </View>
-          <View style={{ padding: 5, marginTop: 90, flexDirection: "row", justifyContent: "center" }}>
-            <View style={{marginRight: 2}}>
+          <View
+            style={{
+              padding: 5,
+              marginTop: 90,
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <View style={{ marginRight: 2 }}>
               <Button title="Clear" onPress={() => this.clearState()} />
             </View>
-            <View style={{marginLeft: 2}}>
-            <Button
-              title="Search"
-              onPress={() => this.Loc().then(() => this.setModalVisible(true))}
-            /></View>
+            <View style={{ marginLeft: 2 }}>
+              <Button
+                title="Search"
+                onPress={() =>
+                  this.Loc().then(() => this.setModalVisible(true))
+                }
+              />
+            </View>
           </View>
         </View>
         <Modal
@@ -382,20 +393,28 @@ export default class FriendsSearchScreen extends React.Component {
               return item.name;
             }}
             renderItem={({ item }) => {
+              const UID = firebase.auth().currentUser.uid
               return (
-                <TouchableOpacity>
-                  <View style={styles.box}>
-                    <Image style={styles.image} source={{ uri: item.pic }} />
-                    <Text style={styles.name}>{item.name}</Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        updatefriends(item.uid);
-                      }}
-                    >
-                      <Text>Add</Text>
+                <>
+                  {
+                    <TouchableOpacity>
+                      <View style={styles.box}>
+                        <Image
+                          style={styles.image}
+                          source={{ uri: item.pic }}
+                        />
+                        <Text style={styles.name}>{item.name}</Text>
+                        <TouchableOpacity
+                          onPress={() => {
+                            updatefriends(item.uid);
+                          }}
+                        >
+                          <Text>Add</Text>
+                        </TouchableOpacity>
+                      </View>
                     </TouchableOpacity>
-                  </View>
-                </TouchableOpacity>
+                  }
+                </>
               );
             }}
           />

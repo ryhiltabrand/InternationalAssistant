@@ -13,13 +13,14 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
-import deletefriends from "../../shardedComponents/Friends/removefriends";
-
+import {deletefriends} from "../../shardedComponents/Friends/FriendRequest"
+//import {navigation} from '@react-navigation/native'
 LogBox.ignoreLogs(["Setting a timer"]);
 
 class FriendsListScreen extends React.Component {
   constructor(props) {
     super(props);
+    this._unsubscribe;
     this.state = {
       data: [],
       pendingFriends: {},
@@ -27,15 +28,23 @@ class FriendsListScreen extends React.Component {
     };
   }
   componentDidMount() {
+    console.log(this.props)
     this.Loc();
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.clearState()
+      this.Loc()
+    });
   }
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
 
   clearState = () => {
     this.setState({
       data: [],
     });
   };
+
 
   Loc = async () => {
     const usersRef = firebase
