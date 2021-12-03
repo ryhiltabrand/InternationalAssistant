@@ -18,8 +18,8 @@ import {
   Button,
   Image
 } from "react-native";
-import bgImage from '../../assets/bgImage.jpg';
-import firebase from "../../utilities/firebase";
+import bgImage from './../../../assets/bgImage.jpg';
+import firebase from "../../../utilities/firebase";
 import { Component } from "react";
 
 export class ForgotScreen extends Component {
@@ -57,7 +57,7 @@ export class ForgotScreen extends Component {
 		
 	  <Image
 	      style={{ marginTop: 60, width: 150, height: 150 }}
-	      source={require('../../assets/lock.png')}
+	      source={require('./../../../assets/lock.png')}
        />
 	  <Text style={styles.header}>Trouble logging in?</Text>
         <Text style={styles.forgotText}>Enter your email and we'll send you a password reset link to get back into you account.</Text>
