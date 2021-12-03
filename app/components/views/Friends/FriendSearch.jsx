@@ -245,7 +245,7 @@ export default class FriendsSearchScreen extends React.Component {
       //console.log("invalid Search");
       alert("none");
     }
-    
+
     if (Object.keys(criteria).length >= 1) {
       Friendquery = Friendquery.get().then((snap) => {
         //console.log(snap.size);
@@ -384,6 +384,7 @@ export default class FriendsSearchScreen extends React.Component {
             }}
           >
             <Text>Back to Search</Text>
+            
           </TouchableOpacity>
           <FlatList
             style={styles.container}
@@ -393,24 +394,44 @@ export default class FriendsSearchScreen extends React.Component {
               return item.name;
             }}
             renderItem={({ item }) => {
-              const UID = firebase.auth().currentUser.uid
+              const UID = firebase.auth().currentUser.uid;
               return (
                 <>
-                  {
+                
+                  { !(Object.keys(item.Friends).includes(UID)) &&
                     <TouchableOpacity>
-                      <View style={styles.box}>
-                        <Image
-                          style={styles.image}
-                          source={{ uri: item.pic }}
-                        />
-                        <Text style={styles.name}>{item.name}</Text>
+                      <View style={styles.boxA}>
+                        <View style={{ flexDirection: "row" }}>
+                          <Image
+                            style={styles.image}
+                            source={{ uri: item.pic }}
+                          />
+                          <Text style={styles.name}>{item.name}</Text>
+                        </View>
+                        <View
+                    style={{
+                      paddingLeft: 280,
+                      paddingTop: 13,
+                      position: "absolute",
+                    }}
+                  >
                         <TouchableOpacity
                           onPress={() => {
                             updatefriends(item.uid);
                           }}
+                          style={{
+                            alignItems: "flex-end",
+                            justifyContent: "center",
+                            paddingVertical: 13,
+                            //paddingHorizontal: 32,
+                            borderRadius: 4,
+                            elevation: 3,
+                            backgroundColor: "teal",
+                          }}
                         >
-                          <Text>Add</Text>
+                      <Text style={{fontSize: 18, paddingLeft: 6, paddingRight: 6}}>Add</Text>
                         </TouchableOpacity>
+                        </View>
                       </View>
                     </TouchableOpacity>
                   }
@@ -424,6 +445,26 @@ export default class FriendsSearchScreen extends React.Component {
   }
 }
 const styles = StyleSheet.create({
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: "#008B8B",
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "black",
+    alignContent: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+  },
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -470,7 +511,40 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
   },
-
+  SumbitBtn: {
+    width: "80%",
+    backgroundColor: "blue",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 5,
+    marginLeft: 30,
+  },
+  SumbitBtnText: {
+    color: "white",
+    fontSize: 15,
+  },
+  boxA: {
+    padding: 8,
+    marginTop: 5,
+    borderColor: "black",
+    borderStyle: "solid",
+    borderWidth: 3,
+    marginBottom: 5,
+    marginRight: 5,
+    marginLeft: 5,
+    backgroundColor: "#ADD8E6",
+    flexDirection: "row",
+    shadowColor: "black",
+    shadowOpacity: 0.2,
+    shadowOffset: {
+      height: 1,
+      width: -2,
+    },
+    elevation: 2,
+    width: 380,
+  },
   box: {
     padding: 5,
     marginTop: 5,
@@ -486,10 +560,30 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   name: {
-    color: "#20B2AA",
+    color: "black",
     fontSize: 22,
     alignSelf: "center",
     marginLeft: 10,
     textAlign: "center",
+  },
+  firstLine: {
+    marginTop: 1,
+
+    flexDirection: "row",
+    borderColor: "black",
+    borderStyle: "solid",
+    borderWidth: 3,
+  },
+  secondLine: {
+    margin: 1,
+  },
+  thirdLine: {
+    flexDirection: "row",
+  },
+  forthLine: {
+    flexDirection: "row",
+  },
+  fifthLine: {
+    flexDirection: "row",
   },
 });
