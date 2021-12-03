@@ -12,7 +12,7 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
-import deletefriends from "../../shardedComponents/Friends/removefriends"
+import deletefriends from "../../shardedComponents/Friends/removefriends";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
@@ -43,16 +43,26 @@ class FriendsListScreen extends React.Component {
     const doc = await usersRef.get();
     var fl = doc.data().FriendsList;
     var f1A = Object.keys(fl);
-    for (var i = 0; i < f1A.length; i++) {
+    var f1V = Object.values(fl);
+    var TrueFriends = Object.keys(fl).reduce((o, key) => {
+      fl[key] !== false && (o[key] = fl[key]);
+      return o;
+    }, {});
+    var pendingFriends = Object.keys(fl).reduce((o, key) => {
+      fl[key] !== true && (o[key] = fl[key]);
+      return o;
+    }, {});
+    var TrueFriendsKeys = Object.keys(TrueFriends);
+    for (var i = 0; i < TrueFriendsKeys.length; i++) {
       Friendquery = await firebase
         .firestore()
         .collection("users")
-        .where("UID", "==", f1A[i])
+        .where("UID", "==", TrueFriendsKeys[i])
         .get();
       Friendquery.docs.map((doc) => {
         const name = doc.get("name");
         const profpic = doc.get("profilepicture");
-        let friend = { uid: f1A[i], name: name, pic: profpic };
+        let friend = { uid: TrueFriendsKeys[i], name: name, pic: profpic };
         this.setState({
           data: [...this.state.data, friend],
         });
@@ -83,9 +93,13 @@ class FriendsListScreen extends React.Component {
                 <View style={styles.box}>
                   <Image style={styles.image} source={{ uri: item.pic }} />
                   <Text style={styles.name}>{item.name}</Text>
-                  <TouchableOpacity onPress={() => {
-                      deletefriends(item.uid)
-                    }}><Text>Remove</Text></TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      deletefriends(item.uid);
+                    }}
+                  >
+                    <Text>Remove</Text>
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             );
