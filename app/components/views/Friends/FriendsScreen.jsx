@@ -6,6 +6,18 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import FriendsListScreen from "./FriendsList";
 import FriendsSearchScreen from "./FriendSearch";
 import FriendsMatchScreen from "./FriendMatching";
+import PendingFriends from "./PendingFriends";
+import { createStackNavigator } from "@react-navigation/stack";
+
+const Stack = createStackNavigator();
+function NavStack() {
+    return (
+      <Stack.Navigator initialRouteName="FriendsSplit">
+         <Stack.Screen name="FriendsSplit" component={FriendsScreen} options={{ headerShown: false }} />
+         <Stack.Screen name="PendingFriends" component={PendingFriends} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    );
+  }
 
 const FriendsScreen = () => {
   return (
@@ -63,7 +75,7 @@ const FriendsStackScreen = ({ navigation }) => (
   >
     <FStack.Screen
       name="FriendsScreen"
-      component={FriendsScreen}
+      component={NavStack}
       options={{
         title: "Friends",
         headerTitleAlign: "center",

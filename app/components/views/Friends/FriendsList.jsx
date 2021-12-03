@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   FlatList,
   LogBox,
+  
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -21,6 +22,8 @@ class FriendsListScreen extends React.Component {
     super(props);
     this.state = {
       data: [],
+      pendingFriends: {},
+      RequestedFriends:{},
     };
   }
   componentDidMount() {
@@ -45,16 +48,24 @@ class FriendsListScreen extends React.Component {
     var f1A = Object.keys(fl);
     var f1V = Object.values(fl);
     var TrueFriends = Object.keys(fl).reduce((o, key) => {
-      fl[key] !== false && (o[key] = fl[key]);
+      fl[key] === 'Friends' && (o[key] = fl[key]);
       return o;
     }, {});
-    var pendingFriends = Object.keys(fl).reduce((o, key) => {
-      fl[key] !== true && (o[key] = fl[key]);
+    var PendingFriends = Object.keys(fl).reduce((o, key) => {
+      fl[key] === 'Pending' && (o[key] = fl[key]);
       return o;
     }, {});
+    var RequestedFriends = Object.keys(fl).reduce((o, key) => {
+      fl[key] === 'Requested' && (o[key] = fl[key]);
+      return o;
+    }, {});
+    this.setState({
+      pendingFriends: PendingFriends,
+      RequestedFriends:  RequestedFriends
+    });
     var TrueFriendsKeys = Object.keys(TrueFriends);
     for (var i = 0; i < TrueFriendsKeys.length; i++) {
-      Friendquery = await firebase
+      var Friendquery = await firebase
         .firestore()
         .collection("users")
         .where("UID", "==", TrueFriendsKeys[i])
@@ -80,6 +91,19 @@ class FriendsListScreen extends React.Component {
         >
           <Text>Refresh</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            this.clearState();
+            this.Loc();
+            this.props.navigation.navigate("PendingFriends", {
+              Pending: this.state.pendingFriends,
+              Requested: this.state.RequestedFriends
+            });
+          }}
+        >
+          <Text>Pending Friends</Text>
+        </TouchableOpacity>
+        
         <FlatList
           style={styles.container}
           enableEmptySections={true}
