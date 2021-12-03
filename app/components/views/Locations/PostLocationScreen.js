@@ -74,15 +74,10 @@
        name: this.state.location_name,
        address: this.state.location_address,
        contributor: this.state.location_contributor,
-<<<<<<< HEAD:app/components/views/PostLocationScreen.js
        category: this.state.location_category, //Resturant
        rating: this.state.location_rating, //1-5 stars
-       uid: getCurrentUserUID()
-=======
-       category: this.state.location_category,
-       rating: this.state.location_rating,
+       uid: getCurrentUserUID(),
        user_country: this.state.user_country
->>>>>>> main:app/components/views/Locations/PostLocationScreen.js
       })
   }
 
