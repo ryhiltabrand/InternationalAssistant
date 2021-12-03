@@ -19,6 +19,7 @@ import AddQuestion from "../../shardedComponents/QandA/postQuestion";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
+
 LogBox.ignoreLogs(["Setting a timer"]);
 
 class MyQuestion extends React.Component {
@@ -108,6 +109,16 @@ class MyQuestion extends React.Component {
           }}
           renderItem={({ item }) => {
             return (
+              <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate("IndividualQuestion", {
+                  Name: item.Name,
+                  Pic: item.Pic,
+                  Answers: item.Answers,
+                  Question: item.Question,
+                });
+              }}>
+                
                 <View style={styles.box}>
                   <View style={styles.firstLine}>
                     <Image style={styles.image} source={{ uri: item.Pic }} />
@@ -121,6 +132,7 @@ class MyQuestion extends React.Component {
                     <Text>Answers: {Object.keys(item.Answers).length}</Text>
                   </View>
                 </View>
+                </TouchableOpacity>
             );
           }}
         />

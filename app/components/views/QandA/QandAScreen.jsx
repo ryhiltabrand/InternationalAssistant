@@ -8,6 +8,7 @@ import AllRequest from "../HelpRequests/AllRequests";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from "@react-navigation/stack";
 import IndividualRequest from "../HelpRequests/IndividualRequests";
+import Questionview from "../QandA/individualQuestion";
 import OthersRequests from "../HelpRequests/OthersRequests";
 
 const Stack = createStackNavigator();
@@ -15,7 +16,7 @@ function NavStack() {
     return (
       <Stack.Navigator initialRouteName="HelpScreen1">
          <Stack.Screen name="HelpScreen1" component={HelpScreen} options={{ headerShown: false }} />
-         <Stack.Screen name="IndividualRequest" component={IndividualRequest} options={{ headerShown: false }} />
+         <Stack.Screen name="IndividualQuestion" component={Questionview} options={{ headerShown: false }} />
       </Stack.Navigator>
     );
   }
