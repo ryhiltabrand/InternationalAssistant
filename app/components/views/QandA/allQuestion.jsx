@@ -114,7 +114,16 @@ AllQuestions2 = async (
           }}
           renderItem={({ item }) => {
             return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate("OthersQuestion", {
+                    Name: item.Name,
+                    Pic: item.Pic,
+                    Answers: item.Answers,
+                    Question: item.Question,
+                    DocID: item.DocID
+                  });
+                }}>
                 <View style={styles.box}>
                   <View style={styles.firstLine}>
                     <Image style={styles.image} source={{ uri: item.Pic }} />
