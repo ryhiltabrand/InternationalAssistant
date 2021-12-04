@@ -4,7 +4,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MyQuestion from "./Myquestions";
-import AllRequest from "../HelpRequests/AllRequests";
+import AllQuestion from "./allQuestion";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createStackNavigator } from "@react-navigation/stack";
 import IndividualRequest from "../HelpRequests/IndividualRequests";
@@ -34,7 +34,7 @@ function MyTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="My Questions" component={MyQuestion} />
-      <Tab.Screen name="All Questions" component={MyQuestion} />
+      <Tab.Screen name="All Questions" component={AllQuestion} />
     </Tab.Navigator>
   );
 }
