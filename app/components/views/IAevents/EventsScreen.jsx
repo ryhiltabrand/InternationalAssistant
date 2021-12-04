@@ -8,6 +8,8 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { createStackNavigator } from "@react-navigation/stack";
 import { StackRouter } from "react-navigation";
 import MyEvents from "./MyEvents";
+import CampusEvents from "./CampusEvents"
+import LocalEvents from "./LocalEvents";
 
 const Nstack = createStackNavigator();
 const NavStack = () => {
@@ -30,8 +32,8 @@ function EventTabs () {
   return(
     <Tab.Navigator>
       <Tab.Screen name="Recommended Events" component={MyEvents}/>
-      <Tab.Screen name="Campus Events" component={MyEvents}/>
-      <Tab.Screen name="Local Events" component={MyEvents}/>
+      <Tab.Screen name="Campus Events" component={CampusEvents}/>
+      <Tab.Screen name="Local Events" component={LocalEvents}/>
     </Tab.Navigator>
   );
 }
