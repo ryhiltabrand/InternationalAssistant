@@ -16,7 +16,8 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
 import DropDownPicker from "react-native-dropdown-picker";
-import EventMatcher from "./../../shardedComponents/IAEvents/eventmatching"
+import EventMatcher from "./../../shardedComponents/IAEvents/eventmatching";
+import event from "./../../shardedComponents/IAEvents/AddEvents";
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
@@ -77,6 +78,7 @@ export default class MyEvents extends React.Component {
   render() {
     return (
       <View style={styles.body}>
+        <Button title="add" onPress={()=> event}/>
         <FlatList
           style={styles.scrollView}
           enableEmptySections={true}
