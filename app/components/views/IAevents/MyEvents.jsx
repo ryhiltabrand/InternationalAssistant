@@ -16,39 +16,111 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
 import DropDownPicker from "react-native-dropdown-picker";
-import EventMatcher from "./../../shardedComponents/IAEvents/eventmatching";
-
+import EventMatcher from "./../../shardedComponents/IAEvents/eventmatching"
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
-class MyEvents extends React.Component {
+export default class MyEvents extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      eventsDatabase:[],
-      modalVisible: false,
-      Language: null,
-      Languages: [
-        { label: "English", value: "English" },
-        { label: "Spanish", value: "Spanish" },
-        { label: "French", value: "French" },
-        { label: "Indian", value: "Indian" },
-        { label: "Chinese", value: "Chinese" },
-      ],
-
+      eventsDatabase: [],
     };
   }
   componentDidMount() {
-    EventMatcher();
+    this.Recommend();
   }
-  componentWillUnmount() {}
-  
+  componentWillUnmount() { }
+
+  MyEvents = async (EID) => {
+    const userRef = firebase.firestore().collection("Events").doc(EID);
+    const doc = await userRef.get();
+    var address = doc.get("Address");
+    var campus = doc.get("Campus");
+    var description = doc.get("Description");
+    var EID = doc.get("EID");
+    var loc = doc.get("Location");
+    var name = doc.get("Name");
+    var country = doc.get("country");
+    var dislikes = doc.get("dislikes");
+    var language = doc.get("language");
+    var likes = doc.get("likes");
+    var type = doc.get("type");
+    let Event = {
+      Address: address,
+      Campus: campus,
+      Description: description,
+      EID: EID,
+      loc: loc,
+      Name: name,
+      Country: country,
+      Dislikes: dislikes,
+      Language: language,
+      Likes: likes,
+      Type: type,
+    };
+    console.log(Event)
+    this.setState({
+      eventsDatabase: [...this.state.eventsDatabase, Event]
+    })
+  }
+    Recommend = async () => {
+      EventMatcher().then((results) => {
+        console.log(results)
+        for (var i=0; i<results.length; i++){
+          console.log(results[i]);
+          this.MyEvents(results[i]);
+          }
+      });
+    }
+
   render() {
-    
     return (
       <View style={styles.body}>
-        
-        
+        <FlatList
+          style={styles.scrollView}
+          enableEmptySections={true}
+          data={this.state.eventsDatabase}
+          keyExtractor={(item) => {
+            return item.name;
+          }}
+          renderItem={({ item }) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate("Recommended Events", {
+                    Name: item.Name,
+                    Campus: item.Campus,
+                    Description: item.Description,
+                    Address: item.Address,
+                    Language: item.Language,
+                  });
+                }}
+              >
+                <View style={styles.box}>
+                  <View style={styles.firstLine}>
+                    <Text style={styles.name}>{item.Name}</Text>
+                  </View>
+
+                  <View style={styles.secondLine}>
+                    <Text style={styles.event}>{item.Description}</Text>
+                  </View>
+                  <View style={styles.thirdLine}>
+                    <Text>Language: {item.Language}</Text>
+                  </View>
+                  <View style={styles.forthLine}>
+                    <Text>Campus: {item.Campus}</Text>
+                  </View>
+                  <View style={styles.fifthLine}>
+                    <Text>Address: {item.Address} </Text>
+                  </View>
+                  <View style={styles.fifthLine}>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            );
+          }}
+        />
       </View>
     );
   }
@@ -130,7 +202,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     textAlign: "right",
   },
-  request: {
+  event: {
     color: "#000000",
     fontSize: 14,
     marginTop: 3,
@@ -161,5 +233,3 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
-
-export default MyEvents;

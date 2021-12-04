@@ -16,7 +16,6 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
 import DropDownPicker from "react-native-dropdown-picker";
-import EventMatcher from "./../../shardedComponents/IAEvents/eventmatching";
 
 
 LogBox.ignoreLogs(["Setting a timer"]);
@@ -71,7 +70,7 @@ export default class CampusEvents extends React.Component {
                 Likes: likes,
                 Type: type,
             };
-            console.log(Event)
+            //console.log(Event)
             this.setState({
                 eventsDatabase: [...this.state.eventsDatabase, Event]
             })
