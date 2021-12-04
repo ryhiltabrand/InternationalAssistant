@@ -20,10 +20,11 @@ import {
   Button,
 } from "react-native";
 import bgImage from './../../../assets/bgImage.jpg';
-import { Component } from 'react';
+import { Component, useCallback } from 'react';
 import firebase from "../../../utilities/firebase";
 import { getCurrentUserUID } from '../../../utilities/currentUser';
 import * as database from '../../../utilities/database';
+import DropDownPicker from 'react-native-dropdown-picker';
 export class signupScreen extends Component {
   constructor(props) {
     super(props);
@@ -34,11 +35,21 @@ export class signupScreen extends Component {
       country: '',
       language: '',
       birthday: '',
-      school: '',
-      native: '',
-      isLoading: false
+      school: 'Old Dominion University',
+      native: 'Native',
+      isLoading: false,
+      //dropdownStuff
+      schoolOpen: false,
+      schoolItem: [
+        { label: 'Virginia Tech', value: 'Virginia Tech' },
+        { label: 'Old Dominion University', value: 'Old Dominion University' },
+        { label: 'George Mason', value: 'George Mason' },
+        { label: 'Norfolk State University', value: 'Norfolk State University' },
+        { label: 'William and Mary', value: 'William and Mary' }
+      ],
     }
-  } 
+    this.setSchoolValue = this.setSchoolValue.bind(this);
+  }
   //user inputs
   updateInputVal = (val, prop) => {
     const state = this.state;
@@ -46,6 +57,23 @@ export class signupScreen extends Component {
     this.setState(state);
   }
 
+  //dropDown accessors and mutators
+
+  //School Dropdown Menu
+  setSchoolOpen = (schoolOpen) => {
+    console.debug('opens school dropdown')
+    this.setState({
+      schoolOpen
+    });
+  }
+
+  setSchoolValue(callback) {
+    this.setState(state => (
+      console.debug('the value being inputed is ', callback(state.value)),
+      { school: callback(state.value) }
+    )
+    );
+  }
   //Birthday inputView
 
   registerUser = () => {
@@ -168,13 +196,24 @@ export class signupScreen extends Component {
               onChangeText={(val) => this.updateInputVal(val, 'birthday')} />
           </View>
 
-          <View style={styles.inputView} >
+          {/* <View style={styles.inputView} >
             <TextInput
               style={styles.inputText}
               placeholder="School"
               placeholderTextColor="rgba(225, 225, 225, 1.0)"
               onChangeText={(val) => this.updateInputVal(val, 'school')} />
-          </View>
+          </View> */}
+          <DropDownPicker
+            // style={styles.singSelect}
+            open={this.state.schoolOpen}
+            value={this.state.school}
+            items={this.state.schoolItem}
+            setOpen={this.setSchoolOpen}
+            setValue={this.setSchoolValue}
+          //dropDownContainerStyle={styles.singleSelectDropdown}
+          // zIndex={3000}
+          // zIndexInverse={1000}
+          />
 
           <View style={styles.inputView} >
             <TextInput
@@ -280,5 +319,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff'
-  }
+  },
+  //Dropdown Styles
+  singSelect: {},
+  singleSelectDropdown: {},
+  multiSelect: {},
+  multiSelectDropdown: {}
 });
