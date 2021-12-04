@@ -1,9 +1,9 @@
 import firebase from "firebase";
 
-export default function AddQuestion(Request) {
+export default function AddAnswer(Request) {
   
 
-  const questions = async () => {
+  const answers = async () => {
     // get current users uid
     const Uid = firebase.auth().currentUser.uid;
     const usersRef = firebase
@@ -15,13 +15,9 @@ export default function AddQuestion(Request) {
     var pic = doc.data().profilepicture;
     // define the current users
     firebase.firestore().collection('Questions and Answers').add({
-            Pic: pic,
-            Name: name,
-            RequesterUID: Uid,
-            Answers: {},
-            Question: Request
+            
         })
   };
 
-  questions();
+  answers();
 }

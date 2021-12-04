@@ -15,6 +15,9 @@ import {
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
+import AddAnswer from "../../shardedComponents/QandA/postQuestion";
+
+
 
 
 LogBox.ignoreLogs(["Setting a timer"]);
@@ -37,6 +40,17 @@ class AllQuestion extends React.Component {
   componentWillUnmount() {}
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
+  };
+
+  clearState = () => {
+    this.setState({
+      data: [],
+    });
+  };
+  updateInputVal = (val, prop) => {
+    const state = this.state;
+    state[prop] = val;
+    this.setState(state);
   };
 
   clearState = () => {
@@ -103,6 +117,9 @@ AllQuestions2 = async (
     };
   
   render() {
+
+    const { modalVisible } = this.state;
+
     return (
       <View style={styles.body}>
         <FlatList
@@ -136,11 +153,66 @@ AllQuestions2 = async (
                   <View style={styles.thirdLine}>
                     <Text>Answers: {Object.keys(item.Answers).length}</Text>
                   </View>
+                  <View style >
+                      <Button title="Reply" onPress={()=> this.setModalVisible(true)} />
+                </View>
                 </View>
                 </TouchableOpacity>
             );
           }}
         />
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            this.setModalVisible(!modalVisible);
+          }}
+        >
+          <TouchableOpacity
+            style={styles.SumbitBtn}
+            onPress={() => {
+              this.setModalVisible(!modalVisible);
+              //this.clearState();
+            }}
+          >
+            <Text style={styles.SumbitBtnText}>Go Back</Text>
+          </TouchableOpacity>
+      
+          <TextInput
+            multiline
+            numberOfLines={4}
+            onChangeText={(val) => this.updateInputVal(val, "Input")}
+            placeholder="Type out your Answer here"
+            maxLength={256}
+            style={{
+              padding: 10,
+              borderColor: "black",
+              borderStyle: "solid",
+              borderWidth: 3,
+            }}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              if (
+                this.state.Input == null 
+              ) {
+                alert(
+                  "Please enter a question"
+                );
+              } else {
+               
+                  console.log(this.state.Input);
+                  
+                this.setModalVisible(!modalVisible);
+              }
+            }}
+            style={styles.SumbitBtn}
+          >
+            <Text style={styles.SumbitBtnText}>Submit</Text>
+          </TouchableOpacity>
+        </Modal>
       </View>
     );
   }

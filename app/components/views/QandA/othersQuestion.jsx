@@ -2,6 +2,7 @@ import { Modal, Text, View, Pressable,TextInput, Button, StyleSheet, Image } fro
 import React, {TouchableOpacity, useState} from "react";
 import ApplyForRequest from "./../../shardedComponents/Help/ApplyForRequest"
 
+
 export default function OthersQuestion({ route, navigation }) {
   /* 2. Get the param */
   const {
@@ -28,15 +29,11 @@ export default function OthersQuestion({ route, navigation }) {
         <View style={styles.secondLine}>
           <Text style={styles.request}>{Question}</Text>
         </View>
-        <View style={styles.fifthLine}>
+        <View style={styles.thirdLine}>
           <Text>Answers: {Object.keys(Answers).length}</Text>
         </View>
       </View>
-      <View style >
-        <Button
-          title="Reply"
-        />
-      </View>
+      
     </View>
   );
 }
