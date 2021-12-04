@@ -288,7 +288,7 @@ export class DisplayList extends Component {
           </View>
           <View style={styles.mapSection}>
             <Pressable onPress={() => { this.props.navigation.navigate('MapViewer'); }}>
-              <Image source={require("../../assets/locations/categoryBar/map.png")} style={styles.mapButton} />
+              <Image source={require("./../../../assets/locations/categoryBar/map.png")} style={styles.mapButton} />
             </Pressable>
           </View>
         </View>
