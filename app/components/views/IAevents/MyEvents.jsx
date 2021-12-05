@@ -722,6 +722,13 @@ export default class MyEvents extends React.Component {
                     this.state.Date
                   );
                   this.setModalVisible(!modalVisible);
+                  this.setState({
+                    Description:null,
+                    language: null,
+                    Campus:null,
+                    Country:null,
+                    US:null,
+                  })
                 }
               }}
               style={styles.SumbitBtn}

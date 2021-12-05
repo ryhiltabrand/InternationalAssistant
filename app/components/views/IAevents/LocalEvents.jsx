@@ -16,11 +16,14 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
 import DropDownPicker from "react-native-dropdown-picker";
+import * as Location from "expo-location";
+const geofire= require('geofire-common');
 
 
 LogBox.ignoreLogs(["Setting a timer"]);
 
 export default class LocalEvents extends React.Component {
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -30,50 +33,71 @@ export default class LocalEvents extends React.Component {
     componentDidMount() {
         this.LocalEvents();
     }
+    clearState = () =>{
+    }
     componentWillUnmount() { }
 
-    LocalEvents = async () => {
-        const usersRef = firebase
-            .firestore()
-            .collection("users")
-            .doc(firebase.auth().currentUser.uid);
-        const doc = await usersRef.get();
-        var UsersCampus = doc.data().university;
-        const EventsQuery = await firebase
-            .firestore()
-            .collection("Events")
-            .get();
-        //console.log(UsersCampus)
-        EventsQuery.docs.map((doc) => {
-            var address = doc.get("Address");
-            var campus = doc.get("Campus");
-            var description = doc.get("Description");
-            var EID = doc.id;
-            var loc = doc.get("Location");
-            var name = doc.get("Name");
-            var country = doc.get("country");
-            var dislikes = doc.get("dislikes");
-            var language = doc.get("language");
-            var likes = doc.get("likes");
-            let Event = {
-                Address: address,
-                Campus: campus,
-                Description: description,
-                EID: EID,
-                Loc: loc,
-                Name: name,
-                Country: country,
-                Dislikes: dislikes,
-                Language: language,
-                Likes: likes,
-            };
-            //console.log(Event)
-            this.setState({
-                eventsDatabase: [...this.state.eventsDatabase, Event]
-            })
-        })
-    }
+    LocalEvents = async () =>{
+        const userRef = firebase.firestore().collection("users")
+        .doc(firebase.auth().currentUser.uid)
+        const doc = await userRef.get()
+        var school= doc.data().university
+        let coords = await Location.geocodeAsync(school)
+        const center = [coords[0].latitude, coords[0].longitude]
+        const radiusinM = 104*1000;
+        const bounds = geofire.geohashQueryBounds(center,radiusinM)
+        const promises=[]
+        for(const b of bounds){
+            const q = firebase.firestore().collection("Events")
+            .orderBy("geohash")
+            .startAt(b[0])
+            .endAt(b[1]);
 
+            promises.push(q.get());
+        }
+        Promise.all(promises).then((snapshots) =>{
+            for(const snap of snapshots){
+                for(const doc of snap.docs){
+                    console.log("hey",doc.data())
+                    const lat = doc.get('lat')
+                    const lng = doc.get('lng')
+                    const distanceinKm = geofire.distanceBetween([lat,lng],center)
+                    const distanceinM = distanceinKm * 1000
+                    if(distanceinM <= radiusinM){
+                        var address = doc.get("Address");
+                        var campus = doc.get("Campus");
+                        var description = doc.get("Description");
+                        var EID = doc.id;
+                        var loc = doc.get("Location");
+                        var name = doc.get("Name");
+                        var country = doc.get("country");
+                        var dislikes = doc.get("dislikes");
+                        var language = doc.get("language");
+                        var likes = doc.get("likes");
+                        let Event = {
+                            Address: address,
+                            Campus: campus,
+                             Description: description,
+                            EID: EID,
+                            Loc: loc,
+                            Name: name,
+                            Country: country,
+                            Dislikes: dislikes,
+                            Language: language,
+                            Likes: likes,
+                        };
+                        console.log("Event",Event)
+                        this.setState({
+                            eventsDatabase: [...this.state.eventsDatabase, Event]
+                        })
+                    }
+                }
+            }
+        })
+        
+
+    }
+    
     render() {
         return (
             <View style={styles.body}>

@@ -173,14 +173,24 @@ export class MessageListScreen extends Component {
     }
   };
   AddChat = async (ouid) =>{
+    Dupecreator=null;
     Users=[ouid,firebase.auth().currentUser.uid]
     Users.sort()
     data = {
       HelpRequest:false,
       Users: Users,
     }
-    const add = await firebase.firestore().collection("DirectMessaging").add(data)
+    Dupequery= await firebase.firestore().collection("DirectMessaging")
+    .where("Users", "in", [Users]).get()
+    Dupequery.docs.map((doc)=>{
+      if(doc.data().HelpRequest==false){
+        Dupecreator=true;
+      }
+    })
+    if(Dupecreator!=true){
+      const add = await firebase.firestore().collection("DirectMessaging").add(data)
     console.log("Worked ", add.id)
+    }
   }
 
   Joinchat = async() =>{
