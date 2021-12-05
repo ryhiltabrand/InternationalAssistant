@@ -49,14 +49,13 @@ export default class CampusEvents extends React.Component {
             var address = doc.get("Address");
             var campus = doc.get("Campus");
             var description = doc.get("Description");
-            var EID = doc.get("EID");
+            var EID = doc.id;
             var loc = doc.get("Location");
             var name = doc.get("Name");
             var country = doc.get("country");
             var dislikes = doc.get("dislikes");
             var language = doc.get("language");
             var likes = doc.get("likes");
-            var type = doc.get("type");
             let Event = {
                 Address: address,
                 Campus: campus,
@@ -68,7 +67,6 @@ export default class CampusEvents extends React.Component {
                 Dislikes: dislikes,
                 Language: language,
                 Likes: likes,
-                Type: type,
             };
             //console.log(Event)
             this.setState({
