@@ -1,21 +1,74 @@
-import { Modal, Text, View, Pressable,TextInput, Button, StyleSheet, Image } from "react-native";
-import React, {TouchableOpacity, useState} from "react";
-
+import {
+  Modal,
+  Text,
+  View,
+  Pressable,
+  TextInput,
+  Button,
+  StyleSheet,
+  Image,
+  FlatList,
+} from "react-native";
+import React, { TouchableOpacity, useState } from "react";
+import {
+  AcceptApplicant,
+  DenyApplicant,
+} from "./../../shardedComponents/Help/updateHelper";
+import firebase from "firebase";
+import AddChat from '../../shardedComponents/Help/createMessage.js'
 export default function IndividualRequest({ route, navigation }) {
   /* 2. Get the param */
+  const [modalVisible, setModalVisible] = useState(false);
+  const [Data, setData] = useState([]);
+  const [current, setCurrent] = useState(null);
   const {
     Name,
     Pic,
-    AmountOfHelpers,
+    AmountRequested,
     Applicants,
     Campus,
     Comments,
-    Date,
     Description,
-    Helpers,
+    HelpersUID,
     Language,
+    Doc,
+    Date,
   } = route.params;
-  const [modalVisible, setModalVisible] = useState(false);
+  
+  var ApplicantsInfo = async () => {
+    setData([]);
+    for (var i = 0; i < Applicants.length; i++) {
+     
+      const ApplicantQuery = await firebase
+        .firestore()
+        .collection("users")
+        .where("UID", "==", Applicants[i])
+        .get();
+      ApplicantQuery.docs.map((doc) => {
+        const name = doc.get("name");
+        const profpic = doc.get("profilepicture");
+        let applicant = { uid: Applicants[i], name: name, pic: profpic };
+        setData((Data) => [...Data, applicant]);
+      });
+    }
+  };
+  var HelperInfo = async () => {
+    setData([]);
+    for (var i = 0; i < HelpersUID.length; i++) {
+      
+      const HelperQuery = await firebase
+        .firestore()
+        .collection("users")
+        .where("UID", "==", HelpersUID[i])
+        .get();
+      HelperQuery.docs.map((doc) => {
+        const name = doc.get("name");
+        const profpic = doc.get("profilepicture");
+        let helper = { uid: HelpersUID[i], name: name, pic: profpic };
+        setData((Data) => [...Data, helper]);
+      });
+    }
+  };
   return (
     <View style={styles.body}>
       <View style>
@@ -28,7 +81,15 @@ export default function IndividualRequest({ route, navigation }) {
         <View style={styles.firstLine}>
           <Image style={styles.image} source={{ uri: Pic }} />
           <Text style={styles.name}>{Name}</Text>
-          <Text style={styles.time}>{Date.getMonth()+"-"+Date.getDate()+" @ "+Date.getHours()+":"+Date.getMinutes()}</Text>
+          <Text style={styles.time}>
+            {Date.getMonth() +
+              "-" +
+              Date.getDate() +
+              " @ " +
+              Date.getHours() +
+              ":" +
+              Date.getMinutes()}
+          </Text>
         </View>
 
         <View style={styles.secondLine}>
@@ -41,7 +102,7 @@ export default function IndividualRequest({ route, navigation }) {
           <Text>Campus: {Campus}</Text>
         </View>
         <View style={styles.fifthLine}>
-          <Text>Requested Helpers: {AmountOfHelpers}</Text>
+          <Text>Requested Helpers: {AmountRequested}</Text>
           <Text style={{ paddingLeft: 5 }}>
             Applicants: {Applicants.length}
           </Text>
@@ -50,33 +111,98 @@ export default function IndividualRequest({ route, navigation }) {
           <Text>Comments: {Object.keys(Comments).length}</Text>
         </View>
       </View>
-      <View style >
+      <View style={{flexDirection: "row", alignContent:"center", alignItems:"center", justifyContent:"center"}}>
         <Button
-          title="Applicants"
-          onPress={() =>  setModalVisible(true)}
+          title=" Show Helpers"
+          onPress={() => {
+            setCurrent("Helper")
+            HelperInfo();
+          }}
         />
-      </View>
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
+        <Text>  </Text>
+        <Button
+        title=" Show Applicants"
+        onPress={() => {
+          setCurrent("Applicant")
+          ApplicantsInfo();
         }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
+      />
+      </View>
+      <View>
+        { current=="Applicant" &&
+        <FlatList
+          style={styles.container}
+          enableEmptySections={true}
+          data={Data}
+          keyExtractor={(item) => {
+            return item.uid;
+          }}
+          renderItem={({ item }) => {
+            return (
+              <Pressable
+                onPress={() => {
+                  console.log(`Hi`);
+                }}
+              >
+                <View style={styles.boxA}>
+                  <Image style={styles.image} source={{ uri: item.pic }} />
+                  <Text style={styles.name}>{item.name}</Text>
+                  <Pressable
+                    onPress={() => {
+                      AcceptApplicant(Doc, item.uid);
+                      ApplicantsInfo();
+                      console.log(`you approved this bitch ${item.uid}`);
+                    }}
+                  >
+                    <Text style={{paddingRight:5}}>Approve</Text>
+                  </Pressable>
+                  <Pressable
+                    onPress={() => {
+                      console.log(`you denied this bitch ${item.uid}`);
+                    }}
+                  >
+                    <Text>Deny</Text>
+                  </Pressable>
+                </View>
+              </Pressable>
+            );
+          }}
+        />}
+        { current=="Helper" &&
+        <FlatList
+          style={styles.container}
+          enableEmptySections={true}
+          data={Data}
+          keyExtractor={(item) => {
+            return item.uid;
+          }}
+          renderItem={({ item }) => {
+            return (
+              <Pressable
+                onPress={() => {
+                  console.log(`Hi`);
+                }}
+              >
+                <View style={styles.boxA}>
+                  <Image style={styles.image} source={{ uri: item.pic }} />
+                  <Text style={styles.name}>{item.name}</Text>
+          
+                  <Pressable
+                    onPress={() => {
+                      console.log(`MESSAGE STUFF HERE`);
+                      console.log(item.uid)
+                      AddChat(item.uid);
+                      navigation.navigate("Message")
+                    }}
+                  >
+                    <Text>Start a message</Text>
+                  </Pressable>
+                </View>
+              </Pressable>
+            );
+          }}
+        />}
+      </View>
     </View>
   );
 }
@@ -102,7 +228,26 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 15,
   },
-
+  boxA: {
+    padding: 8,
+    marginTop: 5,
+    borderColor: "black",
+    borderStyle: "solid",
+    borderWidth: 3,
+    marginBottom: 5,
+    marginRight: 5,
+    marginLeft: 5,
+    backgroundColor: "#ADD8E6",
+    flexDirection: "row",
+    shadowColor: "black",
+    shadowOpacity: 0.2,
+    shadowOffset: {
+      height: 1,
+      width: -2,
+    },
+    elevation: 2,
+    width: 380,
+  },
   box: {
     padding: 8,
     marginTop: 5,

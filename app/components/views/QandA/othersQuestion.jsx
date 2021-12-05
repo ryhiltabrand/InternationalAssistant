@@ -1,7 +1,7 @@
 import { Modal, Text, View, Pressable,TextInput, Button, StyleSheet, Image } from "react-native";
-import React, {TouchableOpacity, useState} from "react";
+import React, {TouchableOpacity, useEffect, useState} from "react";
 import ApplyForRequest from "./../../shardedComponents/Help/ApplyForRequest"
-
+import firebase from "firebase";
 
 export default function OthersQuestion({ route, navigation }) {
   /* 2. Get the param */
@@ -10,8 +10,26 @@ export default function OthersQuestion({ route, navigation }) {
     Pic,
     Answers,
     Question,
+    DocID,
   } = route.params;
-  const [modalVisible, setModalVisible] = useState(false);
+
+  const [replys,setreplys] = useState([])
+
+  useEffect(()=>{
+    puller();
+  })
+  puller = async()=>{
+
+    const replyref = await firebase.firestore().collection("Questions and Answers").doc(id).collection("Answers").get()
+
+    replyref.docs.map((doc)=>{
+
+      setreplys(doc.data())
+
+    })
+    console.log(replys)
+  }
+
   return (
     <View style={styles.body}>
       <View style>
@@ -33,8 +51,18 @@ export default function OthersQuestion({ route, navigation }) {
           <Text>Answers: {Object.keys(Answers).length}</Text>
         </View>
       </View>
-      
+{/* 
+      <View style={styles.box}>
+        <View style={styles.firstLine}>
+          <Image style={styles.image} source={{ uri: RPic }} />
+          <Text style={styles.name}>{RName}</Text>
+        </View>
+
+      </View> */}
     </View>
+    
+
+    
   );
 }
 const styles = StyleSheet.create({

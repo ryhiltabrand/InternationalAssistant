@@ -32,6 +32,7 @@ class AllQuestion extends React.Component {
       ruid: "",
       Question: '',
       Answers: {},
+      id:null,
     };
   }
   componentDidMount() {
@@ -116,6 +117,23 @@ AllQuestions2 = async (
     })
     };
   
+  uploadanswer= async(id,text)=>{
+    const userref = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
+    const doc = await userref.get()
+    var pic = doc.data().profilepicture;
+    var name = doc.data().name;
+    const adderref = firebase.firestore().collection("Questions and Answers").doc(id).collection("Answers")
+
+    data = {
+      Pic: pic,
+      Name: name,
+      Text: text,
+    }
+
+    const write = await adderref.add(data)
+  
+  }
+
   render() {
 
     const { modalVisible } = this.state;
@@ -138,7 +156,7 @@ AllQuestions2 = async (
                     Pic: item.Pic,
                     Answers: item.Answers,
                     Question: item.Question,
-                    DocID: item.DocID
+                    DocID: item.DocID,
                   });
                 }}>
                 <View style={styles.box}>
@@ -154,7 +172,10 @@ AllQuestions2 = async (
                     <Text>Answers: {Object.keys(item.Answers).length}</Text>
                   </View>
                   <View style >
-                      <Button title="Reply" onPress={()=> this.setModalVisible(true)} />
+                      <Button title="Reply" onPress={()=> this.setState({
+                        modalVisible: true,
+                        id: item.DocID,
+                      })} />
                 </View>
                 </View>
                 </TouchableOpacity>
@@ -203,7 +224,8 @@ AllQuestions2 = async (
                 );
               } else {
                
-                  console.log(this.state.Input);
+                  this.uploadanswer(this.state.id,this.state.Input)
+                  
                   
                 this.setModalVisible(!modalVisible);
               }
