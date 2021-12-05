@@ -83,7 +83,7 @@ export default class CampusEvents extends React.Component {
                     enableEmptySections={true}
                     data={this.state.eventsDatabase}
                     keyExtractor={(item) => {
-                        return item.name;
+                        return item.EID;
                     }}
                     renderItem={({ item }) => {
                         return (

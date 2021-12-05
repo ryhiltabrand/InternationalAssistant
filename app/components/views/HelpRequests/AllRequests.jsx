@@ -192,7 +192,7 @@ AllRequests2 = async (date,
           enableEmptySections={true}
           data={this.state.data}
           keyExtractor={(item) => {
-            return item.name;
+            return item.DocID;
           }}
           renderItem={({ item }) => {
             return (

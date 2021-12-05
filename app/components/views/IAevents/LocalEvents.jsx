@@ -55,7 +55,6 @@ export default class LocalEvents extends React.Component {
             var dislikes = doc.get("dislikes");
             var language = doc.get("language");
             var likes = doc.get("likes");
-            var type = doc.get("type");
             let Event = {
                 Address: address,
                 Campus: campus,
@@ -83,7 +82,7 @@ export default class LocalEvents extends React.Component {
                     enableEmptySections={true}
                     data={this.state.eventsDatabase}
                     keyExtractor={(item) => {
-                        return item.name;
+                        return item.EID;
                     }}
                     renderItem={({ item }) => {
                         return (
