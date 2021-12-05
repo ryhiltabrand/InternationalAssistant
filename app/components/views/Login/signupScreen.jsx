@@ -21,19 +21,23 @@ import {
 } from "react-native";
 import bgImage from './../../../assets/bgImage.jpg';
 import { Component, useCallback } from 'react';
+import { KeyboardAvoidingView, Dimensions } from 'react-native';
 import firebase from "../../../utilities/firebase";
 import { getCurrentUserUID } from '../../../utilities/currentUser';
 import * as database from '../../../utilities/database';
 import DropDownPicker from 'react-native-dropdown-picker';
+import DateTimePicker from "@react-native-community/datetimepicker";
 export class signupScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      behavior: 'position',
       name: '',
       email: '',
       password: '',
       country: '',
       language: '',
+      birthday: new Date(),
       school: '',
       native: '',
       isLoading: false,
@@ -61,10 +65,12 @@ export class signupScreen extends Component {
         { label: 'French', value: 'french' },
         { label: 'Japanese', value: 'japanese' },
       ],
+      showDatePicker: false,
     }
     this.setSchoolValue = this.setSchoolValue.bind(this);
     this.setNativeValue = this.setNativeValue.bind(this);
     this.setLanguageValue = this.setLanguageValue.bind(this);
+
   }
   //user inputs
   updateInputVal = (val, prop) => {
@@ -90,7 +96,6 @@ export class signupScreen extends Component {
     )
     );
   }
-  //Birthday inputView
 
   //Native Dropdown Menu
   setNativeOpen = (nativeOpen) => {
@@ -108,6 +113,7 @@ export class signupScreen extends Component {
     )
     );
   }
+
   //language Dropdown Menu
   setLanguageOpen = (languageOpen) => {
     console.debug('opens language dropdown')
@@ -122,6 +128,22 @@ export class signupScreen extends Component {
       { language: callback(state.value) }
     )
     );
+  }
+
+  onSchoolOpen() {
+    signupScreen.setNativeOpen
+    signupScreen.setLanguageOpen
+  }
+
+  //Birthday inputView
+  setDateVisible = (visible) => {
+    this.setState({ showDatePicker: visible });
+  };
+  setDateClose = (visible) => {
+    this.setState({ showDatePicker: visible });
+  };
+  setDate(date) {
+    this.setState({ birthday: date });
   }
   registerUser = () => {
 
@@ -187,13 +209,12 @@ export class signupScreen extends Component {
     }
   }
   render() {
-
     return (
       <ImageBackground source={bgImage} style={styles.bkimage}>
         <View style={styles.container}>
-          <Text style={styles.logo}>International Assistant</Text>
-          <Text style={styles.signupText}>Sign up to find friends and connect with others.</Text>
-
+          <View style={styles.signupView}>
+            <Text style={styles.signupText}>Sign up to find friends and connect with others.</Text>
+          </View>
           <View style={styles.inputView} >
             <TextInput
               style={styles.inputText}
@@ -227,13 +248,50 @@ export class signupScreen extends Component {
               onChangeText={(val) => this.updateInputVal(val, 'country')} />
           </View>
 
-          <View style={styles.inputView} >
-            <TextInput
-              style={styles.inputText}
-              placeholder="Language"
-              placeholderTextColor="rgba(225, 225, 225, 1.0)"
-              onChangeText={(val) => this.updateInputVal(val, 'language')} />
+          {/* <View style={styles.inputView} >
+              <TextInput
+                style={styles.inputText}
+                placeholder="Birthday"
+                placeholderTextColor="rgba(225, 225, 225, 1.0)"
+                onChangeText={(val) => this.updateInputVal(val, 'birthday')} />
+            </View> */}
+          <View style={styles.birthdayView}>
+            <TouchableOpacity onPress={this.setDateVisible}>
+              <Text style={styles.birthDayText}> birthday </Text>
+            </TouchableOpacity>
           </View>
+          {this.state.showDatePicker && (
+            <DateTimePicker
+              value={this.state.birthday}
+              display="default"
+              onChange={(e, d) => {
+                if (Platform.OS === "ios") {
+                  this.setState({ Day: d });
+                  onChange(d);
+                } else {
+                  this.setDateClose(false);
+                  var Month = "";
+                  if (Number(d.getMonth() + 1) < 11) {
+                    Month = "0" + (d.getMonth() + 1);
+                  } else {
+                    Month = d.getMonth() + 1;
+                  }
+                  var Day = "";
+                  if (Number(d.getDate()) < 10) {
+                    Day = "0" + (d.getDate() + 1);
+                  } else {
+                    Day = d.getDate() + 1;
+                  }
+                  var Year = d.getFullYear();
+                  var Date = Year + "-" + Month + "-" + Day;
+                  this.setState({ birthday: Date });
+                  // console.log(this.state.birthday)
+                }
+              }}
+              style={{ backgroundColor: "white" }}
+            />
+          )}
+          <View style={styles.drownDownSection}>
 
             <View style={styles.inputView} >
               <DropDownPicker
@@ -250,24 +308,22 @@ export class signupScreen extends Component {
               />
             </View>
 
-          {/* <View style={styles.inputView} >
-            <TextInput
-              style={styles.inputText}
-              placeholder="School"
-              placeholderTextColor="rgba(225, 225, 225, 1.0)"
-              onChangeText={(val) => this.updateInputVal(val, 'school')} />
-          </View> */}
-          <DropDownPicker
-            // style={styles.singSelect}
-            open={this.state.schoolOpen}
-            value={this.state.school}
-            items={this.state.schoolItem}
-            setOpen={this.setSchoolOpen}
-            setValue={this.setSchoolValue}
-          //dropDownContainerStyle={styles.singleSelectDropdown}
-          // zIndex={3000}
-          // zIndexInverse={1000}
-          />
+            <View style={styles.inputView} >
+
+              <DropDownPicker
+                style={styles.singleSelect}
+                open={this.state.schoolOpen}
+                value={this.state.school}
+                items={this.state.schoolItem}
+                setOpen={this.setSchoolOpen}
+                setValue={this.setSchoolValue}
+                dropDownContainerStyle={styles.singleSelectDropdown}
+                placeholder="University"
+                zIndex={4000}
+                zIndexInverse={3000}
+                onOpen={this.onSchoolOpen}
+              />
+            </View>
             <View style={styles.inputView} >
               <DropDownPicker
                 style={styles.singleSelect}
@@ -282,18 +338,16 @@ export class signupScreen extends Component {
                 zIndexInverse={1000}
               />
             </View>
-
-          <TouchableOpacity onPress={() => this.registerUser()} style={styles.signupBtn}>
-            <Text style={styles.signupBtnText}>Sign up</Text>
-          </TouchableOpacity>
-
-          <Text style={styles.policy}>By signing up, you agree to our Nonexistence Terms & Privacy Policy.</Text>
-
-          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate("Login")} style={styles.loginBtn}>
-              <Text style={styles.loginText}>Already have an account? Sign In.</Text>
+          </View>
+          <View style={styles.signupBtn} >
+            <TouchableOpacity onPress={() => this.registerUser()}>
+              <Text style={styles.signupBtnText}>Sign up</Text>
             </TouchableOpacity>
           </View>
+
+          <TouchableOpacity onPress={() => this.props.navigation.navigate("Login")} style={styles.loginBtn}>
+            <Text style={styles.loginText}>Already have an account? Sign In.</Text>
+          </TouchableOpacity>
 
         </View>
       </ImageBackground>
@@ -307,16 +361,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    //justifyContent: 'center',
   },
   bkimage: {
-    flex: 1
+    flex: 1,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+
   },
-  logo: {
-    fontWeight: "bold",
-    fontSize: 25,
-    color: 'rgba(225, 225, 225, 1.0)',
-    marginBottom: 40
+  signupView: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 20,
+
   },
   signupText: {
     color: "white",
@@ -324,26 +382,41 @@ const styles = StyleSheet.create({
     padding: 20
   },
   inputView: {
-    width: "80%",
+    flex: 1,
     backgroundColor: "#465881",
     height: 30,
-    marginBottom: 20,
+    width: "80%",
+    margin: 10,
     justifyContent: "center",
-    padding: 20
   },
   inputText: {
     height: 50,
     color: "white"
   },
+  birthdayView: {
+    flex: 1,
+    backgroundColor: "#465881",
+    height: 30,
+    width: "80%",
+    margin: 10,
+    justifyContent: "center",
+    borderRadius: 25,
+
+  },
+  birthDayText: {
+    height: 50,
+    color: "white",
+    marginTop: 30,
+    textAlign: "center"
+  },
   signupBtn: {
+    flex: 1,
     width: "80%",
     backgroundColor: 'rgba(182, 32, 32, 0.7)',
     borderRadius: 25,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
-    marginBottom: 10
   },
   signupBtnText: {
     color: "white",
@@ -355,34 +428,28 @@ const styles = StyleSheet.create({
 
   },
   loginBtn: {
-    width: 1000,
+    width: '100%',
+    //janky way to apply height
+    height: 31,
     backgroundColor: 'rgba(94, 8, 203, 0.7)',
-    height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 40,
-    marginBottom: 0
+    marginTop: 140,
   },
   loginText: {
     justifyContent: 'center',
     alignItems: 'center',
-    bottom: 0,
+    //bottom: 0,
     color: "black",
     fontSize: 15
   },
-  preloader: {
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff'
-  },
   //Dropdown Styles
-  singSelect: {},
-  singleSelectDropdown: {},
+  drownDownSection: {
+    flexDirection: 'row',
+  },
+  singleSelect: {},
+  singleSelectDropdown: {
+  },
   multiSelect: {},
   multiSelectDropdown: {}
 });
