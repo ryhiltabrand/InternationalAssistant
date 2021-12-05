@@ -49,7 +49,7 @@ export class UsersCollection {
     }
 
     setSchool(school) {
-        this.#userFieldEntries.school = school
+        this.#userFieldEntries.university = school
     }
 
     setNative(native) {
