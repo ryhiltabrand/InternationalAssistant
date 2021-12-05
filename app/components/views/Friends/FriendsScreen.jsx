@@ -8,6 +8,7 @@ import FriendsSearchScreen from "./FriendSearch";
 import FriendsMatchScreen from "./FriendMatching";
 import PendingFriends from "./PendingFriends";
 import { createStackNavigator } from "@react-navigation/stack";
+import profiles from "./picArea"
 
 const Stack = createStackNavigator();
 function NavStack() {
@@ -15,6 +16,7 @@ function NavStack() {
       <Stack.Navigator initialRouteName="FriendsSplit">
          <Stack.Screen name="FriendsSplit" component={FriendsScreen} options={{ headerShown: false }} />
          <Stack.Screen name="PendingFriends" component={PendingFriends} options={{ headerShown: false }} />
+         <Stack.Screen name="Profile" component={profiles} options={{ headerShown: false }} />
       </Stack.Navigator>
     );
   }
@@ -66,7 +68,8 @@ const FriendsStackScreen = ({ navigation }) => (
   <FStack.Navigator
     screenOptions={{
       headerStyle: {
-        backgroundColor: "#ADD8E6",
+        //backgroundColor: "#ADD8E6",
+        backgroundColor: "#202898",
       },
       headerTintColor: "#000000",
       headerTitleStyle: {
@@ -80,12 +83,15 @@ const FriendsStackScreen = ({ navigation }) => (
       options={{
         title: "Friends",
         headerTitleAlign: "center",
+        headerTitleStyle: {color:"white"},
         headerLeft: () => (
           <FontAwesome5.Button
             name="bars"
             size={25}
-            color="#000000"
-            backgroundColor="#ADD8E6"
+            color="white"
+            backgroundColor="#202898"
+            //color="#000000"
+            //backgroundColor="#ADD8E6"
             onPress={() => navigation.openDrawer()}
           ></FontAwesome5.Button>
         ),

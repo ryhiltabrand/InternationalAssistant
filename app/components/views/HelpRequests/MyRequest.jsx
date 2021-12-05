@@ -216,8 +216,8 @@ class MyRequest extends React.Component {
     const { open, openL, Language, Campus } = this.state;
 
     return (
-      <View style={styles.body}>
-        <Button title="Add" onPress={() => this.setModalVisible(true)} />
+      <View style={{flex: 1, backgroundColor:"#003057" }}>
+        <Button color="#404A5A" title="Add" onPress={() => this.setModalVisible(true)} />
 
         <FlatList
           style={styles.scrollView}

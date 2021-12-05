@@ -1,7 +1,7 @@
 import firebase from "firebase";
 
-export default function AddEvent(Description, language, Campus, Name, Country) {
-  
+export default function AddEvent(Description, language, Campus, Name, Country, Street, City, States, Zip, Date) {
+
 
   const event = async () => {
     // get current users uid
@@ -12,22 +12,19 @@ export default function AddEvent(Description, language, Campus, Name, Country) {
       .doc(firebase.auth().currentUser.uid);
     const doc = await usersRef.get();
     var name = doc.data().name;
-    // define the current users
+    var Address = Street + ", " +City + ", " + States + " " + Zip;
+    console.log(Address)
     firebase.firestore().collection('Events').add({
-            
-            Address: Address,
-            Campus: Campus,
-            Description: Description,
-            EID: EID,
-            Name: Name,
-            Country: Country,
-            dislikes: dislikes,
-            language: language,
-            likes: likes,
-            photo: photo,
-            type:type
-        })
+      Address: Address,
+      Campus: Campus,
+      Description: Description,
+      Name: Name,
+      Country: Country,
+      dislikes: 0,
+      language: language,
+      likes: 0,
+      Date: Date,
+    })
   };
-
   event();
 }

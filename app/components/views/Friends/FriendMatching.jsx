@@ -41,7 +41,7 @@ class FriendsMatchScreen extends React.Component {
   Recomendations = async () => {
     FriendMatcher().then((results) => {
       for (var i = 0; i < results.length; i++) {
-        console.log(results[i]);
+        //console.log(results[i]);
         this.data(results[i]);
       }
     });
@@ -49,7 +49,7 @@ class FriendsMatchScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.body}>
+      <View style={{flexDirection: "column", flex: 1, backgroundColor: "#003057"}}>
         <TouchableOpacity
           onPress={() => {
             this.setState({ data: [] });
@@ -71,7 +71,12 @@ class FriendsMatchScreen extends React.Component {
           renderItem={({ item }) => {
             
             return (
-              <TouchableOpacity>
+              <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate("Profile", {
+                  UID: item.uid
+                });
+              }}>
                 <>{/*console.log(this.state.data)*/}</>
                 <View style={styles.boxA}>
                   <View style={{ flexDirection: "row" }}>
@@ -96,7 +101,7 @@ class FriendsMatchScreen extends React.Component {
                         //paddingHorizontal: 32,
                         borderRadius: 4,
                         elevation: 3,
-                        backgroundColor: "teal",
+                        backgroundColor: "#404A5A",
                       }}
                     >
                       <Text style={{fontSize: 18, paddingLeft: 6, paddingRight: 6}}>Add</Text>
@@ -134,6 +139,8 @@ const styles = StyleSheet.create({
   },
   body: {
     flexDirection: "column",
+    backgroundColor: "#003057",
+    flex: 1
   },
   image: {
     width: 60,
@@ -156,13 +163,13 @@ const styles = StyleSheet.create({
   boxA: {
     padding: 8,
     marginTop: 5,
-    borderColor: "black",
+    borderColor: "#0A192D",
     borderStyle: "solid",
     borderWidth: 3,
     marginBottom: 5,
     marginRight: 5,
     marginLeft: 5,
-    backgroundColor: "#ADD8E6",
+    backgroundColor: "#98C5EA",
     flexDirection: "row",
     shadowColor: "black",
     shadowOpacity: 0.2,
@@ -214,7 +221,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   name: {
-    color: "#000000",
+    color: "black",
     fontSize: 18,
     paddingTop: 15,
     paddingLeft: 10,

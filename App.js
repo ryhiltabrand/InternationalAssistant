@@ -14,7 +14,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import DrawerN from "./app/navigator/topNav/drawer";
 import { EventRegister } from "react-native-event-listeners";
 import { YellowBox } from "react-native"
-//LogBox.ignoreAllLogs(true)
+LogBox.ignoreAllLogs(true)
 
 
 const Stack = createStackNavigator();

@@ -48,7 +48,7 @@ export default class LocalEvents extends React.Component {
             var address = doc.get("Address");
             var campus = doc.get("Campus");
             var description = doc.get("Description");
-            var EID = doc.get("EID");
+            var EID = doc.id;
             var loc = doc.get("Location");
             var name = doc.get("Name");
             var country = doc.get("country");
@@ -67,7 +67,6 @@ export default class LocalEvents extends React.Component {
                 Dislikes: dislikes,
                 Language: language,
                 Likes: likes,
-                Type: type,
             };
             //console.log(Event)
             this.setState({
@@ -88,38 +87,26 @@ export default class LocalEvents extends React.Component {
                     }}
                     renderItem={({ item }) => {
                         return (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    this.props.navigation.navigate("Local Events", {
-                                        Name: item.Name,
-                                        Campus: item.Campus,
-                                        Description: item.Description,
-                                        Address: item.Address,
-                                        Language: item.Language,
-                                    });
-                                }}
-                            >
-                                <View style={styles.box}>
-                                    <View style={styles.firstLine}>
-                                        <Text style={styles.name}>{item.Name}</Text>
-                                    </View>
-
-                                    <View style={styles.secondLine}>
-                                        <Text style={styles.event}>{item.Description}</Text>
-                                    </View>
-                                    <View style={styles.thirdLine}>
-                                        <Text>Language: {item.Language}</Text>
-                                    </View>
-                                    <View style={styles.forthLine}>
-                                        <Text>Campus: {item.Campus}</Text>
-                                    </View>
-                                    <View style={styles.fifthLine}>
-                                        <Text>Address: {item.Address} </Text>
-                                    </View>
-                                    <View style={styles.fifthLine}>
-                                    </View>
+                            <View style={styles.box}>
+                                <View style={styles.firstLine}>
+                                    <Text style={styles.name}>{item.Name}</Text>
                                 </View>
-                            </TouchableOpacity>
+
+                                <View style={styles.secondLine}>
+                                    <Text style={styles.event}>{item.Description}</Text>
+                                </View>
+                                <View style={styles.thirdLine}>
+                                    <Text>Language: {item.Language}</Text>
+                                </View>
+                                <View style={styles.forthLine}>
+                                    <Text>Campus: {item.Campus}</Text>
+                                </View>
+                                <View style={styles.fifthLine}>
+                                    <Text>Address: {item.Address} </Text>
+                                </View>
+                                <View style={styles.fifthLine}>
+                                </View>
+                            </View>
                         );
                     }}
                 />
