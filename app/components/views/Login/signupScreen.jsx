@@ -65,11 +65,22 @@ export class signupScreen extends Component {
         { label: 'French', value: 'french' },
         { label: 'Japanese', value: 'japanese' },
       ],
+      countryOpen: false,
+      countryItem: [
+        { label: 'United States', value: 'United States' },
+        { label: 'United Kingdom', value: 'United Kingdom' },
+        { label: 'India', value: 'India' },
+        { label: 'China', value: 'China' },
+        { label: 'Japan', value: 'Japan' },
+        { label: 'Germany', value: 'Germany' }
+      ],
+      //dates
       showDatePicker: false,
     }
     this.setSchoolValue = this.setSchoolValue.bind(this);
     this.setNativeValue = this.setNativeValue.bind(this);
     this.setLanguageValue = this.setLanguageValue.bind(this);
+    this.setCountryValue = this.setCountryValue.bind(this);
 
   }
   //user inputs
@@ -133,6 +144,23 @@ export class signupScreen extends Component {
   onSchoolOpen() {
     signupScreen.setNativeOpen
     signupScreen.setLanguageOpen
+  }
+
+  //Country Dropdown Menu
+  setCountryOpen = (countryOpen) => {
+    console.debug('opens country dropdown')
+    this.setState({
+      countryOpen
+    });
+    console.debug(this.state.countryOpen)
+  }
+
+  setCountryValue(callback) {
+    this.setState(state => (
+      console.debug('the value being inputed is ', callback(state.value)),
+      { country: callback(state.value) }
+    )
+    );
   }
 
   //Birthday inputView
@@ -215,6 +243,7 @@ export class signupScreen extends Component {
           <View style={styles.signupView}>
             <Text style={styles.signupText}>Sign up to find friends and connect with others.</Text>
           </View>
+
           <View style={styles.inputView} >
             <TextInput
               style={styles.inputText}
@@ -240,21 +269,6 @@ export class signupScreen extends Component {
               onChangeText={(val) => this.updateInputVal(val, 'password')} />
           </View>
 
-          <View style={styles.inputView} >
-            <TextInput
-              style={styles.inputText}
-              placeholder="Country"
-              placeholderTextColor="rgba(225, 225, 225, 1.0)"
-              onChangeText={(val) => this.updateInputVal(val, 'country')} />
-          </View>
-
-          {/* <View style={styles.inputView} >
-              <TextInput
-                style={styles.inputText}
-                placeholder="Birthday"
-                placeholderTextColor="rgba(225, 225, 225, 1.0)"
-                onChangeText={(val) => this.updateInputVal(val, 'birthday')} />
-            </View> */}
           <View style={styles.birthdayView}>
             <TouchableOpacity onPress={this.setDateVisible}>
               <Text style={styles.birthDayText}> birthday </Text>
@@ -293,62 +307,69 @@ export class signupScreen extends Component {
           )}
           <View style={styles.drownDownSection}>
 
-            <View style={styles.inputView} >
-              <DropDownPicker
-                style={styles.singleSelect}
-                open={this.state.languageOpen}
-                value={this.state.language}
-                items={this.state.languageItem}
-                setOpen={this.setLanguageOpen}
-                setValue={this.setLanguageValue}
-                dropDownContainerStyle={styles.singleSelectDropdown}
-                placeholder="Language"
-                zIndex={4000}
-                zIndexInverse={5000}
-              />
-            </View>
+            <DropDownPicker
+              style={styles.singleSelect}
+              open={this.state.countryOpen}
+              value={this.state.country}
+              items={this.state.countryItem}
+              setOpen={this.setCountryOpen}
+              setValue={this.setCountryValue}
+              dropDownContainerStyle={styles.singleSelectDropdown}
+              placeholder="Country"
+              zIndex={8000}
+              zIndexInverse={1000}
+            />
 
-            <View style={styles.inputView} >
+            <DropDownPicker
+              style={styles.singleSelect}
+              open={this.state.languageOpen}
+              value={this.state.language}
+              items={this.state.languageItem}
+              setOpen={this.setLanguageOpen}
+              setValue={this.setLanguageValue}
+              dropDownContainerStyle={styles.singleSelectDropdown}
+              placeholder="Language"
+              zIndex={8000}
+              zIndexInverse={1000}
+            />
 
-              <DropDownPicker
-                style={styles.singleSelect}
-                open={this.state.schoolOpen}
-                value={this.state.school}
-                items={this.state.schoolItem}
-                setOpen={this.setSchoolOpen}
-                setValue={this.setSchoolValue}
-                dropDownContainerStyle={styles.singleSelectDropdown}
-                placeholder="University"
-                zIndex={4000}
-                zIndexInverse={3000}
-                onOpen={this.onSchoolOpen}
-              />
-            </View>
-            <View style={styles.inputView} >
-              <DropDownPicker
-                style={styles.singleSelect}
-                open={this.state.nativeOpen}
-                value={this.state.native}
-                items={this.state.nativeItem}
-                setOpen={this.setNativeOpen}
-                setValue={this.setNativeValue}
-                dropDownContainerStyle={styles.singleSelectDropdown}
-                placeholder="Are you an international student"
-                zIndex={5000}
-                zIndexInverse={1000}
-              />
-            </View>
+
+            <DropDownPicker
+              style={styles.singleSelect}
+              open={this.state.schoolOpen}
+              value={this.state.school}
+              items={this.state.schoolItem}
+              setOpen={this.setSchoolOpen}
+              setValue={this.setSchoolValue}
+              dropDownContainerStyle={styles.singleSelectDropdown}
+              placeholder="University"
+              zIndex={4000}
+              zIndexInverse={2000}
+              onOpen={this.onSchoolOpen}
+            />
+            <DropDownPicker
+              style={styles.singleSelect}
+              open={this.state.nativeOpen}
+              value={this.state.native}
+              items={this.state.nativeItem}
+              setOpen={this.setNativeOpen}
+              setValue={this.setNativeValue}
+              dropDownContainerStyle={styles.singleSelectDropdown}
+              placeholder="Are you an international student"
+              zIndex={4000}
+              zIndexInverse={6000}
+            />
           </View>
           <View style={styles.signupBtn} >
             <TouchableOpacity onPress={() => this.registerUser()}>
               <Text style={styles.signupBtnText}>Sign up</Text>
             </TouchableOpacity>
           </View>
-
-          <TouchableOpacity onPress={() => this.props.navigation.navigate("Login")} style={styles.loginBtn}>
-            <Text style={styles.loginText}>Already have an account? Sign In.</Text>
-          </TouchableOpacity>
-
+          <View style={styles.loginBtn}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate("Login")}>
+              <Text style={styles.loginText}>Already have an account? Sign In.</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ImageBackground>
     );
@@ -430,25 +451,37 @@ const styles = StyleSheet.create({
   loginBtn: {
     width: '100%',
     //janky way to apply height
-    height: 31,
+    height: '100%',
     backgroundColor: 'rgba(94, 8, 203, 0.7)',
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 140,
+    // position: "absolute",
+    marginTop: 25,
+    marginBottom: '100%',
+    //paddingTop: 20
+    flex: 1
   },
   loginText: {
     justifyContent: 'center',
     alignItems: 'center',
     //bottom: 0,
     color: "black",
-    fontSize: 15
+    fontSize: 20,
   },
   //Dropdown Styles
   drownDownSection: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    width: '80%',
+    padding: 10,
   },
-  singleSelect: {},
+  singleSelect: {
+    margin: 5,
+    height: 40,
+  },
   singleSelectDropdown: {
+    position: 'absolute',
+    margin: 5,
+
   },
   multiSelect: {},
   multiSelectDropdown: {}
