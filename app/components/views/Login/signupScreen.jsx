@@ -316,7 +316,7 @@ export class signupScreen extends Component {
               setValue={this.setCountryValue}
               dropDownContainerStyle={styles.singleSelectDropdown}
               placeholder="Country"
-              zIndex={8000}
+              zIndex={9000}
               zIndexInverse={1000}
             />
 
@@ -344,7 +344,7 @@ export class signupScreen extends Component {
               dropDownContainerStyle={styles.singleSelectDropdown}
               placeholder="University"
               zIndex={4000}
-              zIndexInverse={2000}
+              zIndexInverse={1000000}
               onOpen={this.onSchoolOpen}
             />
             <DropDownPicker
@@ -357,7 +357,7 @@ export class signupScreen extends Component {
               dropDownContainerStyle={styles.singleSelectDropdown}
               placeholder="Are you an international student"
               zIndex={4000}
-              zIndexInverse={6000}
+              zIndexInverse={10000}
             />
           </View>
           <View style={styles.signupBtn} >
