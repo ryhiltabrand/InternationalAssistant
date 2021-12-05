@@ -51,6 +51,16 @@ export class signupScreen extends Component {
         { label: 'yes', value: 'International' },
         { label: 'no', value: 'Native' }
       ],
+      languageOpen: false,
+      languageItem: [
+        { label: 'English', value: 'english' },
+        { label: 'Mandarin', value: 'mandarin' },
+        { label: 'Spanish', value: 'spanish' },
+        { label: 'Italian', value: 'italian' },
+        { label: 'Hindi', value: 'hindi' },
+        { label: 'French', value: 'french' },
+        { label: 'Japanese', value: 'japanese' },
+      ],
     }
     this.setSchoolValue = this.setSchoolValue.bind(this);
     this.setNativeValue = this.setNativeValue.bind(this);
@@ -95,6 +105,21 @@ export class signupScreen extends Component {
     this.setState(state => (
       console.debug('the value being inputed is ', callback(state.value)),
       { native: callback(state.value) }
+    )
+    );
+  }
+  //language Dropdown Menu
+  setLanguageOpen = (languageOpen) => {
+    console.debug('opens language dropdown')
+    this.setState({
+      languageOpen
+    });
+  }
+
+  setLanguageValue(callback) {
+    this.setState(state => (
+      console.debug('the value being inputed is ', callback(state.value)),
+      { language: callback(state.value) }
     )
     );
   }
@@ -210,13 +235,20 @@ export class signupScreen extends Component {
               onChangeText={(val) => this.updateInputVal(val, 'language')} />
           </View>
 
-          <View style={styles.inputView} >
-            <TextInput
-              style={styles.inputText}
-              placeholder="Birthday"
-              placeholderTextColor="rgba(225, 225, 225, 1.0)"
-              onChangeText={(val) => this.updateInputVal(val, 'birthday')} />
-          </View>
+            <View style={styles.inputView} >
+              <DropDownPicker
+                style={styles.singleSelect}
+                open={this.state.languageOpen}
+                value={this.state.language}
+                items={this.state.languageItem}
+                setOpen={this.setLanguageOpen}
+                setValue={this.setLanguageValue}
+                dropDownContainerStyle={styles.singleSelectDropdown}
+                placeholder="Language"
+                zIndex={4000}
+                zIndexInverse={5000}
+              />
+            </View>
 
           {/* <View style={styles.inputView} >
             <TextInput
