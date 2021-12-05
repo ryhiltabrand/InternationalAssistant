@@ -20,7 +20,7 @@ import {
 const ChatScreen = ({route}) => {
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState(null)
-  const {name, uid} = route.params;
+  const {name, uid, Help} = route.params;
   var id;
   useEffect(() => {
     readUser()
@@ -71,7 +71,9 @@ async function readUser() {
     .where("Users", "in", [ids])
     .get()
     TestRef.docs.map((doc) =>{
-      id = doc.id;
+      if(doc.data().HelpRequest === Help){
+        id = doc.id;
+      }
     })
 
   }
@@ -84,7 +86,9 @@ async function readUser() {
     .where("Users", "in", [ids])
     .get()
     TestRef.docs.map((doc) =>{
-      id = doc.id;
+      if(doc.data().HelpRequest == Help){
+        id = doc.id;
+      }
     })
     const messageRef = firebase.firestore().collection("DirectMessaging")
       .doc(id).collection("Messages")

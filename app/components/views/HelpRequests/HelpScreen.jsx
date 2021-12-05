@@ -10,6 +10,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import IndividualRequest from './IndividualRequests'
 import OthersRequests from "./OthersRequests";
 
+
 const Stack = createStackNavigator();
 function NavStack() {
     return (
