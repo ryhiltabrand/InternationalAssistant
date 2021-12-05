@@ -15,7 +15,7 @@ import {
   DenyApplicant,
 } from "./../../shardedComponents/Help/updateHelper";
 import firebase from "firebase";
-import AddChat from '../../shardedComponents/Help/createMessage.js'
+import AddChat from "../../shardedComponents/Help/createMessage.js";
 export default function IndividualRequest({ route, navigation }) {
   /* 2. Get the param */
   const [modalVisible, setModalVisible] = useState(false);
@@ -34,11 +34,10 @@ export default function IndividualRequest({ route, navigation }) {
     Doc,
     Date,
   } = route.params;
-  
+
   var ApplicantsInfo = async () => {
     setData([]);
     for (var i = 0; i < Applicants.length; i++) {
-     
       const ApplicantQuery = await firebase
         .firestore()
         .collection("users")
@@ -55,7 +54,6 @@ export default function IndividualRequest({ route, navigation }) {
   var HelperInfo = async () => {
     setData([]);
     for (var i = 0; i < HelpersUID.length; i++) {
-      
       const HelperQuery = await firebase
         .firestore()
         .collection("users")
@@ -111,97 +109,109 @@ export default function IndividualRequest({ route, navigation }) {
           <Text>Comments: {Object.keys(Comments).length}</Text>
         </View>
       </View>
-      <View style={{flexDirection: "row", alignContent:"center", alignItems:"center", justifyContent:"center"}}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignContent: "center",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Button
           title=" Show Helpers"
           onPress={() => {
-            setCurrent("Helper")
+            setCurrent("Helper");
             HelperInfo();
           }}
         />
-        <Text>  </Text>
+        <Text> </Text>
         <Button
-        title=" Show Applicants"
-        onPress={() => {
-          setCurrent("Applicant")
-          ApplicantsInfo();
-        }}
-      />
+          title=" Show Applicants"
+          onPress={() => {
+            setCurrent("Applicant");
+            ApplicantsInfo();
+          }}
+        />
       </View>
       <View>
-        { current=="Applicant" &&
-        <FlatList
-          style={styles.container}
-          enableEmptySections={true}
-          data={Data}
-          keyExtractor={(item) => {
-            return item.name;
-          }}
-          renderItem={({ item }) => {
-            return (
-              <Pressable
-                onPress={() => {
-                  console.log(`Hi`);
-                }}
-              >
-                <View style={styles.boxA}>
-                  <Image style={styles.image} source={{ uri: item.pic }} />
-                  <Text style={styles.name}>{item.name}</Text>
-                  <Pressable
-                    onPress={() => {
-                      AcceptApplicant(Doc, item.uid);
-                      ApplicantsInfo();
-                      console.log(`you approved this bitch ${item.uid}`);
-                    }}
-                  >
-                    <Text style={{paddingRight:5}}>Approve</Text>
-                  </Pressable>
-                  <Pressable
-                    onPress={() => {
-                      console.log(`you denied this bitch ${item.uid}`);
-                    }}
-                  >
-                    <Text>Deny</Text>
-                  </Pressable>
-                </View>
-              </Pressable>
-            );
-          }}
-        />}
-        { current=="Helper" &&
-        <FlatList
-          style={styles.container}
-          enableEmptySections={true}
-          data={Data}
-          keyExtractor={(item) => {
-            return item.name;
-          }}
-          renderItem={({ item }) => {
-            return (
-              <Pressable
-                onPress={() => {
-                  console.log(`Hi`);
-                }}
-              >
-                <View style={styles.boxA}>
-                  <Image style={styles.image} source={{ uri: item.pic }} />
-                  <Text style={styles.name}>{item.name}</Text>
-          
-                  <Pressable
-                    onPress={() => {
-                      console.log(`MESSAGE STUFF HERE`);
-                      console.log(item.uid)
-                      AddChat(item.uid);
-                      navigation.navigate("Message")
-                    }}
-                  >
-                    <Text>Start a message</Text>
-                  </Pressable>
-                </View>
-              </Pressable>
-            );
-          }}
-        />}
+        {current == "Applicant" && (
+          <FlatList
+            style={styles.container}
+            enableEmptySections={true}
+            data={Data}
+            keyExtractor={(item) => {
+              return item.name;
+            }}
+            renderItem={({ item }) => {
+              return (
+                <Pressable
+                  onPress={() => {
+                    console.log(`Hi`);
+                  }}
+                >
+                  <View style={styles.boxA}>
+                    <Image style={styles.image} source={{ uri: item.pic }} />
+                    <Text style={styles.name}>{item.name}</Text>
+                    <Pressable
+                      onPress={() => {
+                        AcceptApplicant(Doc, item.uid);
+                        ApplicantsInfo();
+                      }}
+                    >
+                      <Text style={{ paddingRight: 5 }}>Approve</Text>
+                    </Pressable>
+                    <Pressable onPress={() => {}}>
+                      <Text>Deny</Text>
+                    </Pressable>
+                  </View>
+                </Pressable>
+              );
+            }}
+          />
+        )}
+        {current == "Helper" && (
+          <FlatList
+            style={styles.container}
+            enableEmptySections={true}
+            data={Data}
+            keyExtractor={(item) => {
+              return item.name;
+            }}
+            renderItem={({ item }) => {
+              return (
+                <Pressable
+                  onPress={() => {
+                    console.log(`Hi`);
+                  }}
+                >
+                  <View style={styles.boxA}>
+                    <Image style={styles.image} source={{ uri: item.pic }} />
+                    <Text style={styles.name}>{item.name}</Text>
+
+                    <Pressable
+                      onPress={() => {
+                        console.log(`MESSAGE STUFF HERE`);
+                        console.log(item.uid);
+                        AddChat(item.uid);
+                        navigation.navigate("Messager", {
+                          screen: "ChatScreen",
+                          param: {
+                            name : "Help Request: " + item.name,
+                            uid: item.uid,
+                            Help: true,
+                          },
+
+                        });
+                      }}
+                    >
+                      <Text>Start a message</Text>
+                    </Pressable>
+                  </View>
+                </Pressable>
+              );
+            }}
+          />
+        )}
       </View>
     </View>
   );

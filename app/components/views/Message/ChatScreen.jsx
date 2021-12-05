@@ -140,6 +140,7 @@ async function readUser() {
 
 
   return (
+    <View style={{backgroundColor: "#003057", flex: 1}}>
     <GiftedChat
       messages={messages}
       onSend={handleSend}
@@ -151,6 +152,7 @@ async function readUser() {
       scrollToBottom
       scrollToBottomComponent={scrollToBottomComponent}
     />
+    </View>
   );
 };
 
