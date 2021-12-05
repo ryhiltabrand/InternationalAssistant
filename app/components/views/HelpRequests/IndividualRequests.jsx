@@ -20,6 +20,7 @@ export default function IndividualRequest({ route, navigation }) {
   /* 2. Get the param */
   const [modalVisible, setModalVisible] = useState(false);
   const [Data, setData] = useState([]);
+  const [current, setCurrent] = useState(null);
   const {
     Name,
     Pic,
@@ -110,23 +111,25 @@ export default function IndividualRequest({ route, navigation }) {
           <Text>Comments: {Object.keys(Comments).length}</Text>
         </View>
       </View>
-      <View style>
-        <Button
-          title=" Show Applicants"
-          onPress={() => {
-            //setModalVisible(true);
-            ApplicantsInfo();
-          }}
-        />
+      <View style={{flexDirection: "row", alignContent:"center", alignItems:"center", justifyContent:"center"}}>
         <Button
           title=" Show Helpers"
           onPress={() => {
-            //setModalVisible(true);
+            setCurrent("Helper")
             HelperInfo();
           }}
         />
+        <Text>  </Text>
+        <Button
+        title=" Show Applicants"
+        onPress={() => {
+          setCurrent("Applicant")
+          ApplicantsInfo();
+        }}
+      />
       </View>
       <View>
+        { current=="Applicant" &&
         <FlatList
           style={styles.container}
           enableEmptySections={true}
@@ -151,7 +154,7 @@ export default function IndividualRequest({ route, navigation }) {
                       console.log(`you approved this bitch ${item.uid}`);
                     }}
                   >
-                    <Text>Approve</Text>
+                    <Text style={{paddingRight:5}}>Approve</Text>
                   </Pressable>
                   <Pressable
                     onPress={() => {
@@ -164,33 +167,39 @@ export default function IndividualRequest({ route, navigation }) {
               </Pressable>
             );
           }}
-        />
+        />}
+        { current=="Helper" &&
+        <FlatList
+          style={styles.container}
+          enableEmptySections={true}
+          data={Data}
+          keyExtractor={(item) => {
+            return item.name;
+          }}
+          renderItem={({ item }) => {
+            return (
+              <Pressable
+                onPress={() => {
+                  console.log(`Hi`);
+                }}
+              >
+                <View style={styles.boxA}>
+                  <Image style={styles.image} source={{ uri: item.pic }} />
+                  <Text style={styles.name}>{item.name}</Text>
+          
+                  <Pressable
+                    onPress={() => {
+                      console.log(`MESSAGE STUFF HERE`);
+                    }}
+                  >
+                    <Text>Start a message</Text>
+                  </Pressable>
+                </View>
+              </Pressable>
+            );
+          }}
+        />}
       </View>
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text> No </Text>
-            <Text style={styles.modalText}>hi{console.log(Data)}</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => {
-                setModalVisible(!modalVisible);
-                setData([]);
-              }}
-            >
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }
