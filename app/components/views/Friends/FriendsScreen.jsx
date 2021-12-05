@@ -8,6 +8,7 @@ import FriendsSearchScreen from "./FriendSearch";
 import FriendsMatchScreen from "./FriendMatching";
 import PendingFriends from "./PendingFriends";
 import { createStackNavigator } from "@react-navigation/stack";
+import profiles from "./picArea"
 
 const Stack = createStackNavigator();
 function NavStack() {
@@ -15,6 +16,7 @@ function NavStack() {
       <Stack.Navigator initialRouteName="FriendsSplit">
          <Stack.Screen name="FriendsSplit" component={FriendsScreen} options={{ headerShown: false }} />
          <Stack.Screen name="PendingFriends" component={PendingFriends} options={{ headerShown: false }} />
+         <Stack.Screen name="Profile" component={profiles} options={{ headerShown: false }} />
       </Stack.Navigator>
     );
   }

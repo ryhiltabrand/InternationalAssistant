@@ -13,6 +13,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
 import { deletefriends } from "../../shardedComponents/Friends/FriendRequest";
+
 //import {navigation} from '@react-navigation/native'
 LogBox.ignoreLogs(["Setting a timer"]);
 
@@ -114,7 +115,11 @@ class FriendsListScreen extends React.Component {
           }}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+                this.props.navigation.navigate("Profile", {
+                  UID: item.uid
+                });
+              }}>
                 <View style={styles.boxA}>
                   <View style={{ flexDirection: "row" }}>
                     <Image style={styles.image} source={{ uri: item.pic }} />

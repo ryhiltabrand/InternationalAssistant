@@ -85,13 +85,18 @@ export default function PendingFriends({ route, navigation }) {
             marginRight: 3,
             justifyContent: "center",
             alignContent: "center",
+            marginTop: 3
           }}
         >
           <Pressable style={styles.button} onPress={() => setList("Requested")}>
             <Text style={styles.text}>Friend Requests</Text>
           </Pressable>
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1,
+            marginRight: 3,
+            marginTop: 3,
+            justifyContent: "center",
+            alignContent: "center", }}>
           <Pressable style={styles.button} onPress={() => setList("Pending")}>
             <Text style={styles.text}>Pending Friends</Text>
           </Pressable>
@@ -110,7 +115,9 @@ export default function PendingFriends({ route, navigation }) {
               return (
                 <Pressable
                   onPress={() => {
-                    console.log(`Hi`);
+                    this.props.navigation.navigate("Profile", {
+                      UID: item.uid
+                    });
                   }}
                 >
                   <View style={styles.boxA}>
@@ -131,7 +138,6 @@ export default function PendingFriends({ route, navigation }) {
                         }}
                         onPress={() => {
                           AcceptRequest(item.uid)
-                          console.log(`you approved this bitch ${item.uid}`);
                         }}
                       >
                         <Text>Approve</Text>
@@ -150,7 +156,6 @@ export default function PendingFriends({ route, navigation }) {
                       }}
                         onPress={() => {
                           DenyRequest(item.uid)
-                          console.log(`you denied this bitch ${item.uid}`);
                         }}
                       >
                         <Text>Deny</Text>

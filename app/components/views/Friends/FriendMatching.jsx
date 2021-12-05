@@ -71,7 +71,12 @@ class FriendsMatchScreen extends React.Component {
           renderItem={({ item }) => {
             
             return (
-              <TouchableOpacity>
+              <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate("Profile", {
+                  UID: item.uid
+                });
+              }}>
                 <>{/*console.log(this.state.data)*/}</>
                 <View style={styles.boxA}>
                   <View style={{ flexDirection: "row" }}>

@@ -56,18 +56,7 @@ class ProfileScreen extends Component {
     );
   }
 }
-/*<View>
-        <View style={{ alignSelf: "center" }}>
-          <View style={styles.profileImage}>
-            <Image style={styles.image} source={{ uri: this.state.pic }} />
-          </View>
-        </View>
-        <View style={styles.infoContainer}>
-          <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>
-            {this.state.name}
-          </Text>
-        </View>
-      </View>*/
+
 
 const PStack = createNativeStackNavigator();
 const ProfileStackScreen = ({ navigation }) => (

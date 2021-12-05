@@ -12,15 +12,9 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import firebase from "firebase";
 import { LinearGradient } from "expo-linear-gradient";
 import { BackgroundImage } from "react-native-elements/dist/config";
-import { SvgXml } from "react-native-svg";
 
 import ImagePickerExample from './imageSelect'
 
-import FSVG from "./images/fi.svg";
-import USA from "./images/us.png";
-import INDIA from "./images/in.png";
-import FINLAND from "./images/fi.png";
-import CHINA from "./images/cn.png";
 
 const options = {
   title: 'Select Avatar',

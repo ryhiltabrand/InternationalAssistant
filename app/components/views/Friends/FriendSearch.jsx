@@ -399,8 +399,12 @@ export default class FriendsSearchScreen extends React.Component {
               return (
                 <>
                 
-                  { !(Object.keys(item.Friends).includes(UID)) &&
-                    <TouchableOpacity>
+                  
+                    <TouchableOpacity onPress={() => {
+                      this.props.navigation.navigate("Profile", {
+                        UID: item.uid
+                      });
+                    }}>
                       <View style={styles.boxA}>
                         <View style={{ flexDirection: "row" }}>
                           <Image
@@ -435,7 +439,7 @@ export default class FriendsSearchScreen extends React.Component {
                         </View>
                       </View>
                     </TouchableOpacity>
-                  }
+                  
                 </>
               );
             }}
