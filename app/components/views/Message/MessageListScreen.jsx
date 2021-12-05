@@ -190,19 +190,40 @@ export class MessageListScreen extends Component {
       }
     }
   };
-  AddChat = async (ouid) => {
-    Users = [ouid, firebase.auth().currentUser.uid];
-    Users.sort();
+  AddChat = async (ouid) =>{
+    Dupecreator=null;
+    Users=[ouid,firebase.auth().currentUser.uid]
+    Users.sort()
     data = {
       HelpRequest: false,
       Users: Users,
-    };
-    const add = await firebase
-      .firestore()
-      .collection("DirectMessaging")
-      .add(data);
-    console.log("Worked ", add.id);
-  };
+    }
+    Dupequery= await firebase.firestore().collection("DirectMessaging")
+    .where("Users", "in", [Users]).get()
+    Dupequery.docs.map((doc)=>{
+      if(doc.data().HelpRequest==false){
+        Dupecreator=true;
+      }
+    })
+    if(Dupecreator!=true){
+      const add = await firebase.firestore().collection("DirectMessaging").add(data)
+    console.log("Worked ", add.id)
+    }
+  }
+
+  Joinchat = async() =>{
+    docRef= firebase.firestore().collection("GroupChats").doc(this.state.id)
+    const doc = await docRef.get()
+    var Users= doc.data().Users;
+    console.log(Users)
+    Users.push(firebase.auth().currentUser.uid)
+    Users.sort()
+    const add = await firebase.firestore().collection("GroupChats")
+    .doc(this.state.id)
+    .update({
+      Users: Users,
+    })
+  }
 
   Joinchat = async () => {
     docRef = firebase.firestore().collection("GroupChats").doc(this.state.id);
