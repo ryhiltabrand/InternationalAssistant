@@ -135,7 +135,7 @@ export default function IndividualRequest({ route, navigation }) {
           enableEmptySections={true}
           data={Data}
           keyExtractor={(item) => {
-            return item.name;
+            return item.uid;
           }}
           renderItem={({ item }) => {
             return (
@@ -174,7 +174,7 @@ export default function IndividualRequest({ route, navigation }) {
           enableEmptySections={true}
           data={Data}
           keyExtractor={(item) => {
-            return item.name;
+            return item.uid;
           }}
           renderItem={({ item }) => {
             return (
