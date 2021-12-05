@@ -392,7 +392,7 @@ export default class FriendsSearchScreen extends React.Component {
             enableEmptySections={true}
             data={this.state.data}
             keyExtractor={(item) => {
-              return item.name;
+              return item.uid;
             }}
             renderItem={({ item }) => {
               const UID = firebase.auth().currentUser.uid;
