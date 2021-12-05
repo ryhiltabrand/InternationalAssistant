@@ -507,240 +507,240 @@ export default class MyEvents extends React.Component {
             this.setModalVisible(!modalVisible);
           }}
         >
-        <ScrollView>
-          <TouchableOpacity
-            style={styles.SumbitBtn}
-            onPress={() => {
-              this.setModalVisible(!modalVisible);
-              //this.clearState();
-            }}
-          >
-            <Text style={styles.SumbitBtnText}>Back to Search</Text>
-          </TouchableOpacity>
-          <Text> When does it need to be Completed </Text>
-          <Button
-            title="Select Date"
-            onPress={() => this.setDateVisible(true)}
-          />
-          <Button
-            title="Select Time"
-            onPress={() => this.setTimeVisible(true)}
-          />
-          <Text> Date: {this.state.Day} Time: {this.state.Time}</Text>
-          <Text>Enter the following information to create a request</Text>
-          <TextInput
-            multiline
-            numberOfLines={4}
-            onChangeText={(val) => this.updateInputVal(val, "Description")}
-            placeholder="Enter Description"
-            maxLength={256}
-            style={{
-              padding: 10,
-              borderColor: "black",
-              borderStyle: "solid",
-              borderWidth: 3,
-            }}
-          />
-          <Text> Prefered Language: </Text>
-          <DropDownPicker
-            open={Languagedropdown}
-            value={this.state.language}
-            items={this.state.languages}
-            setOpen={this.setLanguagedropdown}
-            setValue={this.setLanguage}
-            zIndex={3000}
-            zIndexInverse={1000}
-          />
-          <Text> On Campus: </Text>
-          <DropDownPicker
-            open={Campusdropdown}
-            value={Campus}
-            items={this.state.Campuses}
-            setOpen={this.setCampusdropdown}
-            setValue={this.setCampus}
-            zIndex={2000}
-            zIndexInverse={2000}
-          />
-          <Text> Country: </Text>
-          <DropDownPicker
-            open={Countrydropdown}
-            value={Country}
-            items={this.state.Countrys}
-            setOpen={this.setCountrydropdown}
-            setValue={this.setCountry}
-            zIndex={1000}
-            zIndexInverse={1000}
-          />
-          <Text> Name: </Text>
-          <TextInput
-            multiline
-            numberOfLines={1}
-            onChangeText={(val) => this.updateInputVal(val, "Name")}
-            placeholder="Name of Event"
-            maxLength={20}
-            style={{
-              padding: 10,
-              borderColor: "black",
-              borderStyle: "solid",
-              borderWidth: 3,
-            }}
-          />
-          <Text> Street: </Text>
-          <TextInput
-            multiline
-            numberOfLines={1}
-            onChangeText={(val) => this.updateInputVal(val, "Street")}
-            placeholder="Enter Street"
-            maxLength={20}
-            style={{
-              padding: 10,
-              borderColor: "black",
-              borderStyle: "solid",
-              borderWidth: 3,
-            }}
-          />
-          <Text> City: </Text>
-          <TextInput
-            multiline
-            numberOfLines={1}
-            onChangeText={(val) => this.updateInputVal(val, "City")}
-            placeholder="Enter City"
-            maxLength={20}
-            style={{
-              padding: 10,
-              borderColor: "black",
-              borderStyle: "solid",
-              borderWidth: 3,
-            }}
-          />
-          <Text> State: </Text>
-          <DropDownPicker
-            open={USesdropdown}
-            value={US}
-            items={this.state.USes}
-            setOpen={this.setUSesdropdown}
-            setValue={this.setUS}
-            zIndex={1000}
-            zIndexInverse={1000}
-          />
-          <Text> Zip: </Text>
-          <TextInput
-            multiline
-            numberOfLines={1}
-            onChangeText={(val) => this.updateInputVal(val, "Zip")}
-            placeholder="Enter Zip"
-            maxLength={6}
-            style={{
-              padding: 10,
-              borderColor: "black",
-              borderStyle: "solid",
-              borderWidth: 3,
-            }}
-          />
-
-
-          {this.state.showDatePicker && (
-            <DateTimePicker
-              value={this.state.Date}
-              mode="date"
-              display="default"
-              onChange={(e, d) => {
-                if (Platform.OS === "ios") {
-                  this.setState({ Day: d });
-                  onChange(d);
-                } else {
-                  this.setDateClose(false);
-                  var Month = ''
-                  if (Number(d.getMonth() + 1) < 11) {
-                    Month = "0" + (d.getMonth() + 1)
-                  } else {
-                    Month = d.getMonth() + 1
-                  }
-                  var Day = ''
-                  if (Number(d.getDate()) < 10) {
-                    Day = "0" + (d.getDate() + 1)
-                  } else {
-                    Day = d.getDate() + 1
-                  }
-                  var Year = d.getFullYear()
-                  var Date = Year + "-" + Month + "-" + Day
-                  this.setState({ Day: Date });
-                  console.log(Date)
-
-                }
-              }}
-              style={{ backgroundColor: "white" }}
-            />
-          )}
-          {this.state.showTimePicker && (
-            <DateTimePicker
-              value={this.state.Date}
-              mode="time"
-              display="default"
-              onChange={(e, d) => {
-                if (Platform.OS === "ios") {
-                  this.setState({ Time: d });
-                  onChange(d);
-                } else {
-                  this.setTimeClose(false);
-                  var Hours = '';
-                  if (Number(d.getHours() < 10)) {
-                    Hours = "0" + d.getHours();
-                  } else {
-                    Hours = d.getHours();
-                  }
-
-                  var Mins = "";
-                  if (Number(d.getMinutes() < 10)) {
-                    Mins = "0" + d.getMinutes();
-                  } else {
-                    Mins = d.getMinutes();
-                  }
-                  var Time = Hours + ":" + Mins + ":00"
-                  this.setState({ Time: Time });
-                  console.log(Time)
-                }
-              }}
-              style={{ backgroundColor: "white" }}
-            />
-          )}
-
-          <TouchableOpacity
-            onPress={() => {
-              if (
-                this.state.US == null ||
-                this.state.Campus == null ||
-                this.state.language == null ||
-                this.state.Description == null || this.state.Day == null || this.state.Time == null
-              ) {
-                alert(
-                  "Could not create the request make sure you inputted everything!"
-                );
-              } else {
-                var dateTime = this.state.Day + "T" + this.state.Time + "Z";
-                console.log(dateTime)
-                var date = new Date(dateTime)
-                console.log(date)
-                AddEvent(
-                  this.state.Description,
-                  this.state.language,
-                  this.state.Campus,
-                  this.state.Name,
-                  this.state.Country,
-                  this.state.Street,
-                  this.state.City,
-                  this.state.US,
-                  this.state.Zip,
-                  this.state.Date
-                );
+          <ScrollView>
+            <TouchableOpacity
+              style={styles.SumbitBtn}
+              onPress={() => {
                 this.setModalVisible(!modalVisible);
-              }
-            }}
-            style={styles.SumbitBtn}
-          >
-            <Text style={styles.SumbitBtnText}>Sumbit</Text>
-          </TouchableOpacity>
-        </ScrollView>
+                //this.clearState();
+              }}
+            >
+              <Text style={styles.SumbitBtnText}>Back to Search</Text>
+            </TouchableOpacity>
+            <Text> When does it need to be Completed </Text>
+            <Button
+              title="Select Date"
+              onPress={() => this.setDateVisible(true)}
+            />
+            <Button
+              title="Select Time"
+              onPress={() => this.setTimeVisible(true)}
+            />
+            <Text> Date: {this.state.Day} Time: {this.state.Time}</Text>
+            <Text>Enter the following information to create a request</Text>
+            <TextInput
+              multiline
+              numberOfLines={4}
+              onChangeText={(val) => this.updateInputVal(val, "Description")}
+              placeholder="Enter Description"
+              maxLength={256}
+              style={{
+                padding: 10,
+                borderColor: "black",
+                borderStyle: "solid",
+                borderWidth: 3,
+              }}
+            />
+            <Text> Prefered Language: </Text>
+            <DropDownPicker
+              open={Languagedropdown}
+              value={this.state.language}
+              items={this.state.languages}
+              setOpen={this.setLanguagedropdown}
+              setValue={this.setLanguage}
+              zIndex={3000}
+              zIndexInverse={1000}
+            />
+            <Text> On Campus: </Text>
+            <DropDownPicker
+              open={Campusdropdown}
+              value={Campus}
+              items={this.state.Campuses}
+              setOpen={this.setCampusdropdown}
+              setValue={this.setCampus}
+              zIndex={2000}
+              zIndexInverse={2000}
+            />
+            <Text> Country: </Text>
+            <DropDownPicker
+              open={Countrydropdown}
+              value={Country}
+              items={this.state.Countrys}
+              setOpen={this.setCountrydropdown}
+              setValue={this.setCountry}
+              zIndex={1000}
+              zIndexInverse={1000}
+            />
+            <Text> Name: </Text>
+            <TextInput
+              multiline
+              numberOfLines={1}
+              onChangeText={(val) => this.updateInputVal(val, "Name")}
+              placeholder="Name of Event"
+              maxLength={20}
+              style={{
+                padding: 10,
+                borderColor: "black",
+                borderStyle: "solid",
+                borderWidth: 3,
+              }}
+            />
+            <Text> Street: </Text>
+            <TextInput
+              multiline
+              numberOfLines={1}
+              onChangeText={(val) => this.updateInputVal(val, "Street")}
+              placeholder="Enter Street"
+              maxLength={20}
+              style={{
+                padding: 10,
+                borderColor: "black",
+                borderStyle: "solid",
+                borderWidth: 3,
+              }}
+            />
+            <Text> City: </Text>
+            <TextInput
+              multiline
+              numberOfLines={1}
+              onChangeText={(val) => this.updateInputVal(val, "City")}
+              placeholder="Enter City"
+              maxLength={20}
+              style={{
+                padding: 10,
+                borderColor: "black",
+                borderStyle: "solid",
+                borderWidth: 3,
+              }}
+            />
+            <Text> State: </Text>
+            <DropDownPicker
+              open={USesdropdown}
+              value={US}
+              items={this.state.USes}
+              setOpen={this.setUSesdropdown}
+              setValue={this.setUS}
+              zIndex={1000}
+              zIndexInverse={1000}
+            />
+            <Text> Zip: </Text>
+            <TextInput
+              multiline
+              numberOfLines={1}
+              onChangeText={(val) => this.updateInputVal(val, "Zip")}
+              placeholder="Enter Zip"
+              maxLength={6}
+              style={{
+                padding: 10,
+                borderColor: "black",
+                borderStyle: "solid",
+                borderWidth: 3,
+              }}
+            />
+
+
+            {this.state.showDatePicker && (
+              <DateTimePicker
+                value={this.state.Date}
+                mode="date"
+                display="default"
+                onChange={(e, d) => {
+                  if (Platform.OS === "ios") {
+                    this.setState({ Day: d });
+                    onChange(d);
+                  } else {
+                    this.setDateClose(false);
+                    var Month = ''
+                    if (Number(d.getMonth() + 1) < 11) {
+                      Month = "0" + (d.getMonth() + 1)
+                    } else {
+                      Month = d.getMonth() + 1
+                    }
+                    var Day = ''
+                    if (Number(d.getDate()) < 10) {
+                      Day = "0" + (d.getDate() + 1)
+                    } else {
+                      Day = d.getDate() + 1
+                    }
+                    var Year = d.getFullYear()
+                    var Date = Year + "-" + Month + "-" + Day
+                    this.setState({ Day: Date });
+                    console.log(Date)
+
+                  }
+                }}
+                style={{ backgroundColor: "white" }}
+              />
+            )}
+            {this.state.showTimePicker && (
+              <DateTimePicker
+                value={this.state.Date}
+                mode="time"
+                display="default"
+                onChange={(e, d) => {
+                  if (Platform.OS === "ios") {
+                    this.setState({ Time: d });
+                    onChange(d);
+                  } else {
+                    this.setTimeClose(false);
+                    var Hours = '';
+                    if (Number(d.getHours() < 10)) {
+                      Hours = "0" + d.getHours();
+                    } else {
+                      Hours = d.getHours();
+                    }
+
+                    var Mins = "";
+                    if (Number(d.getMinutes() < 10)) {
+                      Mins = "0" + d.getMinutes();
+                    } else {
+                      Mins = d.getMinutes();
+                    }
+                    var Time = Hours + ":" + Mins + ":00"
+                    this.setState({ Time: Time });
+                    console.log(Time)
+                  }
+                }}
+                style={{ backgroundColor: "white" }}
+              />
+            )}
+
+            <TouchableOpacity
+              onPress={() => {
+                if (
+                  this.state.US == null ||
+                  this.state.Campus == null ||
+                  this.state.language == null ||
+                  this.state.Description == null || this.state.Day == null || this.state.Time == null
+                ) {
+                  alert(
+                    "Could not create the request make sure you inputted everything!"
+                  );
+                } else {
+                  var dateTime = this.state.Day + "T" + this.state.Time + "Z";
+                  console.log(dateTime)
+                  var date = new Date(dateTime)
+                  console.log(date)
+                  AddEvent(
+                    this.state.Description,
+                    this.state.language,
+                    this.state.Campus,
+                    this.state.Name,
+                    this.state.Country,
+                    this.state.Street,
+                    this.state.City,
+                    this.state.US,
+                    this.state.Zip,
+                    this.state.Date
+                  );
+                  this.setModalVisible(!modalVisible);
+                }
+              }}
+              style={styles.SumbitBtn}
+            >
+              <Text style={styles.SumbitBtnText}>Sumbit</Text>
+            </TouchableOpacity>
+          </ScrollView>
         </Modal>
       </View>
     );
