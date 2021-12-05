@@ -15,7 +15,6 @@ import {
   DenyApplicant,
 } from "./../../shardedComponents/Help/updateHelper";
 import firebase from "firebase";
-
 export default function IndividualRequest({ route, navigation }) {
   /* 2. Get the param */
   const [modalVisible, setModalVisible] = useState(false);
@@ -190,6 +189,7 @@ export default function IndividualRequest({ route, navigation }) {
                   <Pressable
                     onPress={() => {
                       console.log(`MESSAGE STUFF HERE`);
+                      navigation.navigate("Message")
                     }}
                   >
                     <Text>Start a message</Text>
