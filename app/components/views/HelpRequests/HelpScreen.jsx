@@ -9,7 +9,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { createStackNavigator } from "@react-navigation/stack";
 import IndividualRequest from './IndividualRequests'
 import OthersRequests from "./OthersRequests";
-import MessageScreen from "../Message/MessagingScreen";
+
 
 const Stack = createStackNavigator();
 function NavStack() {
@@ -73,11 +73,6 @@ const HelpStackScreen = ({ navigation }) => (
             ></FontAwesome5.Button>
           ),
         }}
-      />
-      <HelpStack.Screen
-      name="Message"
-      component={MessageScreen}
-      options={{headerShown: false}}
       />
     </HelpStack.Navigator>
   </>

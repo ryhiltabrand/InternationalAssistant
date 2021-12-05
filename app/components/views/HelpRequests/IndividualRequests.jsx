@@ -15,6 +15,7 @@ import {
   DenyApplicant,
 } from "./../../shardedComponents/Help/updateHelper";
 import firebase from "firebase";
+import AddChat from '../../shardedComponents/Help/createMessage.js'
 export default function IndividualRequest({ route, navigation }) {
   /* 2. Get the param */
   const [modalVisible, setModalVisible] = useState(false);
@@ -189,6 +190,8 @@ export default function IndividualRequest({ route, navigation }) {
                   <Pressable
                     onPress={() => {
                       console.log(`MESSAGE STUFF HERE`);
+                      console.log(item.uid)
+                      AddChat(item.uid);
                       navigation.navigate("Message")
                     }}
                   >
