@@ -2,8 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Alert,
-  ActivityIndicator,
   Image,
   Dimensions,
   Pressable,
@@ -14,9 +12,6 @@ import {
 import React, { Component, useEffect } from "react";
 
 import MapView from "react-native-maps";
-import Marker from "react-native-maps";
-
-import useState from "react";
 
 import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 
@@ -27,9 +22,7 @@ import { SearchBar } from 'react-native-elements';
 
 import firebase from "../../../utilities/firebase";
 import { regionFlag } from "../../../utilities/regionFlagFinder";
-import { TouchableOpacity, FlatList } from "react-native-gesture-handler"
-
-const { width, height } = Dimensions.get("window");
+import { TouchableOpacity, FlatList, RectButton } from "react-native-gesture-handler"
 
 export class MapViewer extends Component {
 
@@ -38,7 +31,6 @@ export class MapViewer extends Component {
   }
 
   state = {
-    selectedIndex: 0,
     //Flatlist 
     locationList: [],
     selectedLocationCard: null,
@@ -70,10 +62,10 @@ export class MapViewer extends Component {
       },
     },
     markers: [{
-      title: 'hello',
+      title: '',
       coordinates: {
-        latitude: 3.148561,
-        longitude: 101.652778
+        latitude: 0,
+        longitude: 0
       }
     }]
   };
@@ -181,7 +173,6 @@ export class MapViewer extends Component {
   };
 
   searchLocation = () => {
-    console.debug('inside search locations the searchQuery is ', this.state.searchQuery)
     this.searchLocations(this.state.searchQuery);
   };
 
@@ -231,16 +222,6 @@ export class MapViewer extends Component {
 
 //-----------------------------------------------------------------
 
-handleTabsChange = (index) => {
-  this.setState({ selectedIndex: index });
-  
-  if(this.state.selectedIndex == 1){
-    this.props.navigation.navigate("PostLocationScreen");
-  }else{
-    this.props.navigation.navigate("DisplayList");
-  }
-}
-
  renderContent = () => (
   <><View
      style={{
@@ -255,17 +236,16 @@ handleTabsChange = (index) => {
        round
        onChangeText={text => this.updateSearch(text)}
        onClear={text => this.updateSearch('')}
-       clearIcon={true}
        placeholder="Type Here to Search..."
        value={this.state.searchQuery} />
 
-       {<TouchableOpacity onPress= { () => { this.props.navigation.navigate("PostLocationScreen"); }} style={styles.TabBtn1}>
+       {/*<TouchableOpacity onPress= { () => { this.props.navigation.navigate("PostLocationScreen"); }} style={styles.TabBtn1}>
               <Text style={styles.BtnText}>Post location</Text>
-       </TouchableOpacity>}
+    </TouchableOpacity>*/}
 
-      {<TouchableOpacity onPress= { () => { this.props.navigation.navigate("DisplayList"); }} style={styles.TabBtn2}>
+      {/*<TouchableOpacity onPress= { () => { this.props.navigation.navigate("DisplayList"); }} style={styles.TabBtn2}>
               <Text style={styles.BtnText}>Display List</Text>
-      </TouchableOpacity>}
+  </TouchableOpacity>*/}
 
       <FlatList
          data={Object.keys(this.state.locationList)}
@@ -352,10 +332,6 @@ AddLocations = () => {
    console.log("---------------- What's inside Marker array -------------------");
    this.state.markers.map( (marker) => ( console.log("Marker name: ", marker.title ), console.log("Marker Coordinates: ", this.state.markerPosition ) ));
 
-  //Print location name
-  {
-    //this.state.locationList.map( (location) => ( console.log("What is the name of the location ", location.name ) ));
-  }
 };
 
 //-----------------------------------------------------------------
@@ -577,44 +553,30 @@ render() {
            {this.state.markers.map(marker => ( <MapView.Marker coordinate={marker.coordinates} title={marker.title} />))}
           </MapView> 
 
-          {/*<MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: 36.88639,
-              longitude: -76.31042,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.0121,
-            }}> 
-           {<MapView.Marker title={"title"} coordinate={{latitude: 36.88639, longitude: -76.31042}}/>}
-           {<MapView.Marker title={this.state.marker.name} coordinate={this.state.marker.coordinates}/>}
-           {this.state.markers.map(marker => ( <MapView.Marker coordinate={marker.coordinates} title={marker.title} />))}
-          </MapView>*/}
-          
-          <Marker
-            coordinate={this.state.markerPosition}
-            //debug
-            title={"title"}
-            description={"description"}
+        </View>}
 
-            // title={this.state.markerDescription.name}
-            //description={"description"}
-         />
+        {<View style={styles.btncontainer}>
+
+          <Pressable
+            style={styles.listBtn}
+            onPress={() => {
+              this.props.navigation.navigate("DisplayList");
+            }}
+          >
+            <FontAwesome5 name={"list-alt"} size={50} color={"white"} />
+          </Pressable>
+
+          <Pressable
+            style={styles.PostBtn}
+            onPress={() => { this.props.navigation.navigate("PostLocationScreen"); }}
+          >
+            <AntDesign name={"addfile"} size={50} color={"white"} />
+          </Pressable>
 
         </View>}
 
-        <View style={styles.btncontainer}>
-
-         {<Pressable onPress={() => { this.PrintItem2()}} style={styles.categoryBtn2}>
-          <Image style={ styles.image } source={require("./../../../assets/chicken-leg.png")}/>
-          </Pressable>}
-
-          {<Pressable onPress={() => { this.props.navigation.navigate("DisplayList")}} style={styles.categoryBtn}>
-          <Image style={ styles.image } source={require("./../../../assets/chicken-leg.png")}/>
-          </Pressable>}
-
-        </View>
         {<BottomSheet
-        snapPoints={[450, 300, 230]}
+        snapPoints={[450, 250, 150]}
         borderRadius={10}
         renderContent={this.renderContent}
         />}
@@ -635,27 +597,31 @@ const styles = StyleSheet.create({
    TabBtn1:{
       width:"35%",
       backgroundColor:'rgba(182, 32, 32, 0.7)',
-      borderRadius:15,
       height:25,
   },
    //Slider
    TabBtn2:{
     width:"35%",
     backgroundColor:'rgba(182, 32, 32, 0.7)',
-    borderRadius:15,
     height:25,
+    top: 10
   },
   listBtn: {
     borderRadius: 20,
     padding: 1,
     alignSelf: "flex-end",
     marginTop: -500,
+    left:330,
+    top:-150,
     position: "absolute",
   },
   PostBtn: {
     borderRadius: 20,
     padding: 1,
-    marginTop: 20,
+    alignSelf: "flex-end",
+    marginTop: -500,
+    right:330,
+    top:-150,
     position: "absolute",
   },
   BtnText:{
@@ -763,6 +729,8 @@ const styles = StyleSheet.create({
   searchbar: {
     color: '#fff9e8ff',
     backgroundColor: '#fff9e8ff',
-    borderColor: '#fff9e8ff'
+    borderColor: '#fff9e8ff',
+    top: 10,
+    marginVertical:10
   }
 });
