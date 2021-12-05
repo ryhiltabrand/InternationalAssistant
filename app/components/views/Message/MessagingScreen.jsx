@@ -1,6 +1,6 @@
 import * as React from "react";
 import ChatScreen from "./ChatScreen";
-import {useState} from 'react';
+import GroupChat from "./GroupChat";
 import { MessageListScreen } from "./MessageListScreen";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -17,6 +17,11 @@ function NavStack(){
            headerTitleAlign: "center",
            headerBackTitleVisible: false,
          })} />
+         <Stack.Screen name="GroupChat" component={GroupChat} options={({route}) =>({
+           title:route.params.name,
+           headerTitleAlign: "center",
+           headerBackTitleVisible: false,
+         })}/>
          </Stack.Navigator>
     );
 }

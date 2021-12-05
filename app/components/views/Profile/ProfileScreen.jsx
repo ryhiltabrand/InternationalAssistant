@@ -1,139 +1,70 @@
-import React, { Component } from 'react';
-import { View, ScrollView, TouchableOpacity, Image, TouchableHighlight, ImageEditor, Text } from 'react-native';
+import React, { Component } from "react";
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Text,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useNavigationState } from '@react-navigation/core';
 import { FontAwesome5 } from "@expo/vector-icons";
-//import { getCurrentUserUID } from './../../utilities/currentUser';
-import * as database from './../../../utilities/database';
+import firebase from "firebase";
+import { LinearGradient } from "expo-linear-gradient";
+import Pic from "./picArea"
 
+class ProfileScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pic: null,
+      name: null,
+    };
+  }
+  componentDidMount() {
+    this.Profile();
+  }
+  componentWillUnmount() {}
+  clearState = () => {
+    this.setState({
+      pic: null,
+    });
+  };
 
-// console.log("the routes in profile screen", route)
-// console.log("the navigation in profile screen", navigation)
-//console.log(useNavigationState)
-//const { UID } = route.params;
-const currentUser = new database.UsersCollection();
-var currentUserInfo = {
-  name: 'N/A',
-  dateofbirth: 'N/A',
-  currentUser: 'N/A',
-  bio: 'N/A',
-  language: 'N/A',
-  country: 'N/A'
+  Profile = async () => {
+    const currentUser = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+    const doc = await currentUser.get();
+    const profpic = doc.data().profilepicture;
+    const name = doc.data().name;
+    this.setState({
+      pic: profpic,
+      name: name,
+    });
+  };
+  //<View style = { styles.container }></View>  
+  //container: { flex: 1, backgroundColor: '#9FA8DA' // Set your own custom Color 
+  render() {
+    return (
+      <View style={styles.container}>
+        <ScrollView style={{ }}>
+          <Pic />
+        </ScrollView>
+      </View>
+    );
+  }
 }
 
-
-//console.log(currentUserInfo);
-
-// function userInfo({ route }) {
-//   console.log(route.params.UID)
-currentUser.getAccountInformation("yVHnHIqhsOYbVbWOM6TbjpU4N3x1").then((result) => {
-  currentUserInfo = result;
-});
-//}
-//userInfo()
-
-//var stuff = userInfo
-function getName() {
-  return currentUserInfo.name;
-}
-
-function getBirthday() {
-  return currentUserInfo.dateofbirth
-}
-
-function getBiography() {
-  return currentUserInfo.bio
-}
-
-function getLanguages() {
-  return currentUserInfo.language
-}
-
-function getCountry() {
-  return currentUserInfo.country
-}
-
-function getProfilePicture() { 
-  return currentUserInfo.profilepicture
-}
-//}
-
-//console.log("Print waht inside profilescreen ", currentUserInfo);
-
-const ProfileScreen = () => {
-
-
-  //console.log("Print waht inside profilescreen ", currentUserInfo);
-  return (
-    <View>
-      
-
-        <View style={{ alignItems: 'center' }}>
-          <Image source={{uri: getProfilePicture()}}
-            style={{ width: 120, height: 120, borderRadius: 100, marginTop: 15 }}></Image>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', padding: 10 }}> {getName()} </Text>
-          <Text style={{ fontSize: 13, fontWeight: 'bold', color: 'grey' }}> {getBirthday()} </Text>
-        </View>
-        <View style={{
-          alignSelf: 'center',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          backgroundColor: '#619BAC',
-          width: '90%',
-          padding: 10,
-          paddingBottom: 22,
-          borderRadius: 10,
-          shadowOpacity: 80,
-          elevation: 15,
-          marginTop: 20
-        }}>
-          <Text style={{ fontSize: 13, fontWeight: 'bold', padding: 10, marginLeft: 10 }}>
-            {"About Me: " + getBiography()}
-          </Text>
-        </View>
-        <View style={{
-          alignSelf: 'center',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          backgroundColor: '#619BAC',
-          width: '90%',
-          padding: 10,
-          paddingBottom: 22,
-          borderRadius: 10,
-          shadowOpacity: 80,
-          elevation: 15,
-          marginTop: 20
-        }}>
-          <Text style={{ fontSize: 13, fontWeight: 'bold', padding: 10, }}>{"Languages: " + getLanguages()} </Text>
-        </View>
-        <View style={{
-          alignSelf: 'center',
-          flexDirection: 'row',
-          justifyContent: 'center',
-          backgroundColor: '#619BAC',
-          width: '90%',
-          padding: 10,
-          paddingBottom: 22,
-          borderRadius: 10,
-          shadowOpacity: 80,
-          elevation: 15,
-          marginTop: 20,
-        }}>
-          <Text style={{ fontSize: 13, fontWeight: 'bold', padding: 10, }}>{"Country: " + getCountry()} </Text>
-        </View>
-      
-    </View>
-
-  );
-
-}
 
 const PStack = createNativeStackNavigator();
 const ProfileStackScreen = ({ navigation }) => (
   <PStack.Navigator
     screenOptions={{
       headerStyle: {
-        backgroundColor: "#ADD8E6",
+        //backgroundColor: "#ADD8E6",
+        backgroundColor: "#202898",
       },
       headerTintColor: "#000000",
       headerTitleStyle: {
@@ -147,12 +78,15 @@ const ProfileStackScreen = ({ navigation }) => (
       options={{
         title: "Profile",
         headerTitleAlign: "center",
+        headerTitleStyle: {color:"white"},
         headerLeft: () => (
           <FontAwesome5.Button
             name="bars"
             size={25}
-            color="#000000"
-            backgroundColor="#ADD8E6"
+            color="white"
+            backgroundColor="#202898"
+            //color="#000000"
+            //backgroundColor="#ADD8E6"
             onPress={() => navigation.openDrawer()}
           ></FontAwesome5.Button>
         ),
@@ -161,5 +95,35 @@ const ProfileStackScreen = ({ navigation }) => (
   </PStack.Navigator>
 );
 
-
 export default ProfileStackScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+    
+  },
+  image: {
+    flex: 1,
+    height: undefined,
+    width: undefined,
+  },
+  flag: {
+    height: 197,
+    width: 394,
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    overflow: "hidden",
+  },
+  text: {
+    color: "#52575D",
+  },
+  infoContainer: {
+    alignSelf: "center",
+    alignItems: "center",
+    marginTop: 16,
+  },
+});

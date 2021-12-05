@@ -10,110 +10,6 @@ import firebase from "../../utilities/firebase";
 import { EventRegister } from "react-native-event-listeners";
 import { render } from "react-dom";
 
-
-/*export default function DrawerCustom(props) {
-   
-  console.log("f", props.Name)
-
-  console.log(firebase.auth().currentUser.uid)
-  return (
-    <View style={{ flex: 1 }}>
-      <DrawerContentScrollView>
-        <View style={{ flex: 1 }}>
-          <TouchableOpacity
-            style={styles.student_image}
-            onPress={() => {
-              
-                props.navigation.navigate("Profile", {
-                  UID: '8XnTipS1iBhyvzBE7CwX9BM59bP2'
-                });
-            }}>
-            <Image
-              style={styles.student_image}
-              source={{uri: 'https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg'}}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ marginLeft: 150, marginTop: 25 }}
-            onPress={() => {
-              props.navigation.navigate("Settings");
-            }}
-          >
-            <Text>
-              <FontAwesome5 name={"cog"} size={30} color={"black"} />
-            </Text>
-          </TouchableOpacity>
-          <View style={{ marginLeft: 15, flexDirection: "column", marginTop: 65 }}>
-            <Text style={{fontSize:20}}>{}</Text>
-            <Text style={{marginTop:0}}>nshah001@odu.edu</Text>
-          </View>
-        </View>
-        <View style={{}}>
-        <DrawerItem
-            label="Message"
-            onPress={() => {
-              props.navigation.navigate("Messager");
-            }}
-          />
-          <DrawerItem
-            label="Home"
-            onPress={() => {
-              props.navigation.navigate("Home");
-            }}
-          />
-          <DrawerItem
-            label="Friends"
-            onPress={() => {
-              props.navigation.navigate("Friends");
-            }}
-          />
-          <DrawerItem
-            label="Events"
-            onPress={() => {
-              props.navigation.navigate("Events");
-            }}
-          />
-          <DrawerItem
-            label="Locations"
-            onPress={() => {
-              props.navigation.navigate("Locations");
-            }}
-          />
-          <DrawerItem
-            label="Help"
-            onPress={() => {
-              props.navigation.navigate("Help");
-            }}
-          />
-          <DrawerItem
-            label="Q&A"
-            onPress={() => {
-              props.navigation.navigate("Q&A");
-            }}
-          />
-          <TouchableOpacity
-            style={{ marginLeft: 150, marginTop: 25 }}
-            onPress={() => {
-              firebase
-                .auth()
-                .signOut()
-                .then(() => {
-                  EventRegister.emit("auth", null);
-                })
-                .catch((error) => {
-                  console.log("this dont work");
-                });
-            }}
-          >
-            <Text>
-              <FontAwesome5 name={"fingerprint"} size={30} color={"black"} />
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </DrawerContentScrollView>
-    </View>
-  );
-}*/
 export default class DrawerCustom extends React.Component {
   constructor(props) {
     super(props);
@@ -158,55 +54,62 @@ export default class DrawerCustom extends React.Component {
               }}
             >
               <Text>
-                <FontAwesome5 name={"cog"} size={30} color={"black"} />
+                <FontAwesome5 name={"cog"} size={30} color={"white"} />
               </Text>
             </TouchableOpacity>
             <View
               style={{ marginLeft: 15, flexDirection: "column", marginTop: 65 }}
             >
-              <Text style={{ fontSize: 20 }}>{this.state.Name}</Text>
-              <Text style={{ marginTop: 0 }}>{this.state.Email}</Text>
+              <Text style={{ fontSize: 20, color: "white" }}>{this.state.Name}</Text>
+              <Text style={{ marginTop: 0,  }}>{this.state.Email}</Text>
             </View>
           </View>
           <View style={{}}>
             <DrawerItem
               label="Message"
+              labelStyle={{color: "white", fontWeight: "bold", fontSize:16}}
               onPress={() => {
                 this.props.navigation.navigate("Messager");
               }}
             />
             <DrawerItem
               label="Home"
+              labelStyle={{color: "white", fontWeight: "bold", fontSize:16}}
               onPress={() => {
                 this.props.navigation.navigate("Home");
               }}
             />
             <DrawerItem
               label="Friends"
+              labelStyle={{color: "white", fontWeight: "bold", fontSize:16}}
               onPress={() => {
                 this.props.navigation.navigate("Friends");
               }}
             />
             <DrawerItem
               label="Events"
+              labelStyle={{color: "white", fontWeight: "bold", fontSize:16}}
               onPress={() => {
                 this.props.navigation.navigate("Events");
               }}
             />
             <DrawerItem
               label="Locations"
+              labelStyle={{color: "white", fontWeight: "bold", fontSize:16}}
               onPress={() => {
                 this.props.navigation.navigate("Locations");
               }}
             />
             <DrawerItem
               label="Help"
+              labelStyle={{color: "white", fontWeight: "bold", fontSize:16}}
               onPress={() => {
                 this.props.navigation.navigate("Help");
               }}
             />
             <DrawerItem
               label="Q&A"
+              labelStyle={{color: "white", fontWeight: "bold", fontSize:16}}
               onPress={() => {
                 this.props.navigation.navigate("Q&A");
               }}
@@ -226,7 +129,7 @@ export default class DrawerCustom extends React.Component {
               }}
             >
               <Text>
-                <FontAwesome5 name={"fingerprint"} size={30} color={"black"} />
+                <FontAwesome5 name={"fingerprint"} size={30} color={"white"} />
               </Text>
             </TouchableOpacity>
           </View>

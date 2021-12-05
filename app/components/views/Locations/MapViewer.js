@@ -23,7 +23,7 @@ import * as Location from "expo-location";
 
 
 import { CoordConverter } from "./../../../utilities/GeoCoder";
-import { DisplayList } from "./DisplayListScreen"
+//import { DisplayList } from "./DisplayListScreen"
 
 
 
@@ -177,6 +177,111 @@ export class MapViewer extends Component {
       <>
         <View style={{ marginTop: 10, flex: 1 }}>
           <MapView
+          customMapStyle={[
+            {
+              "featureType": "poi.attraction",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.business",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.government",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.medical",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "labels.text",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.place_of_worship",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.school",
+              "stylers": [
+                {
+                  "weight": 4.5
+                }
+              ]
+            },
+            {
+              "featureType": "poi.school",
+              "elementType": "labels.icon",
+              "stylers": [
+                {
+                  "visibility": "simplified"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.sports_complex",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "transit.station.airport",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "transit.station.bus",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "transit.station.rail",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            }
+          ]}
+          userLocationFastestInterval = {5000}
+          userLocationUpdateInterval ={5000}
+            pitchEnabled = {false}
+            moveOnMarkerPress = {true}
+            mapType={"default"}
             style={styles.map}
             region={{
               latitude: 36.88639,
@@ -184,7 +289,7 @@ export class MapViewer extends Component {
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
             }}> 
-           <MapView.Marker coordinate={{latitude: 36.88639, longitude: -76.31042}}/>
+           <MapView.Marker tracksViewChanges={false} onPress={()=>console.log("hello")} coordinate={{latitude: 36.88639, longitude: -76.31042}} anchor={{x: 0.69, y:1}}/>
           </MapView>
 
           <Marker coordinate={this.state.markerPosition} />

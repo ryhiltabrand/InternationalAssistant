@@ -13,7 +13,10 @@ import ForgotScreen from "./app/components/views/Login/forgotScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import DrawerN from "./app/navigator/topNav/drawer";
 import { EventRegister } from "react-native-event-listeners";
-LogBox.ignoreLogs(['Warning: ...']);
+import { YellowBox } from "react-native"
+LogBox.ignoreAllLogs(true)
+
+
 const Stack = createStackNavigator();
 function NavStack() {
   return (
