@@ -2,7 +2,7 @@ import firebase from 'firebase'
 import * as database from '../utilities/database';
 
 
-export function getCurrentUserUID () {
+export function getCurrentUserUID() {
     // if(firebase.auth().currentUser != null) {
     return firebase.auth().currentUser.uid
     // }
@@ -21,7 +21,7 @@ var currentUserInfo = {
   country: 'N/A'
 }
 
-currentUser.getAccountInformation("yVHnHIqhsOYbVbWOM6TbjpU4N3x1").then((result) => {
+currentUser.getAccountInformation(getCurrentUserUID().toString()).then((result) => {
   currentUserInfo = result;
 });
 
