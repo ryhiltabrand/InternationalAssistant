@@ -251,7 +251,7 @@ render(){
                   <View style={{padding:10}}/>
                   <Image style={styles.gimage} source={{uri : item.pic}}/>
                   <Modal
-                  animationType="slide"
+                  animationType="fade"
                   transparent={true}
                   visible={modalvisible}
                   onRequestClose={() => {
@@ -265,9 +265,7 @@ render(){
                     style={[styles.button, styles.buttonClose]}
                     onPress={() => {
                     this.setModalvisible(!modalvisible)
-                    this.clearState()
-                    this.DirectMessages()
-                    this.GroupChats()
+                   
                   }}
                   >
                   <Text>Back to Messages</Text>

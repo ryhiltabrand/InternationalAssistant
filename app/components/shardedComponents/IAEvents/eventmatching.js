@@ -1,11 +1,11 @@
-import React, { useState, Component } from 'react'
-import firebase from "firebase"
-import { db } from '../../../utilities/firebase'
-import { tsConstructorType } from '@babel/types'
-import { render } from 'react-dom'
-import { State } from 'react-native-gesture-handler'
-LogBox.ignoreLogs(['Setting a timer'])
-import { LogBox } from 'react-native'
+import React, { useState, Component } from "react";
+import firebase from "firebase";
+import { db } from "../../../utilities/firebase";
+import { tsConstructorType } from "@babel/types";
+import { render } from "react-dom";
+import { State } from "react-native-gesture-handler";
+LogBox.ignoreLogs(["Setting a timer"]);
+import { LogBox } from "react-native";
 
 
 export default function EventMatcher() {

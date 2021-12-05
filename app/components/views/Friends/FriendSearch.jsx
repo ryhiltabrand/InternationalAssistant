@@ -276,7 +276,7 @@ export default class FriendsSearchScreen extends React.Component {
     DropDownPicker.setTheme("DARK");
     const { name } = this.state;
     return (
-      <View style={{ flexDirection: "column", flex: 10 }}>
+      <View style={{ flexDirection: "column", flex: 1, backgroundColor: "#003057"}}>
         <View style={{ flex: 5 }}>
           <SearchBar
             placeholder="Search by Name..."
@@ -355,10 +355,11 @@ export default class FriendsSearchScreen extends React.Component {
             }}
           >
             <View style={{ marginRight: 2 }}>
-              <Button title="Clear" onPress={() => this.clearState()} />
+              <Button color="#98C5EA" title="Clear" onPress={() => this.clearState()} />
             </View>
             <View style={{ marginLeft: 2 }}>
               <Button
+                color="#98C5EA"
                 title="Search"
                 onPress={() =>
                   this.Loc().then(() => this.setModalVisible(true))
@@ -398,8 +399,12 @@ export default class FriendsSearchScreen extends React.Component {
               return (
                 <>
                 
-                  { !(Object.keys(item.Friends).includes(UID)) &&
-                    <TouchableOpacity>
+                  
+                    <TouchableOpacity onPress={() => {
+                      this.props.navigation.navigate("Profile", {
+                        UID: item.uid
+                      });
+                    }}>
                       <View style={styles.boxA}>
                         <View style={{ flexDirection: "row" }}>
                           <Image
@@ -434,7 +439,7 @@ export default class FriendsSearchScreen extends React.Component {
                         </View>
                       </View>
                     </TouchableOpacity>
-                  }
+                  
                 </>
               );
             }}

@@ -14,7 +14,7 @@ import firebase from "../../../utilities/firebase";
 import DropDownPicker from 'react-native-dropdown-picker';
 import Dialog from "react-native-dialog";
 import { regionFlag } from "./../../../utilities/regionFlagFinder"
-import { MapViewer } from "./MapViewer";
+//import { MapViewer } from "./MapViewer";
 
 //console.log("This is opening DisplayList");
 

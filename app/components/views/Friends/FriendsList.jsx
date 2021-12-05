@@ -13,6 +13,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import firebase from "firebase";
 import { deletefriends } from "../../shardedComponents/Friends/FriendRequest";
+
 //import {navigation} from '@react-navigation/native'
 LogBox.ignoreLogs(["Setting a timer"]);
 
@@ -114,7 +115,11 @@ class FriendsListScreen extends React.Component {
           }}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+                this.props.navigation.navigate("Profile", {
+                  UID: item.uid
+                });
+              }}>
                 <View style={styles.boxA}>
                   <View style={{ flexDirection: "row" }}>
                     <Image style={styles.image} source={{ uri: item.pic }} />
@@ -134,8 +139,9 @@ class FriendsListScreen extends React.Component {
                         paddingVertical: 13,
                         //paddingHorizontal: 32,
                         borderRadius: 4,
+                        borderColor: "#FFFFFF",
                         elevation: 3,
-                        backgroundColor: "teal",
+                        backgroundColor: "#404A5A",
                       }}
                       onPress={() => {
                         deletefriends(item.uid);
@@ -204,6 +210,8 @@ const styles = StyleSheet.create({
   },
   body: {
     flexDirection: "column",
+    backgroundColor: "#003057",
+    flex: 1
   },
   image: {
     width: 60,
@@ -226,13 +234,13 @@ const styles = StyleSheet.create({
   boxA: {
     padding: 8,
     marginTop: 5,
-    borderColor: "black",
+    borderColor: "#0A192D",
     borderStyle: "solid",
     borderWidth: 3,
     marginBottom: 5,
     marginRight: 5,
     marginLeft: 5,
-    backgroundColor: "#ADD8E6",
+    backgroundColor: "#98C5EA",
     flexDirection: "row",
     shadowColor: "black",
     shadowOpacity: 0.2,
@@ -284,7 +292,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   name: {
-    color: "#000000",
+    color: "black",
     fontSize: 18,
     paddingTop: 15,
     paddingLeft: 10,
