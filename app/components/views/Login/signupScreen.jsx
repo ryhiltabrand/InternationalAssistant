@@ -98,6 +98,7 @@ export class signupScreen extends Component {
     this.setState({
       schoolOpen
     });
+    this.setState({ countryOpen: false, nativeOpen: false, languageOpen: false })
   }
 
   setSchoolValue(callback) {
@@ -114,7 +115,7 @@ export class signupScreen extends Component {
     this.setState({
       nativeOpen
     });
-    console.debug(this.state.nativeOpen)
+    this.setState({ countryOpen: false, languageOpen: false, schoolOpen: false })
   }
 
   setNativeValue(callback) {
@@ -131,6 +132,8 @@ export class signupScreen extends Component {
     this.setState({
       languageOpen
     });
+    this.setState({ countryOpen: false, nativeOpen: false, schoolOpen: false })
+
   }
 
   setLanguageValue(callback) {
@@ -141,17 +144,13 @@ export class signupScreen extends Component {
     );
   }
 
-  onSchoolOpen() {
-    signupScreen.setNativeOpen
-    signupScreen.setLanguageOpen
-  }
-
   //Country Dropdown Menu
   setCountryOpen = (countryOpen) => {
     console.debug('opens country dropdown')
     this.setState({
       countryOpen
     });
+    this.setState({ languageOpen: false, nativeOpen: false, schoolOpen: false })
     console.debug(this.state.countryOpen)
   }
 
@@ -162,7 +161,7 @@ export class signupScreen extends Component {
     )
     );
   }
-
+  
   //Birthday inputView
   setDateVisible = (visible) => {
     this.setState({ showDatePicker: visible });
@@ -318,6 +317,7 @@ export class signupScreen extends Component {
               placeholder="Country"
               zIndex={9000}
               zIndexInverse={1000}
+              onOpen={ this.onCountryOpen }
             />
 
             <DropDownPicker
@@ -345,7 +345,6 @@ export class signupScreen extends Component {
               placeholder="University"
               zIndex={4000}
               zIndexInverse={1000000}
-              onOpen={this.onSchoolOpen}
             />
             <DropDownPicker
               style={styles.singleSelect}
