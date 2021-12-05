@@ -34,9 +34,8 @@ export class signupScreen extends Component {
       password: '',
       country: '',
       language: '',
-      birthday: '',
-      school: 'Old Dominion University',
-      native: 'Native',
+      school: '',
+      native: '',
       isLoading: false,
       //dropdownStuff
       schoolOpen: false,
@@ -47,8 +46,15 @@ export class signupScreen extends Component {
         { label: 'Norfolk State University', value: 'Norfolk State University' },
         { label: 'William and Mary', value: 'William and Mary' }
       ],
+      nativeOpen: false,
+      nativeItem: [
+        { label: 'yes', value: 'International' },
+        { label: 'no', value: 'Native' }
+      ],
     }
     this.setSchoolValue = this.setSchoolValue.bind(this);
+    this.setNativeValue = this.setNativeValue.bind(this);
+    this.setLanguageValue = this.setLanguageValue.bind(this);
   }
   //user inputs
   updateInputVal = (val, prop) => {
@@ -76,6 +82,22 @@ export class signupScreen extends Component {
   }
   //Birthday inputView
 
+  //Native Dropdown Menu
+  setNativeOpen = (nativeOpen) => {
+    console.debug('opens native dropdown')
+    this.setState({
+      nativeOpen
+    });
+    console.debug(this.state.nativeOpen)
+  }
+
+  setNativeValue(callback) {
+    this.setState(state => (
+      console.debug('the value being inputed is ', callback(state.value)),
+      { native: callback(state.value) }
+    )
+    );
+  }
   registerUser = () => {
 
     var newUser = new database.UsersCollection();
@@ -214,14 +236,20 @@ export class signupScreen extends Component {
           // zIndex={3000}
           // zIndexInverse={1000}
           />
-
-          <View style={styles.inputView} >
-            <TextInput
-              style={styles.inputText}
-              placeholder="Are you an international or native student"
-              placeholderTextColor="rgba(225, 225, 225, 1.0)"
-              onChangeText={(val) => this.updateInputVal(val, 'native')} />
-          </View>
+            <View style={styles.inputView} >
+              <DropDownPicker
+                style={styles.singleSelect}
+                open={this.state.nativeOpen}
+                value={this.state.native}
+                items={this.state.nativeItem}
+                setOpen={this.setNativeOpen}
+                setValue={this.setNativeValue}
+                dropDownContainerStyle={styles.singleSelectDropdown}
+                placeholder="Are you an international student"
+                zIndex={5000}
+                zIndexInverse={1000}
+              />
+            </View>
 
           <TouchableOpacity onPress={() => this.registerUser()} style={styles.signupBtn}>
             <Text style={styles.signupBtnText}>Sign up</Text>
