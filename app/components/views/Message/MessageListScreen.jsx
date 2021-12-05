@@ -26,6 +26,7 @@ export class MessageListScreen extends Component {
       modalvisible: false,
       modalData: [],
       gData: [],
+      hdata:[],
       id:null,
     };
   }
@@ -47,6 +48,7 @@ export class MessageListScreen extends Component {
       data: [],
       modalData:[],
       gData:[],
+      hdata:[],
       id:null,
     });
   };
@@ -54,12 +56,13 @@ export class MessageListScreen extends Component {
 
   DirectMessages = async() =>{
     OtherUser= []
+    HelpUser=[]
     const currentUser = firebase.auth().currentUser.uid;
     RecRef= await firebase.firestore().collection("DirectMessaging")
     .where("Users", 'array-contains', currentUser).get()
     RecRef.docs.map((doc) =>{
       for(i=0; i< doc.data().Users.length;i++){
-        if(doc.data().Users[i] != currentUser){
+        if((doc.data().Users[i] !== currentUser) && (doc.data().HelpRequest===false)){
           OtherUser.push(doc.data().Users[i])
         }
       }
@@ -71,9 +74,31 @@ export class MessageListScreen extends Component {
       DMquery.docs.map((doc)=> {
         const name = doc.get("name");
         const profpic = doc.get("profilepicture");
-        let user = { uid: OtherUser[i], name: name, pic: profpic};
+        let user = { uid: OtherUser[i], name: name, pic: profpic, Help:false};
         this.setState({
           data: [...this.state.data, user],
+        })
+      })
+    }
+    RecRef= await firebase.firestore().collection("DirectMessaging")
+    .where("Users", 'array-contains', currentUser).get()
+    RecRef.docs.map((doc) =>{
+      for(i=0; i< doc.data().Users.length;i++){
+        if((doc.data().Users[i] != currentUser) && (doc.data().HelpRequest===true)){
+          HelpUser.push(doc.data().Users[i])
+        }
+      }
+    })
+    for (var i=0;i<HelpUser.length; i++){
+      Helpquery = await firebase.firestore().collection("users")
+      .where("UID", "==", HelpUser[i])
+      .get()
+      Helpquery.docs.map((doc) =>{
+        const name = doc.get("name");
+        const profpic = doc.get("profilepicture");
+        let help = { uid: HelpUser[i], name: name, pic: profpic, Help:true,};
+        this.setState({
+          hdata:[...this.state.hdata,help],
         })
       })
     }
@@ -151,6 +176,7 @@ export class MessageListScreen extends Component {
     Users=[ouid,firebase.auth().currentUser.uid]
     Users.sort()
     data = {
+      HelpRequest:false,
       Users: Users,
     }
     const add = await firebase.firestore().collection("DirectMessaging").add(data)
@@ -265,7 +291,6 @@ render(){
                     style={[styles.button, styles.buttonClose]}
                     onPress={() => {
                     this.setModalvisible(!modalvisible)
-                   
                   }}
                   >
                   <Text>Back to Messages</Text>
@@ -295,13 +320,14 @@ render(){
           enableEmptySections={true}
           data={this.state.data}
           keyExtractor={(item) => {
-            return item.name;
+            return item.uid;
           }}
           renderItem={({ item }) => {
             return(
               <TouchableOpacity onPress={() => this.props.navigation.navigate("ChatScreen",{
                 name : item.name,
                 uid: item.uid,
+                Help: item.Help,
               })}>
                 <View style={styles.box}>
                   <Image style={styles.image} source={{uri : item.pic}} />
@@ -314,6 +340,32 @@ render(){
               
           }}
           />
+          <FlatList
+          styles={styles.container}
+          enableEmptySections={true}
+          data={this.state.hdata}
+          keyExtractor={(item) => {
+            return item.name;
+          }}
+          renderItem={({ item }) => {
+            return(
+              <TouchableOpacity onPress={() => this.props.navigation.navigate("ChatScreen",{
+                name : "Help Request: " + item.name,
+                uid: item.uid,
+                Help: item.Help,
+              })}>
+                <View style={styles.box}>
+                  <Image style={styles.image} source={{uri : item.pic}} />
+                  <Text style={styles.name}>Help Request: {item.name}</Text>
+                </View>
+              </TouchableOpacity>
+              
+              
+              );
+              
+          }}
+          />
+
       </View>
     )
 }

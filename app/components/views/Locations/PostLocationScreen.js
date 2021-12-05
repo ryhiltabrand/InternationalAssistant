@@ -74,8 +74,9 @@
        name: this.state.location_name,
        address: this.state.location_address,
        contributor: this.state.location_contributor,
-       category: this.state.location_category,
-       rating: this.state.location_rating,
+       category: this.state.location_category, //Resturant
+       rating: this.state.location_rating, //1-5 stars
+       uid: getCurrentUserUID(),
        user_country: this.state.user_country
       })
   }
