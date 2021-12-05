@@ -186,7 +186,7 @@ AllRequests2 = async (date,
   
   render() {
     return (
-      <View style={styles.body}>
+      <View style={{flex: 1, backgroundColor:"#003057" }}>
         <FlatList
           style={styles.scrollView}
           enableEmptySections={true}

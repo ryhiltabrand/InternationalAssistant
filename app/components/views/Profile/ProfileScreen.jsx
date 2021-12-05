@@ -1,71 +1,81 @@
-import React, { Component } from 'react';
-import { 
-  View, 
-  TouchableOpacity, 
-  Image, 
+import React, { Component } from "react";
+import {
+  View,
+  TouchableOpacity,
+  Image,
   Text,
   StyleSheet,
-} from 'react-native';
+  ScrollView,
+} from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { FontAwesome5 } from "@expo/vector-icons";
-import firebase from 'firebase';
+import firebase from "firebase";
+import { LinearGradient } from "expo-linear-gradient";
+import Pic from "./picArea"
 
-class ProfileScreen extends Component{
-  constructor(props){
-    super(props)
-    this.state={
-      pic:null,
-      name:null,
-    }
+class ProfileScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pic: null,
+      name: null,
+    };
   }
   componentDidMount() {
-    this.Profile()
+    this.Profile();
   }
-  componentWillUnmount() {
-
-  }
-  clearState = () =>{
+  componentWillUnmount() {}
+  clearState = () => {
     this.setState({
-      pic:null,
-    })
-  }
+      pic: null,
+    });
+  };
 
-  Profile = async() =>{
-    const currentUser = firebase.firestore().collection("users")
-    .doc(firebase.auth().currentUser.uid)
-    const doc = await currentUser.get()
-    const profpic = doc.data().profilepicture
-    const name =  doc.data().name
+  Profile = async () => {
+    const currentUser = firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid);
+    const doc = await currentUser.get();
+    const profpic = doc.data().profilepicture;
+    const name = doc.data().name;
     this.setState({
-      pic:profpic,
-      name:name,
-    })
-
-  }
-  render(){
-    return(
-      <View>
-      <View style={{alignSelf:'center'}}>
-      <View style={styles.profileImage}>
-        <Image style={styles.image} source={{uri: this.state.pic}}/>
+      pic: profpic,
+      name: name,
+    });
+  };
+  //<View style = { styles.container }></View>  
+  //container: { flex: 1, backgroundColor: '#9FA8DA' // Set your own custom Color 
+  render() {
+    return (
+      <View style={styles.container}>
+        <ScrollView style={{ }}>
+          <Pic />
+        </ScrollView>
       </View>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={[styles.text,{fontWeight:"200", fontSize:36}]}>
-          {this.state.name}
-        </Text>
-      </View>
-      </View>
-        )
+    );
   }
 }
+/*<View>
+        <View style={{ alignSelf: "center" }}>
+          <View style={styles.profileImage}>
+            <Image style={styles.image} source={{ uri: this.state.pic }} />
+          </View>
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>
+            {this.state.name}
+          </Text>
+        </View>
+      </View>*/
 
 const PStack = createNativeStackNavigator();
 const ProfileStackScreen = ({ navigation }) => (
   <PStack.Navigator
     screenOptions={{
       headerStyle: {
-        backgroundColor: "#ADD8E6",
+        //backgroundColor: "#ADD8E6",
+        backgroundColor: "#202898",
       },
       headerTintColor: "#000000",
       headerTitleStyle: {
@@ -79,12 +89,15 @@ const ProfileStackScreen = ({ navigation }) => (
       options={{
         title: "Profile",
         headerTitleAlign: "center",
+        headerTitleStyle: {color:"white"},
         headerLeft: () => (
           <FontAwesome5.Button
             name="bars"
             size={25}
-            color="#000000"
-            backgroundColor="#ADD8E6"
+            color="white"
+            backgroundColor="#202898"
+            //color="#000000"
+            //backgroundColor="#ADD8E6"
             onPress={() => navigation.openDrawer()}
           ></FontAwesome5.Button>
         ),
@@ -93,27 +106,35 @@ const ProfileStackScreen = ({ navigation }) => (
   </PStack.Navigator>
 );
 
-
 export default ProfileStackScreen;
 
-const styles= StyleSheet.create({
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+    
+  },
   image: {
     flex: 1,
     height: undefined,
-    width: undefined
+    width: undefined,
   },
-  profileImage:{
-    width:200,
-    height:200,
-    borderRadius:200,
-    overflow: "hidden"
+  flag: {
+    height: 197,
+    width: 394,
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    overflow: "hidden",
   },
   text: {
-    color: "#52575D"
+    color: "#52575D",
   },
-infoContainer: {
-  alignSelf: "center",
-  alignItems: "center",
-  marginTop: 16
+  infoContainer: {
+    alignSelf: "center",
+    alignItems: "center",
+    marginTop: 16,
   },
-})
+});

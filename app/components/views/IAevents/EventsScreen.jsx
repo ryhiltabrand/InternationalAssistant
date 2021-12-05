@@ -14,7 +14,7 @@ const NavStack = () => {
   return (
     <Nstack.Navigator initialRouteName="EventScreen1">
         <Nstack.Screen name="EventScreen1" component={EventsScreen} options={{ headerShown: false}} />
-        <Nstack.Screen name="Events" component={EventTabs} options={{ headerShown: false}} />
+        
     </Nstack.Navigator>
   );
 }

@@ -15,35 +15,6 @@ import firebase from "firebase"
 
 const Drawer = createDrawerNavigator();
 
-/*const DrawerN = () => {
-  var profileName = "TEMP";
-  var profileEmail = "TEMP";
-
-  return (
-    <Drawer.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        headerShown: false,
-        drawerStyle: {
-          backgroundColor: "#ADD8E6",
-          width: 200,
-        },
-      }}
-      drawerContent={(props) => (
-        <DrawerCustom
-          {...props}
-        />
-      )}
-    >
-      <Drawer.Screen name="Homes" component={Tabs} />
-      <Drawer.Screen name="Profile" component={ProfileStackScreen} />
-      <Drawer.Screen name="Settings" component={SettingsStackScreen} />
-      <Drawer.Screen name="Friends" component={FriendsStackScreen} />
-      <Drawer.Screen name="Messager" component={MessageStackScreen} />
-    </Drawer.Navigator>
-  );
-};*/
-
 class DrawerN extends React.Component {
   //var profileName = "TEMP";
   //var profileEmail = "TEMP";
@@ -59,12 +30,14 @@ class DrawerN extends React.Component {
   return (
     <Drawer.Navigator
       initialRouteName="Home"
+      
       screenOptions={{
         headerShown: false,
         drawerStyle: {
-          backgroundColor: "#ADD8E6",
+          backgroundColor: "#202898",
           width: 200,
-        },
+          
+        }        
       }}
       drawerContent={(props) => (
         <DrawerCustom

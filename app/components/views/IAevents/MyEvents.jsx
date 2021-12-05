@@ -29,7 +29,7 @@ class MyEvents extends React.Component {
     };
   }
   componentDidMount() {
-    EventMatcher();
+    //EventMatcher();
   }
   componentWillUnmount() {}
   
@@ -37,7 +37,7 @@ class MyEvents extends React.Component {
     
     return (
       <View style={styles.body}>
-        
+        <TouchableOpacity onPress={()=>EventMatcher()}><Text>Bitch</Text></TouchableOpacity>
         
       </View>
     );
