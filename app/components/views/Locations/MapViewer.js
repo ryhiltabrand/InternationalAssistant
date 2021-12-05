@@ -7,22 +7,20 @@ import {
   Image,
   Dimensions,
   Pressable,
-  ImageBackground
+  Button,
+  ImageBackground,
 } from "react-native";
 
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 
 import MapView from "react-native-maps";
 import Marker from "react-native-maps";
 
 import useState from "react";
 
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 
 import * as Location from "expo-location";
-
-import { CoordConverter } from "../../../utilities/GeoCoder";
 
 import BottomSheet from 'reanimated-bottom-sheet';
 import { SearchBar } from 'react-native-elements';
@@ -33,10 +31,6 @@ import { TouchableOpacity, FlatList } from "react-native-gesture-handler"
 
 const { width, height } = Dimensions.get("window");
 
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
 export class MapViewer extends Component {
 
   constructor(props) {
@@ -44,6 +38,7 @@ export class MapViewer extends Component {
   }
 
   state = {
+    selectedIndex: 0,
     //Flatlist 
     locationList: [],
     selectedLocationCard: null,
@@ -58,21 +53,6 @@ export class MapViewer extends Component {
       latitudeDelta: 0,
       longitudeDelta: 0,
     },
-    searchMarker: {
-      latitude: 0,
-      longitude: 0,
-      latitudeDelta: LATITUDE_DELTA, //0
-      longitudeDelta: LONGITUDE_DELTA, //0
-    },
-    markerDescription:
-    {
-      name: "",
-      address: "",
-      contributor: "",
-      category: "",
-      rating: "",
-      rating: 0
-    },
     markerPosition: {
       latitude: 0,
       longitude: 0,
@@ -83,7 +63,6 @@ export class MapViewer extends Component {
       address: "",
       contributor: "",
       category: "",
-      rating: "",
       rating: 0,
       coordinates: {
         latitude: 0,
@@ -93,8 +72,8 @@ export class MapViewer extends Component {
     markers: [{
       title: 'hello',
       coordinates: {
-        latitude: 0,
-        longitude: 0
+        latitude: 3.148561,
+        longitude: 101.652778
       }
     }]
   };
@@ -105,20 +84,39 @@ export class MapViewer extends Component {
     }
   }
 
-  componentDidMount() {
-    this.getLocation();
+  componentWillUpdate() {
+
+
   }
+  
+  //----------------------------------------------------------------------------------
+  //Location converter and Print list
+
+  //Converts street names to coordinates 
+  getCoordinates = async (value) => {
+    console.log("getCoordinates is being called");
+    var location = await Location.geocodeAsync(value);
+    this.setState({ location });
+    location.map((Coords) => (
+      console.log("What is the latitude ", Coords.latitude),
+      console.log("What is the latitude ", Coords.longitude),
+      this.setState(this.state.markerPosition = {
+        latitude: Coords.latitude,
+        longitude: Coords.longitude,
+      })
+    ));
+};
 
   //Print the list of items
   PrintItem()
   {
     console.log("------------ Print Item --------------------");
     console.log("------------ Item from the list --------------------");
-    console.log(this.state.markerDescription.name);
-    console.log(this.state.markerDescription.address);
-    console.log(this.state.markerDescription.contributor);
-    console.log(this.state.markerDescription.category);
-    console.log(this.state.markerDescription.rating);
+    console.log(this.state.marker.name);
+    console.log(this.state.marker.address);
+    console.log(this.state.marker.contributor);
+    console.log(this.state.marker.category);
+    console.log(this.state.marker.rating);
 
     console.log("----------- Print the converted coorinates from item --------------------");
     console.log("Latitude: ",this.state.markerPosition.latitude);
@@ -126,44 +124,8 @@ export class MapViewer extends Component {
 
   }
 
-  //Converts the address string to coordinates
-  AddresstoCoordinates() {
-    let Coord = new CoordConverter();
-
-    Coord.ConvertCoords(this.state.markerDescription.address);
-
-    this.state.markerPosition = {
-      latitude: Coord.state.markerPosition.latitude,
-      longitude: Coord.state.markerPosition.longitude
-    };
-   }  
-
-  getLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-
-    if (status !== "granted") {
-      this.setstate({ errorMessage: "Permission not granted" });
-    }
-
-    let location = await Location.getLastKnownPositionAsync();
-
-    this.setState({ location, errorMessage: "Permission granted" });
-
-    var lat = parseFloat(location.coords.latitude);
-    var long = parseFloat(location.coords.longitude);
-
-    var region = {
-      latitude: lat,
-      longitude: long,
-      latitudeDelta: LATITUDE_DELTA, //0
-      longitudeDelta: LONGITUDE_DELTA, //0
-    };
-
-    this.setState({ positionState: region });
-    this.setState({ markerPosition: region });
-  };
-
   //----------------------------------------------------------------------------------
+  //matchLocations and searchlocations
 
   matchLocations = (value1, value2) => {
 
@@ -209,17 +171,9 @@ export class MapViewer extends Component {
     this.setState(prevState => ({
       locationList: prevState.locationList = locationList
     }));
-    console.log(this.state.locationList);
   }
 
   //----------------------------------------------------------------------------------
-
-  setSearchQuery = (query) => {
-    this.setState({ 
-      searchQuery: query
-    })
-    this.searchLocation();
-  }
 
   updateSearch = (searchQuery) => {
     this.setState({ searchQuery });
@@ -228,27 +182,8 @@ export class MapViewer extends Component {
 
   searchLocation = () => {
     console.debug('inside search locations the searchQuery is ', this.state.searchQuery)
-    //this.matchLocations('name', this.state.searchQuery)
     this.searchLocations(this.state.searchQuery);
   };
-
-  PlaceMarker(item)
-  {
-    //Moves data to the map viewer state
-    this.state.markerDescription = {
-      name: item.name,
-      address: item.address,
-      contributor: item.contributor,
-      category: item.category,
-      rating: item.rating
-    };
-
-    //Converts the address to coordinates
-    this.AddresstoCoordinates();
-
-    //Prints the item from list saved in mapview state
-    this.PrintItem();
-  }
 
  //----------------------------------------------------------------------------------
 
@@ -295,31 +230,44 @@ export class MapViewer extends Component {
 )
 
 //-----------------------------------------------------------------
+
+handleTabsChange = (index) => {
+  this.setState({ selectedIndex: index });
+  
+  if(this.state.selectedIndex == 1){
+    this.props.navigation.navigate("PostLocationScreen");
+  }else{
+    this.props.navigation.navigate("DisplayList");
+  }
+}
+
  renderContent = () => (
   <><View
      style={{
        backgroundColor: '#fff9e8ff',
        padding: 16,
        height: 450,
-     }}
-   >
-     {<TouchableOpacity onPress= { () => { this.props.navigation.navigate("PostLocationScreen"); }} style={styles.TabBtn1}>
-              <Text style={styles.BtnText}>Post location</Text>
-    </TouchableOpacity>}
-
-     {<TouchableOpacity onPress= { () => { this.props.navigation.navigate("DisplayList"); }} style={styles.TabBtn2}>
-              <Text style={styles.BtnText}>Display List</Text>
-  </TouchableOpacity>}
+     }}>
 
      <SearchBar
        searchIcon={{ size: 25 }}
+       containerStyle={styles.searchbar}
        round
        onChangeText={text => this.updateSearch(text)}
        onClear={text => this.updateSearch('')}
        clearIcon={true}
        placeholder="Type Here to Search..."
        value={this.state.searchQuery} />
-       <FlatList
+
+       {<TouchableOpacity onPress= { () => { this.props.navigation.navigate("PostLocationScreen"); }} style={styles.TabBtn1}>
+              <Text style={styles.BtnText}>Post location</Text>
+       </TouchableOpacity>}
+
+      {<TouchableOpacity onPress= { () => { this.props.navigation.navigate("DisplayList"); }} style={styles.TabBtn2}>
+              <Text style={styles.BtnText}>Display List</Text>
+      </TouchableOpacity>}
+
+      <FlatList
          data={Object.keys(this.state.locationList)}
          renderItem={this.LocationCard}
          keyExtractor={(item) => this.state.locationList[item].name}
@@ -327,6 +275,88 @@ export class MapViewer extends Component {
    </View></>
 );
 
+//-----------------------------------------------------------------
+
+PlaceMarker2()
+  {
+    //TESTER
+    const data = this.props.route.params
+    console.log("Show data: ", data);
+
+    this.getCoordinates(data.address);
+     this.state.marker = {
+      name: data.name,
+      address: data.address,
+      contributor: data.contributor,
+      category: data.category,
+      rating: data.rating
+    }
+  
+    console.log("------------ Items from the display list --------------------");
+    console.log(this.state.marker.name);
+    console.log(this.state.marker.address);
+    console.log(this.state.marker.contributor);
+    console.log(this.state.marker.category);
+    console.log(this.state.marker.rating);
+    console.log("----------- Print the converted coorinates from item --------------------");
+    console.log("Latitude: ",this.state.markerPosition.latitude);
+    console.log("Longitude: ", this.state.markerPosition.longitude);
+
+  }
+
+   PlaceMarker(item)
+  {
+    //Converts the address to coordinates
+    //Set the coordinates to Markerposition and call it directly from the mapview marker
+    this.getCoordinates(item.address);
+
+    //Set the state for marker with variables from the item list
+    this.state.marker = {
+      name: item.name,
+      address: item.address,
+      contributor: item.contributor,
+      category: item.category,
+      rating: item.rating
+    }
+    //Prints the item from list saved in mapview state
+    this.PrintItem();
+  }
+
+//Locationlist uses the map function to iterate throught the list
+//getCoordinates converts the street address to coordnates
+//setState creates a new state for markers state array
+//and the function concat returns a new markers state array with the new marker.
+AddLocations = () => {
+
+    this.matchLocations("category", "Restaurant");
+    this.state.locationList.map((location) => (
+      //Convert
+      console.log("What is the name of the location ", location.name ),
+      console.log("What is the name of the location ", location.address ),
+      this.setState(state => {
+        this.getCoordinates(location.address),
+        region = {
+          title: location.name,
+          address: location.address,
+          contributor: location.contributor,
+          category: location.category,
+          rating: location.rating,
+          coordinates: {
+            latitude: this.state.markerPosition.latitude,
+            longitude: this.state.markerPosition.longitude
+          }
+        }
+        this.state.markers = this.state.markers.concat(region);
+      })
+    ));
+   console.log("---------------- What's inside Marker array -------------------");
+   this.state.markers.map( (marker) => ( console.log("Marker name: ", marker.title ), console.log("Marker Coordinates: ", this.state.markerPosition ) ));
+
+  //Print location name
+  {
+    //this.state.locationList.map( (location) => ( console.log("What is the name of the location ", location.name ) ));
+  }
+};
 
 //-----------------------------------------------------------------
 
@@ -336,15 +366,229 @@ render() {
         {<View>
           
           <MapView
+          customMapStyle={[
+            {
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#242f3e"
+                }
+              ]
+            },
+            {
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#746855"
+                }
+              ]
+            },
+            {
+              "elementType": "labels.text.stroke",
+              "stylers": [
+                {
+                  "color": "#242f3e"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative.locality",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#d59563"
+                }
+              ]
+            },
+            {
+              "featureType": "poi",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "poi",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#d59563"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#263c3f"
+                }
+              ]
+            },
+            {
+              "featureType": "poi.park",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#6b9a76"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#38414e"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "geometry.stroke",
+              "stylers": [
+                {
+                  "color": "#212a37"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "labels.icon",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#9ca5b3"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#746855"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "geometry.stroke",
+              "stylers": [
+                {
+                  "color": "#1f2835"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#f3d19c"
+                }
+              ]
+            },
+            {
+              "featureType": "transit",
+              "stylers": [
+                {
+                  "visibility": "off"
+                }
+              ]
+            },
+            {
+              "featureType": "transit",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#2f3948"
+                }
+              ]
+            },
+            {
+              "featureType": "transit.station",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#d59563"
+                }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#17263c"
+                }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#515c6d"
+                }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text.stroke",
+              "stylers": [
+                {
+                  "color": "#17263c"
+                }
+              ]
+            }
+          ]}
+          userLocationFastestInterval = {5000}
+          userLocationUpdateInterval ={5000}
+            pitchEnabled = {false}
+            moveOnMarkerPress = {true}
+            mapType={"default"}
             style={styles.map}
-            region={{
+            initialRegion={{
               latitude: 36.88639,
               longitude: -76.31042,
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
             }}> 
-           {<MapView.Marker coordinate={{latitude: 36.88639, longitude: -76.31042}}/>}
-          </MapView>
+           {<MapView.Marker title={this.state.marker.name} coordinate={this.state.markerPosition}/>}
+           {this.state.markers.map(marker => ( <MapView.Marker coordinate={marker.coordinates} title={marker.title} />))}
+          </MapView> 
+
+          {/*<MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: 36.88639,
+              longitude: -76.31042,
+              latitudeDelta: 0.015,
+              longitudeDelta: 0.0121,
+            }}> 
+           {<MapView.Marker title={"title"} coordinate={{latitude: 36.88639, longitude: -76.31042}}/>}
+           {<MapView.Marker title={this.state.marker.name} coordinate={this.state.marker.coordinates}/>}
+           {this.state.markers.map(marker => ( <MapView.Marker coordinate={marker.coordinates} title={marker.title} />))}
+          </MapView>*/}
           
           <Marker
             coordinate={this.state.markerPosition}
@@ -360,12 +604,14 @@ render() {
 
         <View style={styles.btncontainer}>
 
+         {<Pressable onPress={() => { this.PrintItem2()}} style={styles.categoryBtn2}>
+          <Image style={ styles.image } source={require("./../../../assets/chicken-leg.png")}/>
+          </Pressable>}
 
-         {/* <TouchableOpacity onPress={() => {this.Selector()}}>
-          <Image style={ styles.image } source={require("../../assets/chicken-leg.png")}/>
-          </TouchableOpacity>*/}
+          {<Pressable onPress={() => { this.props.navigation.navigate("DisplayList")}} style={styles.categoryBtn}>
+          <Image style={ styles.image } source={require("./../../../assets/chicken-leg.png")}/>
+          </Pressable>}
 
-    
         </View>
         {<BottomSheet
         snapPoints={[450, 300, 230]}
@@ -403,7 +649,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 1,
     alignSelf: "flex-end",
-    marginTop: -250,
+    marginTop: -500,
     position: "absolute",
   },
   PostBtn: {
@@ -416,11 +662,6 @@ const styles = StyleSheet.create({
     color:"white",
     fontSize:15,
     left: 20
-  },
-  image: {
-    height:32,
-    width: 32,
-    borderRadius: 12
   },
   //global styles
   restaurant: {
@@ -499,9 +740,29 @@ const styles = StyleSheet.create({
   },
   //
   categoryBtn: {
-    flex: 1,
-    width: 40,
-    height: 40,
-    resizeMode: 'contain',
+    borderRadius: 20,
+    padding: 1,
+    alignSelf: "flex-end",
+    marginTop: -500,
+    right:330,
+    position: "absolute",
   },
+  categoryBtn2: {
+    borderRadius: 20,
+    padding: 1,
+    alignSelf: "flex-end",
+    marginTop: -500,
+    right:100,
+    position: "absolute",
+  },
+  image: {
+    height:32,
+    width: 32,
+    borderRadius: 12
+  },
+  searchbar: {
+    color: '#fff9e8ff',
+    backgroundColor: '#fff9e8ff',
+    borderColor: '#fff9e8ff'
+  }
 });
