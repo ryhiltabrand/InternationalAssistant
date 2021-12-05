@@ -27,6 +27,7 @@ import { getCurrentUserUID } from '../../../utilities/currentUser';
 import * as database from '../../../utilities/database';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePicker from "@react-native-community/datetimepicker";
+import MultiSelect from 'react-native-multiple-select';
 export class signupScreen extends Component {
   constructor(props) {
     super(props);
@@ -36,7 +37,7 @@ export class signupScreen extends Component {
       email: '',
       password: '',
       country: '',
-      language: '',
+      language: [],
       birthday: new Date(),
       school: '',
       native: '',
@@ -55,15 +56,14 @@ export class signupScreen extends Component {
         { label: 'yes', value: 'International' },
         { label: 'no', value: 'Native' }
       ],
-      languageOpen: false,
       languageItem: [
-        { label: 'English', value: 'english' },
-        { label: 'Mandarin', value: 'mandarin' },
-        { label: 'Spanish', value: 'spanish' },
-        { label: 'Italian', value: 'italian' },
-        { label: 'Hindi', value: 'hindi' },
-        { label: 'French', value: 'french' },
-        { label: 'Japanese', value: 'japanese' },
+        { id: 'English', name: 'english' },
+        { id: 'Mandarin', name: 'mandarin' },
+        { id: 'Spanish', name: 'spanish' },
+        { id: 'Italian', name: 'italian' },
+        { id: 'Hindi', name: 'hindi' },
+        { id: 'French', name: 'french' },
+        { id: 'Japanese', name: 'japanese' },
       ],
       countryOpen: false,
       countryItem: [
@@ -77,11 +77,10 @@ export class signupScreen extends Component {
       //dates
       showDatePicker: false,
     }
+
     this.setSchoolValue = this.setSchoolValue.bind(this);
     this.setNativeValue = this.setNativeValue.bind(this);
-    this.setLanguageValue = this.setLanguageValue.bind(this);
     this.setCountryValue = this.setCountryValue.bind(this);
-
   }
   //user inputs
   updateInputVal = (val, prop) => {
@@ -127,22 +126,13 @@ export class signupScreen extends Component {
   }
 
   //language Dropdown Menu
-  setLanguageOpen = (languageOpen) => {
-    console.debug('opens language dropdown')
-    this.setState({
-      languageOpen
-    });
-    this.setState({ countryOpen: false, nativeOpen: false, schoolOpen: false })
-
-  }
-
-  setLanguageValue(callback) {
-    this.setState(state => (
-      console.debug('the value being inputed is ', callback(state.value)),
-      { language: callback(state.value) }
-    )
+  setLanguageValue = language => {
+    console.debug('lang =: ', language)
+    this.setState(
+      { language }
     );
-  }
+    console.debug('language is: ', this.state.language)
+  };
 
   //Country Dropdown Menu
   setCountryOpen = (countryOpen) => {
@@ -161,7 +151,7 @@ export class signupScreen extends Component {
     )
     );
   }
-  
+
   //Birthday inputView
   setDateVisible = (visible) => {
     this.setState({ showDatePicker: visible });
@@ -200,7 +190,7 @@ export class signupScreen extends Component {
           newUser.setDateofBirth(this.state.birthday)
           console.log('b4 getting email')
           newUser.setEmail(this.state.email)
-          newUser.setLanguage([this.state.language])
+          newUser.setLanguage(this.state.language)
           newUser.setCountry(this.state.country)
           newUser.setBio('Hi! My name is' + this.state.name + '. I\'m new to the app. Say hello!')
           newUser.setProfilePicture('https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg')
@@ -305,6 +295,30 @@ export class signupScreen extends Component {
             />
           )}
           <View style={styles.drownDownSection}>
+            <View styles={styles.multiSelect}>
+              <MultiSelect
+                hideTags
+                items={this.state.languageItem}
+                uniqueKey="id"
+                ref={(component) => { this.multiSelect = component }}
+                onSelectedItemsChange={this.setLanguageValue}
+                selectedItems={this.state.language}
+                selectText="Select Languages"
+                searchInputPlaceholderText="Search Languages..."
+                onChangeInput={(text) => console.log(text)}
+                tagRemoveIconColor="#CCC"
+                tagBorderColor="#CCC"
+                tagTextColor="#CCC"
+                selectedItemTextColor="#CCC"
+                selectedItemIconColor="#CCC"
+                itemTextColor="#000"
+                displayKey="name"
+                searchInputStyle={{ color: '#CCC' }}
+                submitButtonColor="#CCC"
+                submitButtonText="Submit"
+                styleMainWrapper = {styles.multiSelect}
+              />
+            </View>
 
             <DropDownPicker
               style={styles.singleSelect}
@@ -317,22 +331,8 @@ export class signupScreen extends Component {
               placeholder="Country"
               zIndex={9000}
               zIndexInverse={1000}
-              onOpen={ this.onCountryOpen }
+              onOpen={this.onCountryOpen}
             />
-
-            <DropDownPicker
-              style={styles.singleSelect}
-              open={this.state.languageOpen}
-              value={this.state.language}
-              items={this.state.languageItem}
-              setOpen={this.setLanguageOpen}
-              setValue={this.setLanguageValue}
-              dropDownContainerStyle={styles.singleSelectDropdown}
-              placeholder="Language"
-              zIndex={8000}
-              zIndexInverse={1000}
-            />
-
 
             <DropDownPicker
               style={styles.singleSelect}
@@ -482,6 +482,7 @@ const styles = StyleSheet.create({
     margin: 5,
 
   },
-  multiSelect: {},
-  multiSelectDropdown: {}
+  multiSelect: {
+    marginLeft: 7
+  },
 });
