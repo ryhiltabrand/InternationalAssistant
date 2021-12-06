@@ -13,9 +13,11 @@ import React, { Component } from 'react';
 import firebase from "../../../utilities/firebase";
 import DropDownPicker from 'react-native-dropdown-picker';
 import Dialog from "react-native-dialog";
+import BottomSheet from 'react-native-bottomsheet-reanimated';
 import { regionFlag } from "./../../../utilities/regionFlagFinder"
 import { MapViewer } from "./MapViewer";
 import { filtercat } from "../../shardedComponents/mapfilter"
+
 
 //console.log("This is opening DisplayList");
 
@@ -38,7 +40,9 @@ export class DisplayList extends Component {
       ],
       //search box
       visible: false,
-      searchQuery: null
+      searchQuery: null,
+      //Review Sectin,
+      commentVisible: false,
     };
     this.setValue = this.setValue.bind(this);
   }
@@ -227,7 +231,7 @@ export class DisplayList extends Component {
   
     // change when trying to figure out how to change bordercolor
     //      <Pressable onPress={() => { this.setSelectedLocation(item)}} styles={[styles.notSelectedLocationCard ,this.state.selectedLocationCard]}> */}
-    <Pressable onPress={() => this.SetMarker(this.state.locationList[item])}>
+    <Pressable onPress={() => this.toggleComment()}>
       {/* crazy looking multi-layer ternary operation for backgroundColor */}
       <View
         style={[
@@ -342,6 +346,29 @@ export class DisplayList extends Component {
             fadingEdgeLength={15}
           />
         </View>
+        {this.state.commentVisible ? (
+          <BottomSheet
+            keyboardAware
+            bottomSheerColor="#FFFFFF"
+            ref="BottomSheet"
+            initialPosition={'25%'} //200, 300
+            snapPoints={['50%', '100%']}
+            isBackDrop={false}
+            isBackDropDismissByPress={true}
+            isRoundBorderWithTipHeader={true}
+            // backDropColor="red"
+            // isModal
+            // containerStyle={{backgroundColor:"red"}}
+            // tipStyle={{backgroundColor:"red"}}
+            // headerStyle={{backgroundColor:"red"}}
+            // bodyStyle={{backgroundColor:"red",flex:1}}
+            header={this.contributorSection()}
+
+            body={
+              <Text> Body of the future </Text>
+            }
+          />
+        ) : null}
       </View>
     )
   }
