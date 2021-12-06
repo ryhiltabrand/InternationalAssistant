@@ -239,13 +239,6 @@ export class MapViewer extends Component {
        placeholder="Type Here to Search..."
        value={this.state.searchQuery} />
 
-       {/*<TouchableOpacity onPress= { () => { this.props.navigation.navigate("PostLocationScreen"); }} style={styles.TabBtn1}>
-              <Text style={styles.BtnText}>Post location</Text>
-    </TouchableOpacity>*/}
-
-      {/*<TouchableOpacity onPress= { () => { this.props.navigation.navigate("DisplayList"); }} style={styles.TabBtn2}>
-              <Text style={styles.BtnText}>Display List</Text>
-  </TouchableOpacity>*/}
 
       <FlatList
          data={Object.keys(this.state.locationList)}
@@ -550,7 +543,7 @@ render() {
               longitudeDelta: 0.0121,
             }}> 
            {<MapView.Marker title={this.state.marker.name} coordinate={this.state.markerPosition}/>}
-           {this.state.markers.map(marker => ( <MapView.Marker coordinate={marker.coordinates} title={marker.title} />))}
+           {/*this.state.markers.map(marker => ( <MapView.Marker coordinate={marker.coordinates} title={marker.title} />))*/}
           </MapView> 
 
         </View>}

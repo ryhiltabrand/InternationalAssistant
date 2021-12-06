@@ -25,7 +25,6 @@
 
   constructor(props){
     super(props);
-    //var user = new User();
     this.state={
       location_name: '',
       location_address: '',
@@ -121,7 +120,7 @@
                 style={styles.inputText}
                 placeholder="Name" 
                 placeholderTextColor="black"
-                onChangeText={(val) => this.updateInputVal(val, 'location_name')}/>
+                onChangeText={(val) => {this.updateInputVal(val, 'location_name')}}/>
          </View>
         
           <View style={styles.inputView} >
