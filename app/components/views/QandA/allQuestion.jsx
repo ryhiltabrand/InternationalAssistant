@@ -149,7 +149,7 @@ AllQuestions2 = async (
           enableEmptySections={true}
           data={this.state.data}
           keyExtractor={(item) => {
-            return item.name;
+            return item.DocID;
           }}
           renderItem={({ item }) => {
             return (

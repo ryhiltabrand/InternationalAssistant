@@ -16,7 +16,6 @@ const NavStack = () => {
   return (
     <Nstack.Navigator initialRouteName="EventScreen1">
         <Nstack.Screen name="EventScreen1" component={EventsScreen} options={{ headerShown: false}} />
-        
     </Nstack.Navigator>
   );
 }
@@ -45,7 +44,7 @@ const EventStackScreen = ({ navigation }) => (
     <EventStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: "#ADD8E6",
+          backgroundColor: "#202898",
         },
         headerShown:true,
         headerTintColor: "#000000",
@@ -60,12 +59,13 @@ const EventStackScreen = ({ navigation }) => (
         options={{
           title: "Events",
           headerTitleAlign: "center",
+          headerTitleStyle: {color:"white"},
           headerLeft: () => (
             <FontAwesome5.Button
               name="bars"
               size={25}
               color="#000000"
-              backgroundColor="#ADD8E6"
+              backgroundColor="#202898"
               onPress={() => navigation.openDrawer()}
             ></FontAwesome5.Button>
           ),
