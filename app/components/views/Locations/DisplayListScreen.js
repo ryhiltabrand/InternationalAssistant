@@ -180,47 +180,48 @@ export class DisplayList extends Component {
     this.props.navigation.navigate('MapViewer');
   }
 
-  LocationCard = ({ item }) => (
+  LocationCard = ({ item }) => {
 
     // change when trying to figure out how to change bordercolor
     //      <Pressable onPress={() => { this.setSelectedLocation(item)}} styles={[styles.notSelectedLocationCard ,this.state.selectedLocationCard]}> */}
-    <Pressable onPress={() => this.toggleComment()}>
-      {/* crazy looking multi-layer ternary operation for backgroundColor */}
-      <View
-        style={[
-          styles.locationCard,
-          this.state.locationList[item].category === 'Restaurant' ? styles.restaurant :
-            this.state.locationList[item].category === 'Park' ? styles.park :
-              this.state.locationList[item].category === 'Communal' ? styles.communal :
-                this.state.locationList[item].category == 'Worship' ? styles.worship :
-                  styles.unkown,
-        ]}>
-        <View style={styles.locationCardTop}>
-          <View style={styles.locationTitleSection}>
-            <Text style={styles.locationTitle}>
-              {this.state.locationList[item].name}
-            </Text>
+    return (
+      <Pressable onPress={() => this.toggleComment()}>
+        {/* crazy looking multi-layer ternary operation for backgroundColor */}
+        <View
+          style={[
+            styles.locationCard,
+            this.state.locationList[item].category === 'Restaurant' ? styles.restaurant :
+              this.state.locationList[item].category === 'Park' ? styles.park :
+                this.state.locationList[item].category === 'Communal' ? styles.communal :
+                  this.state.locationList[item].category == 'Worship' ? styles.worship :
+                    styles.unkown,
+          ]}>
+          <View style={styles.locationCardTop}>
+            <View style={styles.locationTitleSection}>
+              <Text style={styles.locationTitle}>
+                {this.state.locationList[item].name}
+              </Text>
+            </View>
+            <View style={styles.locatiotnRatingSection}>
+              <ImageBackground source={require('./../../../assets/locations/locationCard/star.png')} style={styles.locationRatingStar}>
+                {/* This needs to be the average of the ratings. Change function when created*/}
+                <Text style={styles.locationRating}> {this.state.locationList[item].rating} </Text>
+              </ImageBackground>
+            </View>
+            <View style={styles.locationRegionSection}>
+              {/* Need function to grab user info base off name. database.js does have it but by UID*/}
+              <Image source={regionFlag(this.state.locationList[item].user_country)} style={styles.locationRegion} />
+            </View>
           </View>
-          <View style={styles.locatiotnRatingSection}>
-            <ImageBackground source={require('./../../../assets/locations/locationCard/star.png')} style={styles.locationRatingStar}>
-              {/* This needs to be the average of the ratings. Change function when created*/}
-              <Text style={styles.locationRating}> {this.state.locationList[item].rating} </Text>
-            </ImageBackground>
-          </View>
-          <View style={styles.locationRegionSection}>
-            {/* Need function to grab user info base off name. database.js does have it but by UID*/}
-            <Image source={regionFlag(this.state.locationList[item].user_country)} style={styles.locationRegion} />
+          <View style={styles.locationCardBottom}>
+            <View style={styles.locationContributorSection}>
+              <Text style={styles.locationContributor}>Founded by {this.state.locationList[item].contributor}</Text>
+            </View>
           </View>
         </View>
-        <View style={styles.locationCardBottom}>
-          <View style={styles.locationContributorSection}>
-            <Text style={styles.locationContributor}>Founded by {this.state.locationList[item].contributor}</Text>
-          </View>
-        </View>
-      </View>
-    </Pressable>
-  )
-
+      </Pressable>
+    )
+  }
 
   //If comment is visible
   toggleComment = () => {
