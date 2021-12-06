@@ -201,7 +201,9 @@ export class DisplayList extends Component {
   //New plan pass the select items from the display to the mapviewer
   //Set's the name, rating, and address of the location
   SetMarker(item) {
-    //Moves data to the map viewer state
+
+    //--------------------------------------
+    //Debug what's being passed
     var tempMarker = {
       name: item.name,
       address: item.address,
@@ -210,12 +212,15 @@ export class DisplayList extends Component {
       rating: item.rating
     };
 
+    console.log("tempMarker: ", tempMarker);
+    //--------------------------------------
+
     this.props.navigation.navigate('MapViewer', {
-      name: tempMarker.name,
-      address: tempMarker.address,
-      contributor: tempMarker.contributor,
-      category: tempMarker.category,
-      rating: tempMarker.rating
+      name: item.name,
+      address: item.address,
+      contributor: item.contributor,
+      category: item.category,
+      rating: item.rating
     });
   }
 
