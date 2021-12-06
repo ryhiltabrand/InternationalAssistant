@@ -67,14 +67,6 @@ export class DisplayList extends Component {
     /* setFilter(callback) */
   }
 
-  //not needed due to not changing what inside of dropdown
-  // setItems = (callback) => {
-  //   console.debug('set Item')
-  //   this.setState(state => ({
-  //     items: callback(state.items)
-  //   }));
-  // }
-
   // set location list property to wat is defined
   onLocationsReceived = (locationList) => {
     console.log("The keys mason ", Object.keys(locationList))
@@ -129,15 +121,6 @@ export class DisplayList extends Component {
       .catch(error => console.log(error))
   }
 
-  // unused function to setup sortBy dropdown
-  // setSortBy = (property) => {
-  //   console.debug('the property given ', property);
-  //   console.debug('Before dropdown change:  ', this.state.sortBy);
-  //   this.setState({ sortBy: property }, () => {
-  //     console.debug('Inside setState ', this.state.sortBy);
-  //   });
-  // }
-
   //rerender after mounting
   componentDidMount() {
     //Lists all locations
@@ -146,68 +129,38 @@ export class DisplayList extends Component {
     //this.MatchLocations("name","a");
   }
 
-
-  //Change border color to selected
-  // setSelectedLocation = item => {
-  //   this.state.selectedLocationCard = this.state.locationList[item].name === this.state.selectedLocationCard ? styles.notSelectedLocationCard : styles.selectedLocationCard;
-  //   // console.debug('The borderColor ', borderColor)
-  //   console.debug('the selected item at render is ', this.state.selectedLocationCard)
-
-  //   console.debug('the value being inputed is ', this.state.locationList[item].name)
-  //   this.setState(
-  //     { selectedLocationCard: this.state.locationList[item].name },
-  //   )
-  // }
-
   setSearchQuery = (query) => {
-    this.setState({ 
+    this.setState({
       searchQuery: query
     })
   }
 
   showSearchBox = () => {
-    this.setState({ 
-      visible: true 
+    this.setState({
+      visible: true
     });
   };
 
   cancelSearchBox = () => {
-    this.setState({ 
-      visible: false 
-    });  };
+    this.setState({
+      visible: false
+    });
+  };
 
   searchLocation = () => {
     console.debug('inside search locations the searchQuery is ', this.state.searchQuery)
     //change later for more better search function
     this.matchLocations('name', this.state.searchQuery)
-    this.setState({ 
-      visible: false 
+    this.setState({
+      visible: false
     });
   };
 
-  // searchInputDialog = () => {
-  //   console.debug('goes inside searchInputDialog')
-  //   return (
-  //     <View style={styles.container}>
-  //       <Button title="Show dialog" onPress={showDialog} />
-  //       <Dialog.Container visible={visible}>
-  //         <Dialog.Title>Account delete</Dialog.Title>
-  //         <Dialog.Description>
-  //           Do you want to delete this account? You cannot undo this action.
-  //         </Dialog.Description>
-  //         <Dialog.Button label="Cancel" onPress={handleCancel} />
-  //         <Dialog.Button label="Delete" onPress={handleDelete} />
-  //       </Dialog.Container>
-  //     </View>
-  //   )
-  // }
-
   //New plan pass the select items from the display to the mapviewer
   //Set's the name, rating, and address of the location
-  SetMarker(item)
-  {
+  SetMarker(item) {
     let Viewer = new MapViewer();
-    
+
     //Moves data to the map viewer state
     Viewer.state.markerDescription = {
       name: item.name,
@@ -228,7 +181,7 @@ export class DisplayList extends Component {
   }
 
   LocationCard = ({ item }) => (
-  
+
     // change when trying to figure out how to change bordercolor
     //      <Pressable onPress={() => { this.setSelectedLocation(item)}} styles={[styles.notSelectedLocationCard ,this.state.selectedLocationCard]}> */}
     <Pressable onPress={() => this.toggleComment()}>
@@ -266,6 +219,50 @@ export class DisplayList extends Component {
         </View>
       </View>
     </Pressable>
+  )
+
+
+  //If comment is visible
+  toggleComment = () => {
+    this.setState((state) => ({
+      commentVisible: !state.commentVisible,
+    }));
+  };
+
+  //Contributor Section
+  contributorSection = () => {
+    return (
+      <View style={styles.contributorSection}>
+        <View style={styles.commentLeftBase}>
+          <View styles={styles.commentTopLeftSection}>
+            <View style={styles.commentUser}>
+              <Text styles={styles.commentUserText}> {this.state.locationList[0].contributor} </Text>
+            </View>
+            <View styles={styles.commentButtomLeftSection}>
+              <Text style={styles.comment}> {this.state.locationList[0].description} </Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.commentMiddleBase}>
+          <View styles={styles.commentRegionSection}>
+            <Image source={regionFlag(this.state.locationList[0].user_country)} style={styles.commentRegion} />
+          </View>
+        </View>
+        <View style={styles.commentRightBase}>
+          <View style={styles.commentRatingSection}>
+            <ImageBackground source={require('./../../../assets/locations/locationCard/star.png')} style={styles.commentRatingStar}>
+              <Text style={styles.commentRatingText}> {this.state.locationList[0].rating} </Text>
+            </ImageBackground>
+          </View>
+        </View>
+      </View>
+    )
+  }
+  //List of Comments Template
+  commentSection = () => (
+    <View style={styles.commentCard}>
+      <Text> Body of the future </Text>
+    </View>
   )
 
   render() {
@@ -311,7 +308,7 @@ export class DisplayList extends Component {
                 <Dialog.Description>
                   Please enter name, region, or rating.
                 </Dialog.Description>
-                <Dialog.Input  onChangeText={this.setSearchQuery} />
+                <Dialog.Input onChangeText={this.setSearchQuery} />
                 <Dialog.Button label="Cancel" onPress={this.cancelSearchBox} />
                 <Dialog.Button label="Search" onPress={this.searchLocation} />
               </Dialog.Container>
@@ -351,24 +348,23 @@ export class DisplayList extends Component {
             keyboardAware
             bottomSheerColor="#FFFFFF"
             ref="BottomSheet"
-            initialPosition={'25%'} //200, 300
-            snapPoints={['50%', '100%']}
+            initialPosition={'35'} //200, 300
+            snapPoints={['0%', '35', '100%']}
             isBackDrop={false}
             isBackDropDismissByPress={true}
             isRoundBorderWithTipHeader={true}
             // backDropColor="red"
             // isModal
-            // containerStyle={{backgroundColor:"red"}}
+            containerStyle={styles.buttomDrawerArea}
             // tipStyle={{backgroundColor:"red"}}
-            // headerStyle={{backgroundColor:"red"}}
+            headerStyle={styles.buttomDrawerHeaderArea}
             // bodyStyle={{backgroundColor:"red",flex:1}}
             header={this.contributorSection()}
 
-            body={
-              <Text> Body of the future </Text>
-            }
+            body={this.commentSection()}
           />
         ) : null}
+
       </View>
     )
   }
@@ -533,4 +529,88 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'white',
   },
+  /* Buttom Drawer Styles */
+  buttomDrawerArea: {
+    borderWidth: 2
+  },
+  buttomDrawerHeaderArea: {
+    height: 100,
+  },
+  /* Contributor Section */
+  contributorSection: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  // contributorName: {},
+  // contributorDescription: {},
+
+  /* Comment List Styles */
+  commentList: {
+    flex: 10,
+    //padding: 2,
+    //marginTop: 5,
+  },
+  commentCard: {
+    flex: 10,
+    padding: 10,
+    // marginVertical: 8,
+    // marginHorizontal: 10,
+    // borderWidth: 2,
+    height: 75,
+  },
+  commentLeftBase: {
+    flex: 3,
+    flexDirection: 'column',
+    padding: 5,
+    backgroundColor: 'green'
+  },
+  commentTopLeftSection: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  commentUser: {
+    flex: 2,
+  },
+  commentUserText: {
+    fontSize: 50,
+    //position: 'absolute',
+    fontWeight: 'bold',
+  },
+  commentTopLeftSection: {
+    flex: 1
+  },
+  comment: {
+    flex: 1,
+    position: 'absolute',
+    marginTop: 25,
+
+  },
+  commentMiddleBase: {
+    flex: 1
+  },
+  commentRegionSection: {
+    flex: 1,
+  },
+  commentRegion: {
+    resizeMode: 'contain',
+    width: 45,
+    height: 45,
+  },
+  commentRightBase: {
+    flex: 1,
+  },
+  commentRatingSection: {
+
+  },
+  commentRatingStar: {
+    justifyContent: 'center',
+    width: 45,
+    height: 45,
+  },
+  commentRatingText: {
+    textAlign: 'center',
+    fontSize: 15,
+    marginBottom: 5
+  },
+
 });
