@@ -70,11 +70,11 @@ export class MapViewer extends Component {
     }]
   };
 
-  componentDidUpdate() {
+  /*componentDidUpdate() {
     if (this.state.positionState.latitude !== "0") {
       this.state.loadingMap = true;
     }
-  }
+  }*/
 
   componentWillUpdate() {
 

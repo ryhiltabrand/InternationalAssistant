@@ -100,7 +100,10 @@ export default class LocalEvents extends React.Component {
     
     render() {
         return (
-            <View style={styles.body}>
+            <View style={{
+                backgroundColor: "#003057",
+                flex: 1
+              }}>
                 <FlatList
                     style={styles.scrollView}
                     enableEmptySections={true}

@@ -55,13 +55,18 @@ export class LoginScreen extends Component {
         .then((res) => {
           firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-              //console.log(user.uid);
-              //let User = Loc();
-              //console.log(User[1], User[2])
-
-              EventRegister.emit('auth', user.uid)
+              
+              if(!user.emailVerified) {
+                alert("Your email has not been confirmed.")
+                EventRegister.emit('auth', user.uid)
+                
+              }else {
+                EventRegister.emit('auth', user.uid)
+              }
+              
             } else {
               // User not logged in or has just logged out.
+              
             }
           });
           //console.log(Object.keys(res))

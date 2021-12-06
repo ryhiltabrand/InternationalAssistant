@@ -108,7 +108,7 @@ class MyQuestion extends React.Component {
           enableEmptySections={true}
           data={this.state.data}
           keyExtractor={(item) => {
-            return item.name;
+            return item.DocID;
           }}
           renderItem={({ item }) => {
             return (
