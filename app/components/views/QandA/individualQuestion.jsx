@@ -1,15 +1,57 @@
-import { Modal, Text, View, Pressable,TextInput, Button, StyleSheet, Image } from "react-native";
-import React, {TouchableOpacity, useState} from "react";
+import {
+  Modal,
+  Text,
+  View,
+  Pressable,
+  TextInput,
+  Button,
+  StyleSheet,
+  Image,
+  FlatList,
+} from "react-native";
+import React, { TouchableOpacity, useState,useEffect } from "react";
+import firebase from "firebase";
 
 export default function Questionview({ route, navigation }) {
   /* 2. Get the param */
-  const {
-    Name,
-    Pic,
-    Answers,
-    Question,
-  } = route.params;
-  const [modalVisible, setModalVisible] = useState(false);
+  const { Name, Pic, Answers, Question,DocID } = route.params;
+  const [replys, setreplys] = useState([]);
+  const [answers, setanswers] = useState(null);
+
+  useEffect(() => {
+    puller();
+  },[]);
+
+  async function puller() {
+    setreplys([])
+    const replyref = await firebase
+      .firestore()
+      .collection("Questions and Answers")
+      .doc(DocID)
+      .collection("Answers")
+      .get();
+
+    replyref.docs.map((doc) => {
+      var name = doc.data().Name
+      var pic = doc.data().Pic
+      var text = doc.data().Text
+      var id = doc.id
+      var like = doc.data().Like
+      var dislike = doc.data().Dislike
+      var size = replyref.size
+      
+      let reply = {
+        Name: name,
+        Pic: pic,
+        Text: text,
+        ID: id,
+        Dislike: dislike,
+        Like: like,
+      }
+      setanswers(size)
+      setreplys((replys) => [...replys, reply]);
+    });
+  };
   return (
     <View style={styles.body}>
       <View style>
@@ -28,18 +70,35 @@ export default function Questionview({ route, navigation }) {
           <Text style={styles.request}>{Question}</Text>
         </View>
         <View style={styles.fifthLine}>
-          <Text>Answers:: {Object.keys(Answers).length}</Text>
+          <Text>Answers:: {answers}</Text>
         </View>
       </View>
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
+
+      <Text style={{ fontSize: 30 }}>Answers:</Text>
+
+      <FlatList
+        style={styles.scrollView}
+        enableEmptySections={true}
+        data={replys}
+        keyExtractor={(item) => {
+          return item.ID;
         }}
-      ></Modal>
+        renderItem={({ item }) => {
+          return (
+            <View style={styles.box}>
+              <View style={styles.firstLine}>
+                <Image style={styles.image} source={{ uri: item.Pic }} />
+                <Text style={styles.name}>{item.Name}</Text>
+              </View>
+
+              <View style={styles.secondLine}>
+                <Text style={styles.request}>{item.Text}</Text>
+              </View>
+              
+            </View>
+          );
+        }}
+      />
     </View>
   );
 }
