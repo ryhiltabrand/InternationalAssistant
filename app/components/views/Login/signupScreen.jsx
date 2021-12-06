@@ -168,9 +168,9 @@ export class signupScreen extends Component {
 
     if ((this.state.email === '' && this.state.password === '')) {
       Alert.alert('Enter details to signup!')
-    } /*else if (this.state.email.endsWith('.edu') !== true) {
+    } else if (this.state.email.endsWith('.edu') !== true) {
       Alert.alert('Emails must be school emails')
-    }*/
+    }
     else {
       this.setState({
         isLoading: true,
