@@ -2,36 +2,27 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  Alert,
-  ActivityIndicator,
   Image,
   Dimensions,
+  Pressable,
+  Button,
+  ImageBackground,
 } from "react-native";
 
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 
 import MapView from "react-native-maps";
-import Marker from "react-native-maps";
 
-import useState from "react";
-
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 
 import * as Location from "expo-location";
 
+import BottomSheet from 'reanimated-bottom-sheet';
+import { SearchBar } from 'react-native-elements';
 
-import { CoordConverter } from "./../../../utilities/GeoCoder";
-//import { DisplayList } from "./DisplayListScreen"
-
-
-
-const { width, height } = Dimensions.get("window");
-
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+import firebase from "../../../utilities/firebase";
+import { regionFlag } from "../../../utilities/regionFlagFinder";
+import { TouchableOpacity, FlatList, RectButton } from "react-native-gesture-handler"
 
 export class MapViewer extends Component {
 
@@ -40,6 +31,11 @@ export class MapViewer extends Component {
   }
 
   state = {
+    //Flatlist 
+    locationList: [],
+    selectedLocationCard: null,
+    searchQuery: null,
+    //------------------
     location: null,
     loadingMap: false,
     errorMessage: null,
@@ -49,25 +45,29 @@ export class MapViewer extends Component {
       latitudeDelta: 0,
       longitudeDelta: 0,
     },
-    searchPosition: {
+    markerPosition: {
       latitude: 0,
       longitude: 0,
-      latitudeDelta: LATITUDE_DELTA, //0
-      longitudeDelta: LONGITUDE_DELTA, //0
     },
-    markerDescription:
+    marker:
     {
       name: "",
       address: "",
       contributor: "",
       category: "",
-      rating: "",
-      rating: 0
+      rating: 0,
+      coordinates: {
+        latitude: 0,
+        longitude: 0,
+      },
     },
-    markerPosition: {
-      latitude: 0,
-      longitude: 0,
-    },
+    markers: [{
+      title: '',
+      coordinates: {
+        latitude: 0,
+        longitude: 0
+      }
+    }]
   };
 
   componentDidUpdate() {
@@ -76,20 +76,39 @@ export class MapViewer extends Component {
     }
   }
 
-  componentDidMount() {
-    this.getLocation();
+  componentWillUpdate() {
+
+
   }
+  
+  //----------------------------------------------------------------------------------
+  //Location converter and Print list
+
+  //Converts street names to coordinates 
+  getCoordinates = async (value) => {
+    console.log("getCoordinates is being called");
+    var location = await Location.geocodeAsync(value);
+    this.setState({ location });
+    location.map((Coords) => (
+      console.log("What is the latitude ", Coords.latitude),
+      console.log("What is the latitude ", Coords.longitude),
+      this.setState(this.state.markerPosition = {
+        latitude: Coords.latitude,
+        longitude: Coords.longitude,
+      })
+    ));
+};
 
   //Print the list of items
   PrintItem()
   {
     console.log("------------ Print Item --------------------");
     console.log("------------ Item from the list --------------------");
-    console.log(this.state.markerDescription.name);
-    console.log(this.state.markerDescription.address);
-    console.log(this.state.markerDescription.contributor);
-    console.log(this.state.markerDescription.category);
-    console.log(this.state.markerDescription.rating);
+    console.log(this.state.marker.name);
+    console.log(this.state.marker.address);
+    console.log(this.state.marker.contributor);
+    console.log(this.state.marker.category);
+    console.log(this.state.marker.rating);
 
     console.log("----------- Print the converted coorinates from item --------------------");
     console.log("Latitude: ",this.state.markerPosition.latitude);
@@ -97,89 +116,253 @@ export class MapViewer extends Component {
 
   }
 
-  //Converts the address string to coordinates
-  AddresstoCoordinates() {
-    let Coord = new CoordConverter();
+  //----------------------------------------------------------------------------------
+  //matchLocations and searchlocations
 
-    Coord.ConvertCoords(this.state.markerDescription.address);
+  matchLocations = (value1, value2) => {
 
-    markerPosition = {
-      latitude: Coord.state.markerPosition.latitude,
-      longitude: Coord.state.markerPosition.longitude
-    };
-   }  
+    var locationList = [];
 
-   Selector()
-   {
-    
-   }
+    console.log('mounted')
+    firebase.firestore()
+      .collection('Locations')
+      .where(value1, '==', value2)
+      .get()
+      .then(snapshot => {
 
-   //Button 1 - Restaurant
-   //Button 2 - Park
-   //Button 3 - Communal
-   //Button 4 - Worship
-   //        
-   SideButtons(){
-    return (
-    <View style={styles.btncontainer} >
-
-        {/*<TouchableOpacity onPress={() => {this.props.navigation.navigate("DisplayList")}}>
-          <Image style={ styles.image } source={require("")}/>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={()=>{alert("you clicked me")}}>
-          <Image style={ styles.image } source={require("")}/>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={()=>{alert("you clicked me")}}>
-          <Image style={ styles.image } source={require("")}/>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={()=>{alert("you clicked me")}}>
-          <Image style={ styles.image } source={require("")}/>
-    </TouchableOpacity>*/}
-
-    </View>
-    )
+        snapshot.forEach((doc) => {
+          locationList.push(doc.data());
+        })
+        this.onLocationsReceived(locationList);
+      })
+      .catch(error => console.log(error))
   }
 
-  getLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
+  searchLocations = (value) => {
 
-    if (status !== "granted") {
-      this.setstate({ errorMessage: "Permission not granted" });
-    }
+    var locationList = [];
 
-    let location = await Location.getLastKnownPositionAsync();
+    console.log('mounted')
+    firebase.firestore()
+      .collection('Locations')
+      .orderBy('name')
+      .startAt(value)
+      .endAt(value + '\uf8ff')
+      .get()
+      .then(snapshot => {
 
-    this.setState({ location, errorMessage: "Permission granted" });
+        snapshot.forEach((doc) => {
+          locationList.push(doc.data());
+        })
+        this.onLocationsReceived(locationList);
+      })
+      .catch(error => console.log(error))
+  }
 
-    var lat = parseFloat(location.coords.latitude);
-    var long = parseFloat(location.coords.longitude);
-    console.log(lat, long, "nishil is a bitch")
+  onLocationsReceived = (locationList) => {
+    this.setState(prevState => ({
+      locationList: prevState.locationList = locationList
+    }));
+  }
 
-    var region = {
-      latitude: lat,
-      longitude: long,
-      latitudeDelta: LATITUDE_DELTA, //0
-      longitudeDelta: LONGITUDE_DELTA, //0
-    };
+  //----------------------------------------------------------------------------------
 
-    this.setState({ positionState: region });
-    this.setState({ markerPosition: region });
+  updateSearch = (searchQuery) => {
+    this.setState({ searchQuery });
+    this.searchLocation();
   };
-  render() {
-    let text = JSON.stringify(this.state.location);
-    let error = JSON.stringify(this.state.errorMessage);
-    console.log(text);
-    console.log(error);
+
+  searchLocation = () => {
+    this.searchLocations(this.state.searchQuery);
+  };
+
+ //----------------------------------------------------------------------------------
+
+  LocationCard = ({ item }) => (
+  
+      // change when trying to figure out how to change bordercolor
+      //      <Pressable onPress={() => { this.setSelectedLocation(item)}} styles={[styles.notSelectedLocationCard ,this.state.selectedLocationCard]}> */}
+      //ANON: debugging
+      <TouchableOpacity onPress={() => this.PlaceMarker(this.state.locationList[item])}>
+        {/* crazy looking multi-layer ternary operation for backgroundColor */}
+        <View
+          style={[
+            styles.locationCard,
+            this.state.locationList[item].category === 'Restaurant' ? styles.restaurant :
+              this.state.locationList[item].category === 'Park' ? styles.park :
+                this.state.locationList[item].category === 'Communal' ? styles.communal :
+                  this.state.locationList[item].category == 'Worship' ? styles.worship :
+                    styles.unkown,
+          ]}>
+          <View style={styles.locationCardTop}>
+            <View style={styles.locationTitleSection}>
+              <Text style={styles.locationTitle}>
+                {this.state.locationList[item].name}
+              </Text>
+            </View>
+            <View style={styles.locatiotnRatingSection}>
+              <ImageBackground source={require('./../../../assets/locations/locationCard/star.png')} style={styles.locationRatingStar}>
+                {/* This needs to be the average of the ratings. Change function when created*/}
+                <Text style={styles.locationRating}> {this.state.locationList[item].rating} </Text>
+              </ImageBackground>
+            </View>
+            <View style={styles.locationRegionSection}>
+              {/* Need function to grab user info base off name. database.js does have it but by UID*/}
+              <Image source={regionFlag(this.state.locationList[item].user_country)} style={styles.locationRegion} />
+            </View>
+          </View>
+          <View style={styles.locationCardBottom}>
+            <View style={styles.locationContributorSection}>
+              <Text style={styles.locationContributor}>Founded by {this.state.locationList[item].contributor}</Text>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+)
+
+//-----------------------------------------------------------------
+
+ renderContent = () => (
+  <><View
+     style={{
+       backgroundColor: '#fff9e8ff',
+       padding: 16,
+       height: 450,
+     }}>
+
+     <SearchBar
+       searchIcon={{ size: 25 }}
+       containerStyle={styles.searchbar}
+       round
+       onChangeText={text => this.updateSearch(text)}
+       onClear={text => this.updateSearch('')}
+       placeholder="Type Here to Search..."
+       value={this.state.searchQuery} />
+
+
+      <FlatList
+         data={Object.keys(this.state.locationList)}
+         renderItem={this.LocationCard}
+         keyExtractor={(item) => this.state.locationList[item].name}
+         fadingEdgeLength={15} />
+   </View></>
+);
+
+//-----------------------------------------------------------------
+
+PlaceMarker2()
+  {
+    //TESTER
+    const data = this.props.route.params
+    console.log("Show data: ", data);
+
+    this.getCoordinates(data.address);
+     this.state.marker = {
+      name: data.name,
+      address: data.address,
+      contributor: data.contributor,
+      category: data.category,
+      rating: data.rating
+    }
+  
+    console.log("------------ Items from the display list --------------------");
+    console.log(this.state.marker.name);
+    console.log(this.state.marker.address);
+    console.log(this.state.marker.contributor);
+    console.log(this.state.marker.category);
+    console.log(this.state.marker.rating);
+    console.log("----------- Print the converted coorinates from item --------------------");
+    console.log("Latitude: ",this.state.markerPosition.latitude);
+    console.log("Longitude: ", this.state.markerPosition.longitude);
+
+  }
+
+   PlaceMarker(item)
+  {
+    //Converts the address to coordinates
+    //Set the coordinates to Markerposition and call it directly from the mapview marker
+    this.getCoordinates(item.address);
+
+    //Set the state for marker with variables from the item list
+    this.state.marker = {
+      name: item.name,
+      address: item.address,
+      contributor: item.contributor,
+      category: item.category,
+      rating: item.rating
+    }
+    //Prints the item from list saved in mapview state
+    this.PrintItem();
+  }
+
+//Locationlist uses the map function to iterate throught the list
+//getCoordinates converts the street address to coordnates
+//setState creates a new state for markers state array
+//and the function concat returns a new markers state array with the new marker.
+AddLocations = () => {
+
+    this.matchLocations("category", "Restaurant");
+    this.state.locationList.map((location) => (
+      //Convert
+      console.log("What is the name of the location ", location.name ),
+      console.log("What is the name of the location ", location.address ),
+      this.setState(state => {
+        this.getCoordinates(location.address),
+        region = {
+          title: location.name,
+          address: location.address,
+          contributor: location.contributor,
+          category: location.category,
+          rating: location.rating,
+          coordinates: {
+            latitude: this.state.markerPosition.latitude,
+            longitude: this.state.markerPosition.longitude
+          }
+        }
+        this.state.markers = this.state.markers.concat(region);
+      })
+    ));
+   console.log("---------------- What's inside Marker array -------------------");
+   this.state.markers.map( (marker) => ( console.log("Marker name: ", marker.title ), console.log("Marker Coordinates: ", this.state.markerPosition ) ));
+
+};
+
+//-----------------------------------------------------------------
+
+render() {
     return (
       <>
-        <View style={{ marginTop: 10, flex: 1 }}>
+        {<View>
+          
           <MapView
           customMapStyle={[
             {
-              "featureType": "poi.attraction",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#242f3e"
+                }
+              ]
+            },
+            {
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#746855"
+                }
+              ]
+            },
+            {
+              "elementType": "labels.text.stroke",
+              "stylers": [
+                {
+                  "color": "#242f3e"
+                }
+              ]
+            },
+            {
+              "featureType": "administrative",
+              "elementType": "geometry",
               "stylers": [
                 {
                   "visibility": "off"
@@ -187,7 +370,16 @@ export class MapViewer extends Component {
               ]
             },
             {
-              "featureType": "poi.business",
+              "featureType": "administrative.locality",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#d59563"
+                }
+              ]
+            },
+            {
+              "featureType": "poi",
               "stylers": [
                 {
                   "visibility": "off"
@@ -195,57 +387,97 @@ export class MapViewer extends Component {
               ]
             },
             {
-              "featureType": "poi.government",
+              "featureType": "poi",
+              "elementType": "labels.text.fill",
               "stylers": [
                 {
-                  "visibility": "off"
-                }
-              ]
-            },
-            {
-              "featureType": "poi.medical",
-              "stylers": [
-                {
-                  "visibility": "off"
+                  "color": "#d59563"
                 }
               ]
             },
             {
               "featureType": "poi.park",
-              "elementType": "labels.text",
+              "elementType": "geometry",
               "stylers": [
                 {
-                  "visibility": "off"
+                  "color": "#263c3f"
                 }
               ]
             },
             {
-              "featureType": "poi.place_of_worship",
+              "featureType": "poi.park",
+              "elementType": "labels.text.fill",
               "stylers": [
                 {
-                  "visibility": "off"
+                  "color": "#6b9a76"
                 }
               ]
             },
             {
-              "featureType": "poi.school",
+              "featureType": "road",
+              "elementType": "geometry",
               "stylers": [
                 {
-                  "weight": 4.5
+                  "color": "#38414e"
                 }
               ]
             },
             {
-              "featureType": "poi.school",
+              "featureType": "road",
+              "elementType": "geometry.stroke",
+              "stylers": [
+                {
+                  "color": "#212a37"
+                }
+              ]
+            },
+            {
+              "featureType": "road",
               "elementType": "labels.icon",
               "stylers": [
                 {
-                  "visibility": "simplified"
+                  "visibility": "off"
                 }
               ]
             },
             {
-              "featureType": "poi.sports_complex",
+              "featureType": "road",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#9ca5b3"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "geometry",
+              "stylers": [
+                {
+                  "color": "#746855"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "geometry.stroke",
+              "stylers": [
+                {
+                  "color": "#1f2835"
+                }
+              ]
+            },
+            {
+              "featureType": "road.highway",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#f3d19c"
+                }
+              ]
+            },
+            {
+              "featureType": "transit",
               "stylers": [
                 {
                   "visibility": "off"
@@ -253,26 +485,47 @@ export class MapViewer extends Component {
               ]
             },
             {
-              "featureType": "transit.station.airport",
+              "featureType": "transit",
+              "elementType": "geometry",
               "stylers": [
                 {
-                  "visibility": "off"
+                  "color": "#2f3948"
                 }
               ]
             },
             {
-              "featureType": "transit.station.bus",
+              "featureType": "transit.station",
+              "elementType": "labels.text.fill",
               "stylers": [
                 {
-                  "visibility": "off"
+                  "color": "#d59563"
                 }
               ]
             },
             {
-              "featureType": "transit.station.rail",
+              "featureType": "water",
+              "elementType": "geometry",
               "stylers": [
                 {
-                  "visibility": "off"
+                  "color": "#17263c"
+                }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text.fill",
+              "stylers": [
+                {
+                  "color": "#515c6d"
+                }
+              ]
+            },
+            {
+              "featureType": "water",
+              "elementType": "labels.text.stroke",
+              "stylers": [
+                {
+                  "color": "#17263c"
                 }
               ]
             }
@@ -283,87 +536,43 @@ export class MapViewer extends Component {
             moveOnMarkerPress = {true}
             mapType={"default"}
             style={styles.map}
-            region={{
+            initialRegion={{
               latitude: 36.88639,
               longitude: -76.31042,
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
             }}> 
-           <MapView.Marker tracksViewChanges={false} onPress={()=>console.log("hello")} coordinate={{latitude: 36.88639, longitude: -76.31042}} anchor={{x: 0.69, y:1}}/>
-          </MapView>
+           {<MapView.Marker title={this.state.marker.name} coordinate={this.state.markerPosition}/>}
+           {/*this.state.markers.map(marker => ( <MapView.Marker coordinate={marker.coordinates} title={marker.title} />))*/}
+          </MapView> 
 
-          <Marker coordinate={this.state.markerPosition} />
-         
-          
-          <Marker
-            coordinate={this.state.markerPosition}
-            //debug
-            title={"title"}
-            description={"description"}
+        </View>}
 
-            // title={this.state.markerDescription.name}
-            //description={"description"}
-         />
+        {<View style={styles.btncontainer}>
 
-          <GooglePlacesAutocomplete
-            placeholder="Search"
-            fetchDetails={true}
-            onPress={(data, details = null) => {
-              // 'details' is provided when fetchDetails = true
-              console.log(data, details);
-              var region = {
-                latitude: details.geometry.location.lat,
-                longitude: details.geometry.location.lng,
-                latitudeDelta: LATITUDE_DELTA, //0
-                longitudeDelta: LONGITUDE_DELTA, //0
-              };
-
-              this.setState({ searchPosition: region });
-            }}
-            query={{
-              key: "AIzaSyDmGQcOZNNjq6NFMES1ppUJkO0jVHnhCbI",
-              language: "en",
-              components: "country:us",
-            }}
-            styles={{
-              container: {
-                flex: 0,
-                position: "absolute",
-                width: "100%",
-                zIndex: 1,
-              },
-              listView: { backgroundColor: "white" },
-            }}
-          />
-
-        </View>
-
-
-        <View style={styles.btncontainer}>
-          <TouchableOpacity
+          <Pressable
             style={styles.listBtn}
             onPress={() => {
               this.props.navigation.navigate("DisplayList");
             }}
           >
-            <FontAwesome5 name={"list-alt"} size={50} color={"black"} />
-          </TouchableOpacity>
+            <FontAwesome5 name={"list-alt"} size={50} color={"white"} />
+          </Pressable>
 
-          <TouchableOpacity
+          <Pressable
             style={styles.PostBtn}
-            onPress={() => {
-              this.props.navigation.navigate("PostLocationScreen");
-            }}
+            onPress={() => { this.props.navigation.navigate("PostLocationScreen"); }}
           >
-            <AntDesign name={"addfile"} size={50} color={"black"} />
-          </TouchableOpacity>
+            <AntDesign name={"addfile"} size={50} color={"white"} />
+          </Pressable>
 
-         {/* <TouchableOpacity onPress={() => {this.Selector()}}>
-          <Image style={ styles.image } source={require("../../assets/chicken-leg.png")}/>
-          </TouchableOpacity>*/}
+        </View>}
 
-    
-        </View>
+        {<BottomSheet
+        snapPoints={[450, 250, 150]}
+        borderRadius={10}
+        renderContent={this.renderContent}
+        />}
       </>
     );
   }
@@ -377,24 +586,132 @@ const styles = StyleSheet.create({
   btncontainer: {
     flex: 1,
   },
+  //Slider
+   TabBtn1:{
+      width:"35%",
+      backgroundColor:'rgba(182, 32, 32, 0.7)',
+      height:25,
+  },
+   //Slider
+   TabBtn2:{
+    width:"35%",
+    backgroundColor:'rgba(182, 32, 32, 0.7)',
+    height:25,
+    top: 10
+  },
   listBtn: {
     borderRadius: 20,
     padding: 1,
     alignSelf: "flex-end",
-    marginTop: -250,
+    marginTop: -500,
+    left:330,
+    top:-150,
     position: "absolute",
   },
   PostBtn: {
     borderRadius: 20,
     padding: 1,
-    marginTop: 20,
+    alignSelf: "flex-end",
+    marginTop: -500,
+    right:330,
+    top:-150,
     position: "absolute",
   },
-  Btn1: {
-    borderRadius: 40,
+  BtnText:{
+    color:"white",
+    fontSize:15,
+    left: 20
+  },
+  //global styles
+  restaurant: {
+    backgroundColor: '#cc0000ff'
+  },
+  worship: {
+    backgroundColor: '#3c78d8ff'
+  },
+  park: {
+    backgroundColor: '#6aa84fff'
+  },
+  communal: {
+    backgroundColor: '#674ea7ff',
+  },
+  unkown: {
+    backgroundColor: 'white'
+  },
+   /* Location Card Styles */
+   locationList: {
+    flex: 10,
+  },
+  locationCard: {
+    flex: 1,
+    padding: 10,
+    marginVertical: 8,
+    marginHorizontal: 10,
+    borderWidth: 2,
+    height: 75,
+  },
+  locationCardTop: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  locationTitleSection: {
+    flex: 2,
+    alignItems: 'flex-start',
+  },
+  locationTitle: {
+    fontSize: 17,
+    color: 'white'
+  },
+  locationRatingSection: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  locationRatingStar: {
+    justifyContent: 'center',
+    width: 45,
+    height: 45,
+  },
+  locationRating: {
+    //resizeMode: 'contain',
+    textAlign: 'center',
+    fontSize: 15,
+    marginBottom: 5
+  },
+  locationRegionSection: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  locationRegion: {
+    resizeMode: 'contain',
+    width: 45,
+    height: 45,
+  },
+  locationCardBottom: {
+    flex: .3,
+  },
+  locationContributorSection: {
+    //flex: 1,
+    alignItems: 'flex-start',
+  },
+  locationContributor: {
+    fontSize: 14,
+    color: 'white',
+  },
+  //
+  categoryBtn: {
+    borderRadius: 20,
     padding: 1,
-    marginTop: 40,
-    marginBottom: 10,
+    alignSelf: "flex-end",
+    marginTop: -500,
+    right:330,
+    position: "absolute",
+  },
+  categoryBtn2: {
+    borderRadius: 20,
+    padding: 1,
+    alignSelf: "flex-end",
+    marginTop: -500,
+    right:100,
     position: "absolute",
   },
   image: {
@@ -402,4 +719,11 @@ const styles = StyleSheet.create({
     width: 32,
     borderRadius: 12
   },
+  searchbar: {
+    color: '#fff9e8ff',
+    backgroundColor: '#fff9e8ff',
+    borderColor: '#fff9e8ff',
+    top: 10,
+    marginVertical:10
+  }
 });

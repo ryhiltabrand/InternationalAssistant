@@ -1,111 +1,114 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
-import Geocoder from 'react-native-geocoding';
+
+import * as Location from 'expo-location';
 
 /*Converts street names to latitude and longitude Coordinates */
 export class CoordConverter extends Component {
 
   constructor(props) {
-  super(props);
-  this.state = {
-    markerPosition: {
-      latitude: 0,
-      longitude: 0
-    }
-   };
+    super(props);
+    this.state = {
+      location: null,
+      errorMessage: null,
+
+      markerPosition: {
+        latitude: 0,  //The latitude in degrees.
+        longitude: 0, //The longitude in degrees.
+      },
+
+      Geocode: {
+        name: null,  //The name of the placemark, for example, "Tower Bridge".
+        country: null, //Localized country name of the address.
+        city: null,  //City name of the address.
+        street: null  //Street name of the address.
+      }
+    };
   }
 
-  //Converts an address to Coordinates
-  ConvertCoords(value) {
+  TestCoordinates = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+    try {
 
-    Geocoder.init("AIzaSyDmGQcOZNNjq6NFMES1ppUJkO0jVHnhCbI");
-    Geocoder.from(value)
-    .then(json => {
-  
-      var geometry = json.results[0].geometry;
-  
-      //Print out the location string
-      console.log(geometry);
-  
-      //Convert the json to a float variable 
-      var lat = parseFloat(geometry.location.lat);
-      var long = parseFloat(geometry.location.lng);
-      console.log("Latitude: ", lat);
-      console.log("Longitude: ", long);
-    
-      //Store the variables in the markerPosition state for Converter
-      this.state.markerPosition = {
-        latitude: lat,
-        longitude: long
-      };   
-    })
-    .catch(error => console.warn(error));
-   }  
+      let location = await Location.geocodeAsync('baker street london');
+      this.setState({ location });
 
-   //Prints the Coordinates stored in markerPosition
-   printlocation = () =>
-   {
+      location.map((Coords) => (
+        console.log("What is the latitude ", Coords.latitude),
+        console.log("What is the latitude ", Coords.longitude),
+        this.setState(this.state.markerPosition = {
+          latitude: Coords.latitude,
+          longitude: Coords.longitude,
+        })
+      ));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  getCoordinates = async (value) => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+    try {
+      let location = await Location.geocodeAsync(value);
+      this.setState({ location });
+
+      location.map((Coords) => (
+        console.log("What is the latitude ", Coords.latitude),
+        console.log("What is the latitude ", Coords.longitude),
+        this.setState(this.state.markerPosition = {
+          latitude: Coords.latitude,
+          longitude: Coords.longitude,
+        })
+      ));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  getAddress = async (Coords) => {
+    let location = await Location.reverseGeocodeAsync(Coords)
+    this.setState({ Geocode })
+
+    location.map((Address) => (
+      console.log("What is the name of the location ", Address.name),
+      console.log("What is the street of the location ", Address.street),
+      console.log("What is the city of the location ", Address.city),
+      console.log("What is the country of the location ", Address.country),
+      this.setState(this.state.Geocode = {
+        name: Address.name,
+        street: Address.street,
+        city: Address.city,
+        country: Address.country,
+      })
+    ));
+  }
+
+  //Prints the Coordinates stored in markerPosition
+  printCoordinates = () => {
     console.log("--------------------- Print Coordinates ---------------------");
     console.log("Latitude: ", this.state.markerPosition.latitude);
     console.log("Longitude: ", this.state.markerPosition.longitude);
-   }
-
-   //Test the converter
-   ConvertCoords_Test = () =>
-   {
-     Geocoder.init("AIzaSyDmGQcOZNNjq6NFMES1ppUJkO0jVHnhCbI");
-     Geocoder.from("Colosseum")
-       .then(json => {
-         var location = json.results[0].geometry.location;
-         console.log(location);
-       })
-       .catch(error => console.warn(error));
-   }
-
-   render() {
-    this.ConvertCoords_Test();
-      return (
-        <View style={{marginTop: 50, flex: 1}}>
-  
-        <GooglePlacesAutocomplete
-          placeholder = "Search"
-          fetchDetails={true}
-          onPress={(data, details = null) => {
-            // 'details' is provided when fetchDetails = true
-            console.log(data, details);
-          }}
-          query={{
-            key: "AIzaSyDmGQcOZNNjq6NFMES1ppUJkO0jVHnhCbI",
-            language: "en"
-          }}
-          styles={{
-            container: { flex: 0, position: "absolute", width: "100%", zIndex: 1 },
-            listView: { backgroundColor: "white" }
-          }}
-        />
-  
-        <MapView
-           style={styles.map}
-           region={{
-           latitude: 37.78825,
-           longitude: -122.4324,
-           latitudeDelta: 0.015,
-           longitudeDelta: 0.0121
-           }}
-       />
-       <Marker coordinate={this.state.markerPosition} />
-  
-       <Marker
-          coordinate={this.state.markerPosition}
-          title={"title"}
-          description={"description"}
-       />
-  
-        </View>
-      )
-    }
-  
   }
+
+  //Prints the Address information stored in Geocode
+  printAddress = () => {
+    console.log("--------------------- Print Address Information ---------------------");
+    console.log("name: ", this.state.Geocode.name);
+    console.log("street: ", this.state.Geocode.street);
+    console.log("country: ", this.state.Geocode.country);
+    console.log("city: ", this.state.Geocode.city);
+  }
+}
 
 const styles = StyleSheet.create({
   container: {

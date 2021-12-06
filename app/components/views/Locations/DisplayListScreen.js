@@ -200,12 +200,9 @@ export class DisplayList extends Component {
 
   //New plan pass the select items from the display to the mapviewer
   //Set's the name, rating, and address of the location
-  SetMarker(item)
-  {
-    let Viewer = new MapViewer();
-    
+  SetMarker(item) {
     //Moves data to the map viewer state
-    Viewer.state.markerDescription = {
+    var tempMarker = {
       name: item.name,
       address: item.address,
       contributor: item.contributor,
@@ -213,14 +210,13 @@ export class DisplayList extends Component {
       rating: item.rating
     };
 
-    //Converts the address to coordinates
-    Viewer.AddresstoCoordinates();
-
-    //PRints the item from list saved in mapview state
-    Viewer.PrintItem();
-
-    //Return the view back to the updated map
-    this.props.navigation.navigate('MapViewer');
+    this.props.navigation.navigate('MapViewer', {
+      name: tempMarker.name,
+      address: tempMarker.address,
+      contributor: tempMarker.contributor,
+      category: tempMarker.category,
+      rating: tempMarker.rating
+    });
   }
 
   LocationCard = ({ item }) => (

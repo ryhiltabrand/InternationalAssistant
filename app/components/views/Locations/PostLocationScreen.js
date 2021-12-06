@@ -17,16 +17,16 @@
    Image
  } from "react-native";
  import { Component } from 'react';
- import firebase from "firebase";
+ import firebase from "../../../utilities/firebase";
  import DropDownPicker from 'react-native-dropdown-picker';
- import {getCurrentUserName, getCurrentUserCountry} from './../../../utilities/currentUser'
+ import { getCurrentUserCountry } from '../../../utilities/currentUser'
 
  export class PostLocationScreen extends Component {
 
   constructor(props){
     super(props);
     this.state={
-      location_name: getCurrentUserName(),
+      location_name: '',
       location_address: '',
       location_contributor: '',
       location_category: '',
@@ -46,20 +46,11 @@
   }
 
   setOpen = (open) => {
-    console.debug('opens dropdown')
-    this.setState({
-      open
-    });
+    this.setState({ open });
   }
 
   setValue(callback) {
-    
-    this.setState(state => (console.log('the value being inputed is ', callback(state.value)),{
-      value: callback(state.value)
-    }));
-    
-    this.updateInputVal(this.state.value, 'location_name');
-    console.log("2 This value is being inputed", this.state.location_category);
+    this.setState(state => ({location_category: callback(state.value)}));
   }
 
   updateInputVal = (val, prop) => {
@@ -84,7 +75,6 @@
    CustomRatingBar = () => {
     const [defaultRating, setdefaultRating] = useState(2);
     const [maxRating, setmaxRating] = useState([1,2,3,4,5]);
-    //const starImgFilled = '../../assets/star_filled.png';
     const starImgFilled = './../../../assets/star_filled.png';
     const starImgCorner = './../../../assets/star_corner.png';
     this.state.location_rating = defaultRating;
@@ -131,7 +121,7 @@
                 style={styles.inputText}
                 placeholder="Name" 
                 placeholderTextColor="black"
-                onChangeText={(val) => this.updateInputVal(val, 'location_name')}/>
+                onChangeText={(val) => {this.updateInputVal(val, 'location_name')}}/>
          </View>
         
           <View style={styles.inputView} >
@@ -152,13 +142,12 @@
 
           <DropDownPicker
           open={this.state.open}
-          value={this.state.value}
+          value={this.state.location_category}
           items={this.state.items}
           setOpen={this.setOpen}
           setValue={this.setValue}
+          setItems={this.setItems}
           placeholder="Select a Category"
-          onChangeItem={item => console.log(item.label, item.value)}
-          //onChangeItem={item => this.updateInputVal(item, 'location_category')}
           style={styles.ScrollView}
           dropDownContainerStyle={styles.sortByDropdown}
           />
@@ -170,7 +159,7 @@
           </TouchableOpacity>
           
           <View style={styles.mapSection}>
-            <TouchableOpacity onPress={() => { this.props.navigation.navigate('MapViewer'); }}>
+            <TouchableOpacity onPress={() => { this.props.navigation.goBack(); }}>
               <Image source={require("./../../../assets/locations/categoryBar/map.png")} style={styles.mapBtn} />
             </TouchableOpacity>
           </View>
@@ -179,15 +168,6 @@
         );
     };
   }
-
-/*   <View style={styles.inputView} >
-              <TextInput  
-                style={styles.inputText}
-                placeholder="Category" 
-                placeholderTextColor="white"
-                onChangeText={(val) => this.updateInputVal(val, 'location_category')}/>
-          </View>
-*/
 
   const styles = StyleSheet.create({
     container: {
