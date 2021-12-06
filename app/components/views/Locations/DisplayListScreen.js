@@ -43,6 +43,10 @@ export class DisplayList extends Component {
       searchQuery: null,
       //Review Sectin,
       commentVisible: false,
+      commentContributor: '',
+      commentContributorDescription: '',
+      commentContributorRating: '',
+      commentContributorRegion: ''
     };
     this.setValue = this.setValue.bind(this);
   }
@@ -181,19 +185,23 @@ export class DisplayList extends Component {
   }
 
   LocationCard = ({ item }) => {
-
+    var category = this.state.locationList[item].category
+    var contributor = this.state.locationList[item].contributor
+    var description = this.state.locationList[item].description
+    var rating = this.state.locationList[item].rating
+    var country = this.state.locationList[item].user_country
     // change when trying to figure out how to change bordercolor
     //      <Pressable onPress={() => { this.setSelectedLocation(item)}} styles={[styles.notSelectedLocationCard ,this.state.selectedLocationCard]}> */}
     return (
-      <Pressable onPress={() => this.toggleComment()}>
+      <Pressable onPress={() => { this.toggleComment(), this.setupCommentSection(contributor, description, rating, country) }}>
         {/* crazy looking multi-layer ternary operation for backgroundColor */}
         <View
           style={[
             styles.locationCard,
-            this.state.locationList[item].category === 'Restaurant' ? styles.restaurant :
-              this.state.locationList[item].category === 'Park' ? styles.park :
-                this.state.locationList[item].category === 'Communal' ? styles.communal :
-                  this.state.locationList[item].category == 'Worship' ? styles.worship :
+            category === 'Restaurant' ? styles.restaurant :
+              category === 'Park' ? styles.park :
+                category === 'Communal' ? styles.communal :
+                  category == 'Worship' ? styles.worship :
                     styles.unkown,
           ]}>
           <View style={styles.locationCardTop}>
@@ -205,17 +213,17 @@ export class DisplayList extends Component {
             <View style={styles.locatiotnRatingSection}>
               <ImageBackground source={require('./../../../assets/locations/locationCard/star.png')} style={styles.locationRatingStar}>
                 {/* This needs to be the average of the ratings. Change function when created*/}
-                <Text style={styles.locationRating}> {this.state.locationList[item].rating} </Text>
+                <Text style={styles.locationRating}> {rating} </Text>
               </ImageBackground>
             </View>
             <View style={styles.locationRegionSection}>
               {/* Need function to grab user info base off name. database.js does have it but by UID*/}
-              <Image source={regionFlag(this.state.locationList[item].user_country)} style={styles.locationRegion} />
+              <Image source={regionFlag(country)} style={styles.locationRegion} />
             </View>
           </View>
           <View style={styles.locationCardBottom}>
             <View style={styles.locationContributorSection}>
-              <Text style={styles.locationContributor}>Founded by {this.state.locationList[item].contributor}</Text>
+              <Text style={styles.locationContributor}>Founded by {contributor}</Text>
             </View>
           </View>
         </View>
@@ -224,35 +232,53 @@ export class DisplayList extends Component {
   }
 
   //If comment is visible
-  toggleComment = () => {
+  toggleComment = (name, description, rating) => {
     this.setState((state) => ({
       commentVisible: !state.commentVisible,
+      commentContributor: name,
+      commentDescription: description,
+      commentContributorRating: rating,
     }));
   };
 
+  setupCommentSection = (name, description, rating, country) => {
+    this.setState(() => ({
+      commentContributor: name,
+      commentContributorDescription: description,
+      commentContributorRating: rating,
+      commentContributorRegion: country
+    }));
+  }
+
   //Contributor Section
   contributorSection = () => {
+    var contributor = this.state.commentContributor
+    var description = this.state.commentDescription
+    var rating = this.state.commentContributorRating
+    var country = this.state.commentContributorRegion
+
+
     return (
       <View style={styles.contributorSection}>
         <View style={styles.commentLeftBase}>
           <View styles={styles.commentTopLeftSection}>
             <View style={styles.commentUser}>
-              <Text style={styles.commentUserText}> {this.state.locationList[0].contributor} </Text>
+              <Text style={styles.commentUserText}> {contributor} </Text>
             </View>
             <View styles={styles.commentButtomLeftSection}>
-              <Text style={styles.comment}> {this.state.locationList[0].description} </Text>
+              <Text style={styles.comment}> {description} </Text>
             </View>
           </View>
         </View>
         <View style={styles.commentMiddleBase}>
           <View styles={styles.commentRegionSection}>
-            <Image source={regionFlag(this.state.locationList[0].user_country)} style={styles.commentRegion} />
+            <Image source={regionFlag(country)} style={styles.commentRegion} />
           </View>
         </View>
         <View style={styles.commentRightBase}>
           <View style={styles.commentRatingSection}>
             <ImageBackground source={require('./../../../assets/locations/locationCard/star.png')} style={styles.commentRatingStar}>
-              <Text style={styles.commentRatingText}> {this.state.locationList[0].rating} </Text>
+              <Text style={styles.commentRatingText}> {rating} </Text>
             </ImageBackground>
           </View>
         </View>
