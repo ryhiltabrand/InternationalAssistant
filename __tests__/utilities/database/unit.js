@@ -52,7 +52,7 @@ test('create new account', () => {
             bio: 'I am groot',
             profilepicture: 'https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg',
             UID: 'cm0IF5KopLgxnJTUtfi403kJuMl2',
-            school: 'ODU',
+            university: 'ODU',
             friendList: {}
     })
     // return expect(testUser.getAccountInformation("cm0IF5KopLgxnJTUtfi403kJuMl2")).resolves.toEqual(

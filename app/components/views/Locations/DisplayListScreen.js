@@ -15,6 +15,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import Dialog from "react-native-dialog";
 import { regionFlag } from "./../../../utilities/regionFlagFinder"
 import { MapViewer } from "./MapViewer";
+import { filtercat } from "../../shardedComponents/mapfilter"
 
 //console.log("This is opening DisplayList");
 
@@ -247,7 +248,7 @@ export class DisplayList extends Component {
           </View>
           <View style={styles.locationRegionSection}>
             {/* Need function to grab user info base off name. database.js does have it but by UID*/}
-            <Image source={regionFlag(this.state.locationList[item].contributor)} style={styles.locationRegion} />
+            <Image source={regionFlag(this.state.locationList[item].user_country)} style={styles.locationRegion} />
           </View>
         </View>
         <View style={styles.locationCardBottom}>

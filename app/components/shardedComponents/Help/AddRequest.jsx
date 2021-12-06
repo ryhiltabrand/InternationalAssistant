@@ -1,9 +1,9 @@
 import firebase from "firebase";
 
-export default function AddEvent(Request, Amount, Language, Campus, time) {
+export default function AddRequest(Request1, Amount, Language, Campus, time) {
   
 
-  const event = async () => {
+  const Request = async () => {
     // get current users uid
     const Uid = firebase.auth().currentUser.uid;
     const usersRef = firebase
@@ -20,8 +20,8 @@ export default function AddEvent(Request, Amount, Language, Campus, time) {
             RequesterUID: Uid,
             HelpersUID: [],
             Completed: false,
-            Description: Request,
-            HelperAmount: Amount,
+            Description: Request1,
+            HelperAmount: Number(Amount),
             PreferedLanguage: Language,
             Campus: Campus,
             Comments: {},
@@ -30,5 +30,5 @@ export default function AddEvent(Request, Amount, Language, Campus, time) {
         })
   };
 
-  event();
+  Request();
 }

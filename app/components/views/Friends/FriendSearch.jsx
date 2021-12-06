@@ -7,6 +7,7 @@ import {
   StyleSheet,
   FlatList,
   Image,
+  Button,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -15,48 +16,144 @@ import SelectDropdown from "react-native-select-dropdown";
 import { color, cos } from "react-native-reanimated";
 import firebase from "firebase";
 import updatefriends from "../../shardedComponents/Friends/Addfriends";
-import {Picker} from '@react-native-picker/picker';
-import DropDownPicker from 'react-native-dropdown-picker';
-
+import { Picker } from "@react-native-picker/picker";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default class FriendsSearchScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       name: null,
-      country: null,
-      type: null,
-      language: null,
-      campus: null,
+      //country: null,
+      //type: null,
+      //language: null,
+      //campus: null,
       modalVisible: false,
       data: [],
-      open: false,
-      value: 'campus',
-      Campus : [{label: 'On', value: 'on'}, {label: 'Off', value: 'off'}],
+
+      openRegionDropdown: false,
+      country: null,
+      Regions: [
+        { label: "Brazil", value: "Brazil" },
+        { label: "Canada", value: "Canada" },
+        { label: "China", value: "China" },
+        { label: "Finland", value: "Finland" },
+        { label: "France", value: "France" },
+        { label: "India", value: "India" },
+        { label: "Japan", value: "Japan" },
+        { label: "Mexico", value: "Mexico" },
+        { label: "Saudi Arabia", value: "Saudi Arabia" },
+        { label: "South Korea", value: "South Korea" },
+        { label: "Spain", value: "Spain" },
+        { label: "Any", value: null },
+      ],
+
+      openTypeDropdown: false,
+      native: null,
+      Type: [
+        { label: "International", value: "International" },
+        { label: "Native", value: "Native" },
+        { label: "Any", value: null },
+      ],
+
+      openLanguagesDropdown: false,
+      valueLanguages: null,
+      Languages: [
+        { label: "Arabic", value: "Arabic" },
+        { label: "Chinese", value: "Chinese" },
+        { label: "English", value: "English" },
+        { label: "French", value: "French" },
+        { label: "Finish", value: "Finish" },
+        { label: "Hindi", value: "Hindi" },
+        { label: "Japanese", value: "Japanese" },
+        { label: "Korean", value: "Korean" },
+        { label: "Portuguese", value: "Portuguese" },
+        { label: "Spanish", value: "Spanish" },
+        { label: "Any", value: null },
+      ],
+
+      openCampusDropdown: false,
+      school: null,
+      Campuses: [
+        { label: "ODU", value: "Old Dominion University" },
+        { label: "Any", value: null },
+      ],
     };
-    this.setValue = this.setValue.bind(this);
+    this.setRegion = this.setRegion.bind(this);
+    this.setType = this.setType.bind(this);
+    this.setLanguage = this.setLanguage.bind(this);
+    this.setCampus = this.setCampus.bind(this);
   }
   componentDidMount() {
     this.clearState();
   }
   componentWillUnmount() {}
 
-  setOpen = (open) => {
-    console.debug('opens dropdown')
+  setOpenRegion = (open) => {
+    console.debug("opens dropdown");
     this.setState({
-      open
+      openRegionDropdown: open,
     });
+  };
+
+  setRegion(callback) {
+    console.debug("set Value");
+    this.setState(
+      (state) => (
+        console.debug("the value being inputed is ", callback(state.value)),
+        { country: callback(state.value) }
+      )
+    );
   }
 
+  setOpenType = (open) => {
+    console.debug("opens dropdown");
+    this.setState({
+      openTypeDropdown: open,
+    });
+  };
 
-  setValue(callback) {
-    console.debug('set Value')
-    this.setState(state => (
-      console.debug('the value being inputed is ', callback(state.value)),
-      { value: callback(state.value) }
-    )
+  setType(callback) {
+    console.debug("set Value");
+    this.setState(
+      (state) => (
+        console.debug("the value being inputed is ", callback(state.value)),
+        { native: callback(state.value) }
+      )
     );
+  }
 
+  setOpenLanguage = (open) => {
+    console.debug("opens dropdown");
+    this.setState({
+      openLanguagesDropdown: open,
+    });
+  };
+
+  setLanguage(callback) {
+    console.debug("set Value");
+    this.setState(
+      (state) => (
+        console.debug("the value being inputed is ", callback(state.value)),
+        { valueLanguages: callback(state.value) }
+      )
+    );
+  }
+  setOpenCampus = (open) => {
+    console.debug("opens dropdown");
+    this.setState({
+      openCampusDropdown: open,
+    });
+  };
+
+  setCampus(callback) {
+    console.debug("set Value");
+    this.setState(
+      (state) => (
+        console.debug("the value being inputed is ", callback(state.value)),
+        { school: callback(state.value) }
+      )
+    );
   }
 
   /*setItems(callback) {
@@ -72,22 +169,21 @@ export default class FriendsSearchScreen extends React.Component {
   clearState = () => {
     this.setState({
       name: null,
-      country: null,
-      type: null,
-      language: null,
-      campus: null,
       data: [],
-     
+      school: null,
+      valueLanguages: null,
+      country: null,
+      native: null,
     });
-
   };
   data = async (Uid) => {
-    userRef = firebase.firestore().collection("users").doc(Uid);
+    const userRef = firebase.firestore().collection("users").doc(Uid);
     const doc = await userRef.get();
     var name = doc.data().name;
     var profpic = doc.data().profilepicture;
-    console.log(Uid, name, profpic, friend);
-    let friend = { uid: Uid, name: name, pic: profpic };
+    var FriendsList = doc.data().FriendsList;
+    //console.log(Uid, name, profpic, friend);
+    let friend = { uid: Uid, name: name, pic: profpic, Friends: FriendsList };
     this.setState({
       data: [...this.state.data, friend],
     });
@@ -105,39 +201,56 @@ export default class FriendsSearchScreen extends React.Component {
         state[property] &&
         Array.isArray(state[property]) != true
       ) {
-        console.log(property, state[property]);
+        //console.log(property, state[property]);
         criteria[property] = state[property];
       }
     }
-    //console.log(criteria);
+    console.log(criteria);
     if (Object.keys(criteria).length > 0) {
       for (let i = 0; i < Object.keys(criteria).length; i++) {
-        if (Object.keys(criteria)[i] == "language") {
+        if (Object.keys(criteria)[i] == "valueLanguages") {
           Friendquery = Friendquery.where(
             "language",
             "array-contains",
             Object.values(criteria)[i]
           );
-        } else {
+        } else if (Object.keys(criteria)[i] == "school") {
           Friendquery = Friendquery.where(
-            Object.keys(criteria)[i],
+            "school",
+            "==",
+            Object.values(criteria)[i]
+          );
+        } else if (Object.keys(criteria)[i] == "country") {
+          Friendquery = Friendquery.where(
+            "country",
+            "==",
+            Object.values(criteria)[i]
+          );
+        } else if (Object.keys(criteria)[i] == "native") {
+          Friendquery = Friendquery.where(
+            "native",
+            "==",
+            Object.values(criteria)[i]
+          );
+        } else if (Object.keys(criteria)[i] == "name") {
+          Friendquery = Friendquery.where(
+            "name",
             "==",
             Object.values(criteria)[i]
           );
         }
       }
-      console.log(Friendquery)
+      //console.log("query",Friendquery);
     } else {
-      console.log("invalid Search");
-      alert("you suck");
+      //console.log("invalid Search");
+      alert("none");
     }
 
-  
     if (Object.keys(criteria).length >= 1) {
       Friendquery = Friendquery.get().then((snap) => {
-        console.log(snap.size);
+        //console.log(snap.size);
         snap.forEach((doc) => {
-          console.log(doc.id);
+          //console.log(doc.id);
           this.data(doc.id);
         });
       });
@@ -147,147 +260,114 @@ export default class FriendsSearchScreen extends React.Component {
   updatename = (name) => {
     this.setState({ name: name });
   };
-  updatecountry = (count) => {
-    if (count == "Any") {
-      this.setState({ country: null });
-    } else {
-      this.setState({ country: count });
-    }
-    
-  };
-  updatetype = (type) => {
-    if (type == "Any") {
-      this.setState({ type: null });
-    } else {
-      this.setState({ type: type });
-    }
-  };
-  updatelanguage = (language) => {
-    if (language == "Any") {
-      this.setState({ language: null });
-    } else {
-      this.setState({ language: language });
-    }
-  };
-  updatecampus = (campus) => {
-    if (campus == "Any") {
-      this.setState({ campus: null });
-    } else {
-      this.setState({ campus: campus });
-    }
-    console.log(this.state.campus)
-  };
 
   render() {
     const { modalVisible } = this.state;
-    const { open, value } = this.state;
-    const countries = [
-      "Any",
-      "Brazil",
-      "Canada",
-      "China",
-      "Finland",
-      "France",
-      "India",
-      "Japan",
-      "Mexico",
-      "Saudi Arabia",
-      "South Korea",
-      "Spain",
-    ];
-    const StudentType = ["Any", "International", "Native"];
-    const Languages = [
-      "Any",
-      "Arabic",
-      "Chinese",
-      "English",
-      "French",
-      "Finish",
-      "Hindi",
-      "Japanese",
-      "Korean",
-      "Portuguese",
-      "Spanish",
-    ];
-    const Campus = ["Any", "On", "Off"];
+    const {
+      openCampusDropdown,
+      school,
+      openRegionDropdown,
+      country,
+      openTypeDropdown,
+      native,
+      openLanguagesDropdown,
+      valueLanguages,
+    } = this.state;
+    DropDownPicker.setTheme("DARK");
     const { name } = this.state;
     return (
-      <View>
-        <SearchBar
-          placeholder="Search by Name..."
-          onChangeText={this.updatename}
-          showLoading={true}
-          value={name}
-        />
-        <View>
-          <Text> Region: </Text>
-          <SelectDropdown
-            dropdownStyle={{ color: "blue" }}
-            data={countries}
-            onSelect={(selectedItem) => {
-              this.updatecountry(selectedItem);
-            }}
+      <View style={{ flexDirection: "column", flex: 1, backgroundColor: "#003057"}}>
+        <View style={{ flex: 5 }}>
+          <SearchBar
+            placeholder="Search by Name..."
+            onChangeText={this.updatename}
+            showLoading={true}
+            value={name}
           />
-        </View>
-        <View>
-          <Text> Student Type: </Text>
-          <SelectDropdown
-            dropdownStyle={{ color: "blue" }}
-            data={StudentType}
-            onSelect={(selectedItem) => {
-              this.updatetype(selectedItem);
-            }}
-          />
-          
-        </View>
-        <View>
-          <Text> Language: </Text>
-          <SelectDropdown
-            dropdownStyle={{ color: "blue" }}
-            data={Languages}
-            onSelect={(selectedItem) => {
-              this.updatelanguage(selectedItem);
-            }}
-          />
-        </View>
-        <View>
-          <Text> On Campus: </Text>
-          <DropDownPicker
-            open={open}
-            value={value}
-            items={this.state.Campus}
-            setOpen={this.setOpen}
-            setValue={this.setValue}
-            onChangeValue={(selectedItem) => {
+          <View>
+            <Text> Region: </Text>
+            <DropDownPicker
+              open={openRegionDropdown}
+              value={country}
+              items={this.state.Regions}
+              setOpen={this.setOpenRegion}
+              setValue={this.setRegion}
+              zIndex={5000}
+              zIndexInverse={4000}
+              /*onChangeValue={(selectedItem) => {
               this.updatecampus(selectedItem);
-            }}
-          />
-          {/*<SelectDropdown
-            dropdownStyle={{ color: "blue" }}
-            data={Campus}
-            onSelect={(selectedItem) => {
+            }}*/
+            />
+          </View>
+          <View>
+            <Text> Language: </Text>
+            <DropDownPicker
+              open={openLanguagesDropdown}
+              value={valueLanguages}
+              items={this.state.Languages}
+              setOpen={this.setOpenLanguage}
+              setValue={this.setLanguage}
+              zIndex={4000}
+              zIndexInverse={3000}
+              /*onChangeValue={(selectedItem) => {
               this.updatecampus(selectedItem);
-            }}
-          />*/}
-        </View>
-        <TouchableOpacity
-          style={{ marginLeft: 150, marginTop: 25 }}
-          onPress={() => {
-            this.clearState();
-          }}
-        >
-          <Text>Clear Search</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          //style={{ marginLeft: 150, marginTop: 25 }}
-          onPress={() => {
-            this.Loc().then(() => this.setModalVisible(true));
-          }}
-        >
-          <Text>Search</Text>
-        </TouchableOpacity>
+            }}*/
+            />
+          </View>
+          <View>
+            <Text> Student Type: </Text>
+            <DropDownPicker
+              open={openTypeDropdown}
+              value={native}
+              items={this.state.Type}
+              setOpen={this.setOpenType}
+              setValue={this.setType}
+              zIndex={3000}
+              zIndexInverse={2000}
+              /*onChangeValue={(selectedItem) => {
+              this.updatecampus(selectedItem);
+            }}*/
+            />
+          </View>
 
+          <View>
+            <Text> Campus: </Text>
+            <DropDownPicker
+              open={openCampusDropdown}
+              value={school}
+              items={this.state.Campuses}
+              setOpen={this.setOpenCampus}
+              setValue={this.setCampus}
+              zIndex={2000}
+              zIndexInverse={1000}
+
+              /*onChangeValue={(selectedItem) => {
+              this.updatecampus(selectedItem);
+            }}*/
+            />
+          </View>
+          <View
+            style={{
+              padding: 5,
+              marginTop: 90,
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <View style={{ marginRight: 2 }}>
+              <Button color="#98C5EA" title="Clear" onPress={() => this.clearState()} />
+            </View>
+            <View style={{ marginLeft: 2 }}>
+              <Button
+                color="#98C5EA"
+                title="Search"
+                onPress={() =>
+                  this.Loc().then(() => this.setModalVisible(true))
+                }
+              />
+            </View>
+          </View>
+        </View>
         <Modal
           animationType="slide"
           transparent={false}
@@ -305,29 +385,62 @@ export default class FriendsSearchScreen extends React.Component {
             }}
           >
             <Text>Back to Search</Text>
+            
           </TouchableOpacity>
           <FlatList
             style={styles.container}
             enableEmptySections={true}
             data={this.state.data}
             keyExtractor={(item) => {
-              return item.name;
+              return item.uid;
             }}
             renderItem={({ item }) => {
+              const UID = firebase.auth().currentUser.uid;
               return (
-                <TouchableOpacity>
-                  <View style={styles.box}>
-                    <Image style={styles.image} source={{ uri: item.pic }} />
-                    <Text style={styles.name}>{item.name}</Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        updatefriends(item.uid);
-                      }}
-                    >
-                      <Text>Add</Text>
+                <>
+                
+                  
+                    <TouchableOpacity onPress={() => {
+                      this.props.navigation.navigate("Profile", {
+                        UID: item.uid
+                      });
+                    }}>
+                      <View style={styles.boxA}>
+                        <View style={{ flexDirection: "row" }}>
+                          <Image
+                            style={styles.image}
+                            source={{ uri: item.pic }}
+                          />
+                          <Text style={styles.name}>{item.name}</Text>
+                        </View>
+                        <View
+                    style={{
+                      paddingLeft: 280,
+                      paddingTop: 13,
+                      position: "absolute",
+                    }}
+                  >
+                        <TouchableOpacity
+                          onPress={() => {
+                            updatefriends(item.uid);
+                          }}
+                          style={{
+                            alignItems: "flex-end",
+                            justifyContent: "center",
+                            paddingVertical: 13,
+                            //paddingHorizontal: 32,
+                            borderRadius: 4,
+                            elevation: 3,
+                            backgroundColor: "teal",
+                          }}
+                        >
+                      <Text style={{fontSize: 18, paddingLeft: 6, paddingRight: 6}}>Add</Text>
+                        </TouchableOpacity>
+                        </View>
+                      </View>
                     </TouchableOpacity>
-                  </View>
-                </TouchableOpacity>
+                  
+                </>
               );
             }}
           />
@@ -337,6 +450,26 @@ export default class FriendsSearchScreen extends React.Component {
   }
 }
 const styles = StyleSheet.create({
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: "#008B8B",
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "black",
+    alignContent: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+  },
   centeredView: {
     flex: 1,
     justifyContent: "center",
@@ -383,7 +516,40 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
   },
-
+  SumbitBtn: {
+    width: "80%",
+    backgroundColor: "blue",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 5,
+    marginLeft: 30,
+  },
+  SumbitBtnText: {
+    color: "white",
+    fontSize: 15,
+  },
+  boxA: {
+    padding: 8,
+    marginTop: 5,
+    borderColor: "black",
+    borderStyle: "solid",
+    borderWidth: 3,
+    marginBottom: 5,
+    marginRight: 5,
+    marginLeft: 5,
+    backgroundColor: "#ADD8E6",
+    flexDirection: "row",
+    shadowColor: "black",
+    shadowOpacity: 0.2,
+    shadowOffset: {
+      height: 1,
+      width: -2,
+    },
+    elevation: 2,
+    width: 380,
+  },
   box: {
     padding: 5,
     marginTop: 5,
@@ -399,10 +565,30 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   name: {
-    color: "#20B2AA",
+    color: "black",
     fontSize: 22,
     alignSelf: "center",
     marginLeft: 10,
     textAlign: "center",
+  },
+  firstLine: {
+    marginTop: 1,
+
+    flexDirection: "row",
+    borderColor: "black",
+    borderStyle: "solid",
+    borderWidth: 3,
+  },
+  secondLine: {
+    margin: 1,
+  },
+  thirdLine: {
+    flexDirection: "row",
+  },
+  forthLine: {
+    flexDirection: "row",
+  },
+  fifthLine: {
+    flexDirection: "row",
   },
 });
