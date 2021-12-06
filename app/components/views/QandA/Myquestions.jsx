@@ -70,12 +70,14 @@ class MyQuestion extends React.Component {
     const doc = await usersRef.get();
     var name = doc.data().name;
     var pic = doc.data().profilepicture;
+    var DocID;
     RequestsQuery = await firebase
       .firestore()
       .collection("Questions and Answers")
       .where("RequesterUID", "==", firebase.auth().currentUser.uid)
       .get();
     RequestsQuery.docs.map((doc) => {
+      DocID = doc.id
       var ruid = doc.get("RequesterUID");
       var huid = doc.get("answererUID");
       var question = doc.get("Question");
@@ -85,6 +87,7 @@ class MyQuestion extends React.Component {
         Name: name,
         Question: question,
         Answers: answers,
+        DocID: DocID,
 
       };
       
@@ -116,6 +119,7 @@ class MyQuestion extends React.Component {
                   Pic: item.Pic,
                   Answers: item.Answers,
                   Question: item.Question,
+                  DocID: item.DocID,
                 });
               }}>
                 
@@ -127,9 +131,6 @@ class MyQuestion extends React.Component {
 
                   <View style={styles.secondLine}>
                     <Text style={styles.request}>{item.Question}</Text>
-                  </View>
-                  <View style={styles.fifthLine}>
-                    <Text>Answers: {Object.keys(item.Answers).length}</Text>
                   </View>
                 </View>
                 </TouchableOpacity>

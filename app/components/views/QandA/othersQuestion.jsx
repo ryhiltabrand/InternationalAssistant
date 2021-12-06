@@ -1,34 +1,59 @@
-import { Modal, Text, View, Pressable,TextInput, Button, StyleSheet, Image } from "react-native";
-import React, {TouchableOpacity, useEffect, useState} from "react";
-import ApplyForRequest from "./../../shardedComponents/Help/ApplyForRequest"
+import {
+  Modal,
+  Text,
+  View,
+  Pressable,
+  TextInput,
+  Button,
+  StyleSheet,
+  Image,
+  FlatList,
+} from "react-native";
+import React, { TouchableOpacity, useEffect, useState } from "react";
+import ApplyForRequest from "./../../shardedComponents/Help/ApplyForRequest";
 import firebase from "firebase";
 
 export default function OthersQuestion({ route, navigation }) {
   /* 2. Get the param */
-  const {
-    Name,
-    Pic,
-    Answers,
-    Question,
-    DocID,
-  } = route.params;
+  const { Name, Pic, Answers, Question, DocID } = route.params;
 
-  const [replys,setreplys] = useState([])
+  const [replys, setreplys] = useState([]);
+  const [answers, setanswers] = useState(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     puller();
-  })
-  puller = async()=>{
+  },[]);
 
-    const replyref = await firebase.firestore().collection("Questions and Answers").doc(id).collection("Answers").get()
+  async function puller() {
+    setreplys([])
+    const replyref = await firebase
+      .firestore()
+      .collection("Questions and Answers")
+      .doc(DocID)
+      .collection("Answers")
+      .get();
 
-    replyref.docs.map((doc)=>{
-
-      setreplys(doc.data())
-
-    })
-    console.log(replys)
-  }
+    replyref.docs.map((doc) => {
+      var name = doc.data().Name
+      var pic = doc.data().Pic
+      var text = doc.data().Text
+      var id = doc.id
+      var like = doc.data().Like
+      var dislike = doc.data().Dislike
+      var size = replyref.size
+      
+      let reply = {
+        Name: name,
+        Pic: pic,
+        Text: text,
+        ID: id,
+        Dislike: dislike,
+        Like: like,
+      }
+      setanswers(size)
+      setreplys((replys) => [...replys, reply]);
+    });
+  };
 
   return (
     <View style={styles.body}>
@@ -48,11 +73,35 @@ export default function OthersQuestion({ route, navigation }) {
           <Text style={styles.request}>{Question}</Text>
         </View>
         <View style={styles.thirdLine}>
-          <Text>Answers: {Object.keys(Answers).length}</Text>
+          <Text>Answers: {answers}</Text>
         </View>
       </View>
-      <Text style={{fontSize:30}}>Replys:</Text>
-{/* 
+      <Text style={{ fontSize: 30 }}>Answers:</Text>
+
+      <FlatList
+        style={styles.scrollView}
+        enableEmptySections={true}
+        data={replys}
+        keyExtractor={(item) => {
+          return item.ID;
+        }}
+        renderItem={({ item }) => {
+          return (
+            <View style={styles.box}>
+              <View style={styles.firstLine}>
+                <Image style={styles.image} source={{ uri: item.Pic }} />
+                <Text style={styles.name}>{item.Name}</Text>
+              </View>
+
+              <View style={styles.secondLine}>
+                <Text style={styles.request}>{item.Text}</Text>
+              </View>
+            </View>
+          );
+        }}
+      />
+
+      {/* 
       <View style={styles.box}>
         <View style={styles.firstLine}>
           <Image style={styles.image} source={{ uri: RPic }} />
@@ -61,9 +110,6 @@ export default function OthersQuestion({ route, navigation }) {
 
       </View> */}
     </View>
-    
-
-    
   );
 }
 const styles = StyleSheet.create({
