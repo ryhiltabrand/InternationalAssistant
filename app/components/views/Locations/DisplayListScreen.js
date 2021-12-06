@@ -236,7 +236,7 @@ export class DisplayList extends Component {
         <View style={styles.commentLeftBase}>
           <View styles={styles.commentTopLeftSection}>
             <View style={styles.commentUser}>
-              <Text styles={styles.commentUserText}> {this.state.locationList[0].contributor} </Text>
+              <Text style={styles.commentUserText}> {this.state.locationList[0].contributor} </Text>
             </View>
             <View styles={styles.commentButtomLeftSection}>
               <Text style={styles.comment}> {this.state.locationList[0].description} </Text>
@@ -258,6 +258,7 @@ export class DisplayList extends Component {
       </View>
     )
   }
+
   //List of Comments Template
   commentSection = () => (
     <View style={styles.commentCard}>
@@ -562,19 +563,16 @@ const styles = StyleSheet.create({
     flex: 3,
     flexDirection: 'column',
     padding: 5,
-    backgroundColor: 'green'
   },
   commentTopLeftSection: {
     flex: 1,
-    flexDirection: 'row',
   },
   commentUser: {
-    flex: 2,
+    flex: 1,
   },
   commentUserText: {
-    fontSize: 50,
-    //position: 'absolute',
-    fontWeight: 'bold',
+    fontSize: 25,
+    fontWeight: 'bold'
   },
   commentTopLeftSection: {
     flex: 1
@@ -583,7 +581,6 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'absolute',
     marginTop: 25,
-
   },
   commentMiddleBase: {
     flex: 1
@@ -593,8 +590,8 @@ const styles = StyleSheet.create({
   },
   commentRegion: {
     resizeMode: 'contain',
-    width: 45,
-    height: 45,
+    width: 35,
+    height: 35,
   },
   commentRightBase: {
     flex: 1,
