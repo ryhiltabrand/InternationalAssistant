@@ -22,6 +22,7 @@ import DropDownPicker from "react-native-dropdown-picker";
 export default class FriendsSearchScreen extends React.Component {
   constructor(props) {
     super(props);
+    this._unsubscribe;
     this.state = {
       name: null,
       //country: null,
@@ -86,8 +87,12 @@ export default class FriendsSearchScreen extends React.Component {
   }
   componentDidMount() {
     this.clearState();
+    this._unsubscribe = this.props.navigation.addListener("focus", () => {
+      this.clearState();
+      this.setModalVisible(false)
+    });
   }
-  componentWillUnmount() {}
+  componentWillUnmount() {this._unsubscribe}
 
   setOpenRegion = (open) => {
     console.debug("opens dropdown");
@@ -285,7 +290,7 @@ export default class FriendsSearchScreen extends React.Component {
             value={name}
           />
           <View>
-            <Text> Region: </Text>
+            <Text style={{color:"white", fontSize: 18}}> Region: </Text>
             <DropDownPicker
               open={openRegionDropdown}
               value={country}
@@ -300,7 +305,7 @@ export default class FriendsSearchScreen extends React.Component {
             />
           </View>
           <View>
-            <Text> Language: </Text>
+            <Text style={{color:"white", fontSize: 18}}> Language: </Text>
             <DropDownPicker
               open={openLanguagesDropdown}
               value={valueLanguages}
@@ -315,7 +320,7 @@ export default class FriendsSearchScreen extends React.Component {
             />
           </View>
           <View>
-            <Text> Student Type: </Text>
+            <Text style={{color:"white", fontSize: 18}}> Student Type: </Text>
             <DropDownPicker
               open={openTypeDropdown}
               value={native}
@@ -331,7 +336,7 @@ export default class FriendsSearchScreen extends React.Component {
           </View>
 
           <View>
-            <Text> Campus: </Text>
+            <Text style={{color:"white", fontSize: 18}}> Campus: </Text>
             <DropDownPicker
               open={openCampusDropdown}
               value={school}
@@ -380,6 +385,7 @@ export default class FriendsSearchScreen extends React.Component {
           <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
             onPress={() => {
+              
               this.setModalVisible(!modalVisible);
               this.clearState();
             }}

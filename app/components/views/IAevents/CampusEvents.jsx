@@ -23,14 +23,26 @@ LogBox.ignoreLogs(["Setting a timer"]);
 export default class CampusEvents extends React.Component {
     constructor(props) {
         super(props);
+        this._unsubscribe;
         this.state = {
             eventsDatabase: [],
         };
     }
     componentDidMount() {
-        this.CampusEvents();
+        this.clearState();
+        this._unsubscribe = this.props.navigation.addListener("focus", () => {
+            this.clearState();
+            this.CampusEvents();
+          });
+        //this.CampusEvents();
     }
-    componentWillUnmount() { }
+    componentWillUnmount() {this._unsubscribe; }
+
+    clearState = () => {
+        this.setState({
+            eventsDatabase: [],
+        });
+      };
 
     CampusEvents = async () => {
         const usersRef = firebase

@@ -285,9 +285,22 @@ export default class MyEvents extends React.Component {
     this.setCountry = this.setCountry.bind(this);
   }
   componentDidMount() {
-    this.Recommend();
+    this.clearState();
+    this._unsubscribe = this.props.navigation.addListener("focus", () => {
+      this.clearState();
+      this.Recommend();
+    });
+    
   }
-  componentWillUnmount() { }
+
+  clearState = () => {
+    this.setState({
+        eventsDatabase: [],
+    });
+  };
+
+  componentWillUnmount() {this._unsubscribe; }
+
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };

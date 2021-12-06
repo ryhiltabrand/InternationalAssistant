@@ -24,6 +24,7 @@ LogBox.ignoreLogs(["Setting a timer"]);
 class AllRequest extends React.Component {
   constructor(props) {
     super(props);
+    this._unsubscribe;
     this.state = {
       modalVisible: false,
       data: [],
@@ -42,9 +43,13 @@ class AllRequest extends React.Component {
     };
   }
   componentDidMount() {
-    this.AllRequests();
+    //this.AllRequests();
+    this._unsubscribe = this.props.navigation.addListener("focus", () => {
+      this.clearState();
+      this.AllRequests();
+    });
   }
-  componentWillUnmount() {}
+  componentWillUnmount() {this._unsubscribe}
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };
