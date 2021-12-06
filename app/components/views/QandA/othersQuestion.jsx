@@ -51,6 +51,7 @@ export default function OthersQuestion({ route, navigation }) {
           <Text>Answers: {Object.keys(Answers).length}</Text>
         </View>
       </View>
+      <Text style={{fontSize:30}}>Replys:</Text>
 {/* 
       <View style={styles.box}>
         <View style={styles.firstLine}>
