@@ -32,6 +32,7 @@ export class PostLocationScreen extends Component {
       location_contributor: '',
       location_category: '',
       location_rating: '',
+      location_description: '',
       user_country: '',
       open: false,
       value: null,
@@ -42,7 +43,6 @@ export class PostLocationScreen extends Component {
         { label: 'Worship', value: 'Worship' }
       ]
     };
-
     this.setValue = this.setValue.bind(this);
   }
 
@@ -56,7 +56,7 @@ export class PostLocationScreen extends Component {
     const country = doc.data().country;
     this.setState({
       location_contributor: name,
-      user_country: country,
+      user_country: country
     });
   }
 
@@ -84,9 +84,11 @@ export class PostLocationScreen extends Component {
         contributor: this.state.location_contributor,
         category: this.state.location_category, //Resturant
         rating: this.state.location_rating, //1-5 stars
-        uid: getCurrentUserUID(),
+        description: this.state.location_description,
+        uid: firebase.auth().currentUser.uid,
         user_country: this.state.user_country
       })
+      this.props.navigation.goBack();
   }
 
   CustomRatingBar = () => {
@@ -126,7 +128,6 @@ export class PostLocationScreen extends Component {
       </View>
     )
   }
-
   render() {
     //const [value, onChangeText] = React.useState(this.state.location_contributor);
     return (
@@ -155,10 +156,17 @@ export class PostLocationScreen extends Component {
             style={styles.inputText}
             placeholder="Contributor"
             placeholderTextColor="black"
-            onChangeText={(val) => this.updateInputVal(val, 'location_contributor')}
-            //Auto fill
-            /*onChangeText={text => onChangeText(text)}
-            value={value}*//>
+            onChangeText={(val) => this.updateInputVal(val, 'location_contributor')}/>
+        </View>
+
+        <View style={styles.inputCommentView} >
+          <TextInput
+            style={styles.inputComment}
+            placeholder="Comment"
+            placeholderTextColor="black"
+            onChangeText={(val) => this.updateInputVal(val, 'location_description')}
+            multiline
+            maxLength={500}/>
         </View>
 
         <DropDownPicker
@@ -214,6 +222,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
+  inputCommentView: {
+    width: "80%",
+    height: 30,
+    borderColor: "orange",
+    borderRadius: 5,
+    borderWidth: 1,
+    marginBottom: 20,
+    marginLeft: 39,
+    justifyContent: "center",
+    padding: 30,
+  },
   ScrollView: {
     width: "80%",
     backgroundColor: "#fff9e8ff",
@@ -236,6 +255,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   inputText: {
+    fontSize: 15,
+    height: 50,
+    color: "black"
+  },
+  inputComment: {
     fontSize: 15,
     height: 50,
     color: "black"
