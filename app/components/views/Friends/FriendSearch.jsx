@@ -221,7 +221,7 @@ export default class FriendsSearchScreen extends React.Component {
           );
         } else if (Object.keys(criteria)[i] == "school") {
           Friendquery = Friendquery.where(
-            "school",
+            "university",
             "==",
             Object.values(criteria)[i]
           );
