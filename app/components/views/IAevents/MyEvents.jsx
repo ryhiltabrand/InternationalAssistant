@@ -493,7 +493,8 @@ export default class MyEvents extends React.Component {
     return (
       <View style={{
         backgroundColor: "#003057",
-        flex: 1
+        flex: 1,
+        marginBottom: 50
       }}>
         <Button title="add event" onPress={() => this.setModalVisible(true)} />
         <FlatList

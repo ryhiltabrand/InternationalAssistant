@@ -501,7 +501,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: '#fff9e8ff'
+    backgroundColor: '#fff9e8ff',
+    marginBottom: 50
   },
   //global styles
   restaurant: {

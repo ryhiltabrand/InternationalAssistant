@@ -91,7 +91,8 @@ export default class CampusEvents extends React.Component {
         return (
             <View style={{
                 backgroundColor: "#003057",
-                flex: 1
+                flex: 1,
+                marginBottom: 50
               }}>
                 <FlatList
                     style={styles.scrollView}
