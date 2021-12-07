@@ -71,7 +71,7 @@ class AllQuestion extends React.Component {
 
   AllQuestions = async () => {
 
-    RequestsQuery = await firebase
+    const RequestsQuery = await firebase
       .firestore()
       .collection("Questions and Answers")
       .where("RequesterUID", "!=", firebase.auth().currentUser.uid)
