@@ -179,6 +179,9 @@ export class signupScreen extends Component {
         .auth()
         .createUserWithEmailAndPassword(this.state.email, this.state.password)
         .then((res) => {
+          res.user.sendEmailVerification();
+          
+          alert("Please Verify your Email")
 
           res.user.updateProfile({
             displayName: this.state.name
@@ -192,8 +195,8 @@ export class signupScreen extends Component {
           newUser.setEmail(this.state.email)
           newUser.setLanguage(this.state.language)
           newUser.setCountry(this.state.country)
-          newUser.setBio('Hi! My name is' + this.state.name + '. I\'m new to the app. Say hello!')
-          newUser.setProfilePicture('https://res.cloudinary.com/teepublic/image/private/s--rh264MCI--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1517893785/production/designs/2341977_3.jpg')
+          newUser.setBio('Hi! My name is ' + this.state.name + '. I\'m new to the app. Say hello!')
+          newUser.setProfilePicture('https://kb.spinbackup.com/wp-content/plugins/all-in-one-seo-pack/images/default-user-image.png')
           newUser.setSchool(this.state.school)
           console.log('b4 getting native')
           newUser.setNative(this.state.native)
@@ -218,8 +221,10 @@ export class signupScreen extends Component {
             birthday: ''
           }
           )
-          console.log('clearing out and clearing state')
+          console.log('clearing out and clearing state'); 
           this.props.navigation.navigate('Login')
+          auth.signOut();
+         
         })
         .catch(error => this.setState({ errorMessage: error.message }))
 
@@ -258,12 +263,12 @@ export class signupScreen extends Component {
               onChangeText={(val) => this.updateInputVal(val, 'password')} />
           </View>
 
-          <View style={styles.birthdayView}>
+          {/*<View style={styles.birthdayView}>
             <TouchableOpacity onPress={this.setDateVisible}>
               <Text style={styles.birthDayText}> birthday </Text>
             </TouchableOpacity>
           </View>
-          {this.state.showDatePicker && (
+          this.state.showDatePicker && (
             <DateTimePicker
               value={this.state.birthday}
               display="default"
@@ -293,7 +298,7 @@ export class signupScreen extends Component {
               }}
               style={{ backgroundColor: "white" }}
             />
-          )}
+            )*/}
           <View style={styles.drownDownSection}>
             <View styles={styles.multiSelect}>
               <MultiSelect

@@ -452,7 +452,10 @@ export default class MyEvents extends React.Component {
 
 
     return (
-      <View style={styles.body}>
+      <View style={{
+        backgroundColor: "#003057",
+        flex: 1
+      }}>
         <Button title="add event" onPress={() => this.setModalVisible(true)} />
         <FlatList
           style={styles.scrollView}

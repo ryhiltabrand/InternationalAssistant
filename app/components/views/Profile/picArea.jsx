@@ -6,27 +6,29 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Button,
 } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { FontAwesome5 } from "@expo/vector-icons";
 import firebase from "firebase";
 import { LinearGradient } from "expo-linear-gradient";
 import { BackgroundImage } from "react-native-elements/dist/config";
+import { Entypo } from "@expo/vector-icons";
 
-import ImagePickerExample from './imageSelect'
 
 
 const options = {
-  title: 'Select Avatar',
+  title: "Select Avatar",
   storageOptions: {
     skipBackup: true,
-    path: 'images',
+    path: "images",
   },
 };
 
 export default class Pic extends Component {
   constructor(props) {
     super(props);
+    this._unsubscribe;
     this.state = {
       pic: null,
       name: null,
@@ -37,9 +39,13 @@ export default class Pic extends Component {
     };
   }
   componentDidMount() {
-    this.Profile();
+    
+    this._unsubscribe = this.props.navigation.addListener("focus", () => {
+      this.clearState();
+      this.Profile();
+    });
   }
-  componentWillUnmount() {}
+  componentWillUnmount() {this._unsubscribe();}
   clearState = () => {
     this.setState({
       pic: null,
@@ -72,6 +78,8 @@ export default class Pic extends Component {
   //container: { flex: 1, backgroundColor: '#9FA8DA' // Set your own custom Color
   render() {
     return (
+      <View style={styles.container1}>
+        <ScrollView style={{ }}>
       <View style={{}}>
         <View style={styles.container}>
           <LinearGradient
@@ -80,8 +88,9 @@ export default class Pic extends Component {
             end={[1, 1]}
           >
             <View style={{ marginHorizontal: 0, paddingVertical: 0 }}>
-            <Text style={{textAlign: "right"}}> <ImagePickerExample/> </Text>
-            
+              <View style={{alignContent:"center", justifyContent:"center", alignItems:"flex-end"}}><TouchableOpacity onPress={()=>{this.props.navigation.navigate("EditProfileScreen")}}>
+              <Entypo name="edit" size={24} color="white" />
+              </TouchableOpacity></View>
               <View
                 style={{
                   height: 150,
@@ -90,14 +99,22 @@ export default class Pic extends Component {
                 }}
               >
                 <View
-                style={{ position: "absolute", alignSelf: "center", paddingTop: 25 }}
-              >
-                <Text
-                  style={{ textAlign: "center", color: "white", fontSize: 30 }}
+                  style={{
+                    position: "absolute",
+                    alignSelf: "center",
+                    paddingTop: 25,
+                  }}
                 >
-                  {this.state.name}
-                </Text>
-              </View>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "white",
+                      fontSize: 30,
+                    }}
+                  >
+                    {this.state.name}
+                  </Text>
+                </View>
                 {/* <Image style={styles.flag} source={CHINA}/>
                 <Image style={styles.flag} source={USA} />
                  <Image style={styles.flag} source={INDIA}/>*/}
@@ -112,7 +129,6 @@ export default class Pic extends Component {
             end={[1, 1]}
           >
             <View style={{ marginHorizontal: 0, paddingVertical: 230 }}>
-              
               <View style={{ position: "absolute", top: 110, paddingLeft: 10 }}>
                 <Text style={{ color: "white", fontSize: 18 }}>
                   {this.state.type} Student
@@ -171,7 +187,7 @@ export default class Pic extends Component {
                   </View>
                 </View>
               </View>
-              
+
               <View
                 style={{
                   position: "absolute",
@@ -181,7 +197,7 @@ export default class Pic extends Component {
                 }}
               >
                 <Text
-                  style={{ textAlign: "center", color: "gray", fontSize: 14 }}
+                  style={{ textAlign: "center", color: "#D6D5DA", fontSize: 16 }}
                 >
                   {this.state.bio}
                 </Text>
@@ -198,12 +214,7 @@ export default class Pic extends Component {
                   top: -100,
                 }}
               >
-                
-                <TouchableOpacity
-                  onPress={() => {
-                    
-                  }}
-                >
+                <TouchableOpacity onPress={() => {}}>
                   <View style={styles.profileImage}>
                     <Image
                       style={styles.image}
@@ -216,11 +227,18 @@ export default class Pic extends Component {
           </LinearGradient>
         </View>
       </View>
+      </ScrollView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container1: {
+    flex: 1,
+    backgroundColor: "black",
+    
+  },
   container: {
     flex: 1,
     backgroundColor: "#000000",

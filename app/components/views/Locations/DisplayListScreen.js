@@ -276,7 +276,7 @@ export class DisplayList extends Component {
           <View style={styles.categoryBarSection}>
             <Pressable onPress={() => { this.getLocations() }}>
               <View style={[styles.filterButtonSection, styles.allFilterButton]}>
-                <Text style={[styles.filterButtonImage]}> All </Text>
+                <Text style={{/*[styles.filterButtonImage]*/}}> All </Text>
               </View>
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Restaurant") }}>
@@ -320,7 +320,7 @@ export class DisplayList extends Component {
             </Pressable>
           </View>
         </View>
-        {/* <View style={styles.sortBy}> */}
+        <View style={{padding: 4}}>
         <DropDownPicker
           style={styles.sortBy}
           open={this.state.open}
@@ -331,7 +331,7 @@ export class DisplayList extends Component {
           setItems={this.setItems}
           dropDownContainerStyle={styles.sortByDropdown}
         />
-        {/* </View> */}
+         </View> 
         {/* Define list of places */}
         <View style={styles.locationList}>
           <FlatList
@@ -432,11 +432,15 @@ const styles = StyleSheet.create({
   /* Sort By Dropdown Styles */
   sortBy: {
     //flex: 1,
-    height: 20,
-    width: 107
+    alignContent:"center",
+    justifyContent:"center",
+    height: 40,
+    width: 107,
+    
   },
   sortByDropdown: {
     //flex: 1,
+    //height: 40,
     width: 107
   },
   /* Location Card Styles */

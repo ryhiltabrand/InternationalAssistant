@@ -3,6 +3,7 @@ import { Text, View, Button } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useNavigationState } from "@react-navigation/core";
+import filtercat from "../../shardedComponents/mapfilter";
 
 //console.log(useNavigationState)
 
@@ -11,6 +12,9 @@ const HomeScreen = () => {
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor:"#003057" }}>
       <Button onPress={() => console.log("hello")} title="you are home" />
     </View>
+    
+
+    
   );
 };
 
