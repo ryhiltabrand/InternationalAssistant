@@ -773,11 +773,13 @@ export default class MyEvents extends React.Component {
                     Country:null,
                     US:null,
                   })
+                  this.clearState()
+                  this.Recommend();
                 }
               }}
               style={styles.SumbitBtn}
             >
-              <Text style={styles.SumbitBtnText}>Sumbit</Text>
+              <Text style={styles.SumbitBtnText}>Submit</Text>
             </TouchableOpacity>
           </ScrollView>
         </Modal>
