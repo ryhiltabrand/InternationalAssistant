@@ -687,10 +687,12 @@ export default class MyEvents extends React.Component {
                       Month = d.getMonth() + 1
                     }
                     var Day = ''
-                    if (Number(d.getDate()) < 10) {
-                      Day = "0" + (d.getDate() + 1)
-                    } else {
-                      Day = d.getDate() + 1
+                    if (Number(d.getDate()) < 9) {
+                      Day = "0" + (d.getDate() + 1);
+                    } else if (Number(d.getDate()) == 9) {
+                      Day = (d.getDate() + 1);
+                    }else {
+                      Day = d.getDate();
                     }
                     var Year = d.getFullYear()
                     var Date = Year + "-" + Month + "-" + Day
