@@ -155,10 +155,7 @@ export class PostLocationScreen extends Component {
             style={styles.inputText}
             placeholder="Contributor"
             placeholderTextColor="black"
-            onChangeText={(val) => this.updateInputVal(val, 'location_contributor')}
-            //Auto fill
-            /*onChangeText={text => onChangeText(text)}
-            value={value}*//>
+            onChangeText={(val) => this.updateInputVal(val, 'location_contributor')}/>
         </View>
 
         <View style={styles.inputCommentView} >
