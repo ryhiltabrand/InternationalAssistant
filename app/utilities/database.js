@@ -11,7 +11,7 @@ var db = firebase.firestore();
 
 export class UsersCollection {
     #userFieldEntries = {
-        friendList: {}
+        FriendsList: {}
     };
 
     //Accessor and Mutator for 'users' collection

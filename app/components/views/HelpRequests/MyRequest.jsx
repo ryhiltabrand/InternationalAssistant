@@ -78,7 +78,7 @@ class MyRequest extends React.Component {
       this.MyRequests();
     });
   }
-  componentWillUnmount() {this._unsubscribe}
+  componentWillUnmount() {this._unsubscribe, this.MyRequestsSnap(), this.MyRequests()}
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };

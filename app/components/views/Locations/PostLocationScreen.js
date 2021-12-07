@@ -226,7 +226,7 @@ export class PostLocationScreen extends Component {
           dropDownContainerStyle={styles.sortByDropdown}
         />
 
-        <DropDownPicker
+        {/*<DropDownPicker
           open={this.state.openRegions}
           value={this.state.valueRegions}
           items={this.state.Regions}
@@ -236,7 +236,7 @@ export class PostLocationScreen extends Component {
           placeholder="Select the Culture it Supports"
           style={styles.ScrollView}
           dropDownContainerStyle={styles.sortByDropdown}
-        />
+        />*/}
 
         <this.CustomRatingBar />
 

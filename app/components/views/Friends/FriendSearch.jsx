@@ -206,9 +206,14 @@ export default class FriendsSearchScreen extends React.Component {
     var FriendsList = doc.data().FriendsList;
     //console.log(Uid, name, profpic, friend);
     let friend = { uid: Uid, name: name, pic: profpic, Friends: FriendsList };
-    this.setState({
+    if (Object.values(friend).length == 0){
+      this.clearState()
+    } else {
+      this.setState({
       data: [...this.state.data, friend],
     });
+    }
+    
   };
 
   Loc = async () => {
@@ -265,7 +270,7 @@ export default class FriendsSearchScreen extends React.Component {
       //console.log("query",Friendquery);
     } else {
       //console.log("invalid Search");
-      alert("none");
+      alert("Please Enter Search Criteria");
     }
 
     if (Object.keys(criteria).length >= 1) {
@@ -376,7 +381,7 @@ export default class FriendsSearchScreen extends React.Component {
           <View
             style={{
               padding: 5,
-              marginTop: 90,
+              marginTop: 190,
               flexDirection: "row",
               justifyContent: "center",
             }}
@@ -393,7 +398,12 @@ export default class FriendsSearchScreen extends React.Component {
                 color="#98C5EA"
                 title="Search"
                 onPress={() =>
-                  this.Loc().then(() => this.setModalVisible(true))
+                  this.Loc().then(() => {
+                    //if(this.state.data.length != 0){
+                      this.setModalVisible(true)
+                    //}
+                    
+                  })
                 }
               />
             </View>
