@@ -18,7 +18,6 @@ export default function AddQuestion(Request) {
             Pic: pic,
             Name: name,
             RequesterUID: Uid,
-            Answers: {},
             Question: Request
         })
   };

@@ -122,16 +122,14 @@ AllQuestions2 = async (
     const doc = await userref.get()
     var pic = doc.data().profilepicture;
     var name = doc.data().name;
-    var like = []
-    var dislike = []
+    var Rater = {}
     const adderref = firebase.firestore().collection("Questions and Answers").doc(id).collection("Answers")
     
     data = {
       Pic: pic,
       Name: name,
       Text: text,
-      Like: like,
-      Dislike: dislike,
+      Rater: Rater,
     }
 
     const write = await adderref.add(data)
