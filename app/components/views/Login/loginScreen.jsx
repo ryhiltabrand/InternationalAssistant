@@ -57,7 +57,7 @@ export class LoginScreen extends Component {
             if (user) {
               
               if(!user.emailVerified) {
-                alert("Your email has not been confirmed.")
+                //alert("Your email has not been confirmed.")
                 EventRegister.emit('auth', user.uid)
                 
               }else {

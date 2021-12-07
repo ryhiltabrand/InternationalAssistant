@@ -161,7 +161,7 @@ AllRequests2 = async (date,
   ruid,
   DocID) => {
 
-    console.log("f", ruid)
+    //console.log("f", ruid)
     const usersRef = firebase
     .firestore()
     .collection("users")
@@ -169,7 +169,7 @@ AllRequests2 = async (date,
     const doc = await usersRef.get();
     var name = doc.data().name;
     var pic = doc.data().profilepicture;
-    console.log(name)
+    //console.log(name)
     let Request = {
       Pic: pic,
       Name: name,
@@ -210,7 +210,7 @@ AllRequests2 = async (date,
                     Applicants: item.Applicants,
                     Campus: item.Campus,
                     Comments: item.Comments,
-                    date: item.Date,
+                    date: item.Date.toJSON(),
                     Description: item.Description,
                     Helpers: item.Helpers,
                     Language: item.Language,

@@ -133,8 +133,8 @@ export default function OthersQuestion({ route, navigation }) {
         Pic: pic,
         Text: text,
         ID: id,
-        Dislike: dislike,
-        Like: like,
+        //e: dislike,
+        //Like: like,
         Rater: Rater,
       }
       setanswers(size)
@@ -214,6 +214,7 @@ export default function OthersQuestion({ route, navigation }) {
 const styles = StyleSheet.create({
   body: {
     flexDirection: "column",
+    marginBottom: 60
   },
   image: {
     width: 60,
