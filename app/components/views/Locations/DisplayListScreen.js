@@ -46,7 +46,9 @@ export class DisplayList extends Component {
       commentContributor: '',
       commentContributorDescription: '',
       commentContributorRating: '',
-      commentContributorRegion: ''
+      commentContributorRegion: '',
+      locationDocID: [],
+      commentList: [],
     };
     this.setValue = this.setValue.bind(this);
   }
@@ -94,9 +96,12 @@ export class DisplayList extends Component {
       .then(snapshot => {
 
         snapshot.forEach((doc) => {
+          this.setState(prevState => ({
+            locationDocID: [...prevState.locationDocID, [doc.data().name, doc.id]]
+          }))
           locationList.push(doc.data());
         })
-
+        console.debug('locationDocID: ', this.state.locationDocID)
         this.onLocationsReceived(locationList);
       })
       .catch(error => console.log(error))
@@ -190,10 +195,11 @@ export class DisplayList extends Component {
     var description = this.state.locationList[item].description
     var rating = this.state.locationList[item].rating
     var country = this.state.locationList[item].user_country
+    var place = this.state.locationList[item].name
     // change when trying to figure out how to change bordercolor
     //      <Pressable onPress={() => { this.setSelectedLocation(item)}} styles={[styles.notSelectedLocationCard ,this.state.selectedLocationCard]}> */}
     return (
-      <Pressable onPress={() => { this.toggleComment(), this.setupCommentSection(contributor, description, rating, country) }}>
+      <Pressable onPress={() => { this.toggleComment(), this.setupCommentSection(contributor, description, rating, country, place) }}>
         {/* crazy looking multi-layer ternary operation for backgroundColor */}
         <View
           style={[
@@ -207,7 +213,7 @@ export class DisplayList extends Component {
           <View style={styles.locationCardTop}>
             <View style={styles.locationTitleSection}>
               <Text style={styles.locationTitle}>
-                {this.state.locationList[item].name}
+                {place}
               </Text>
             </View>
             <View style={styles.locatiotnRatingSection}>
@@ -241,13 +247,49 @@ export class DisplayList extends Component {
     }));
   };
 
-  setupCommentSection = (name, description, rating, country) => {
-    this.setState(() => ({
-      commentContributor: name,
-      commentContributorDescription: description,
-      commentContributorRating: rating,
-      commentContributorRegion: country
-    }));
+  getId(place) {
+    console.log('the inputed place is: ', place)
+
+    for (var i = 0; i < this.state.locationDocID.length; i++) {
+      if (this.state.locationDocID[i][0] == place) {
+        return this.state.locationDocID[i][1]
+      }
+    }
+    return null;
+  }
+
+  setupCommentSection = (name, description, rating, country, place) => {
+
+    var commentList = []
+
+    //get doc ID base off name of location
+
+    var id = this.getId(place)
+
+    console.debug('the id gotten is:', id)
+
+    //grab and store comments to a list
+    firebase.firestore().collection('Locations').doc(id).collection('comments')
+      .get()
+      .then(snapshot => {
+
+        snapshot.forEach((doc) => {
+          commentList.push(doc.data());
+        })
+        console.debug(commentList)
+
+        //set states needed for the section
+        this.setState(() => ({
+          commentContributor: name,
+          commentContributorDescription: description,
+          commentContributorRating: rating,
+          commentContributorRegion: country,
+          commentList: commentList
+        }));
+      })
+      .catch(error => console.log(error))
+
+
   }
 
   //Contributor Section
@@ -601,7 +643,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold'
   },
-  commentTopLeftSection: {
+  commentButtomLeftSection: {
     flex: 1
   },
   comment: {
