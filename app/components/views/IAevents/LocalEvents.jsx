@@ -77,7 +77,7 @@ export default class LocalEvents extends React.Component {
                         var campus = doc.get("Campus");
                         var description = doc.get("Description");
                         var EID = doc.id;
-                        var loc = doc.get("Location");
+                        
                         var name = doc.get("Name");
                         var country = doc.get("country");
                         var dislikes = doc.get("dislikes");
@@ -88,7 +88,7 @@ export default class LocalEvents extends React.Component {
                             Campus: campus,
                              Description: description,
                             EID: EID,
-                            Loc: loc,
+                            
                             Name: name,
                             Country: country,
                             Dislikes: dislikes,
