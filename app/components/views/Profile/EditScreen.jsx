@@ -16,13 +16,19 @@ import ProfileImagePicker from "./imageSelect";
 
 import {UpdateBio, UpdateLanguages} from "./../../shardedComponents/Profile/updateProfile"
 const languageItem = [
+  { id: "Arabic", name: "Arabic"},
+  { id: "Cantonese", name: "Cantonese"},
   { id: "English", name: "English" },
-  { id: "Mandarin", name: "Mandarin" },
-  { id: "Spanish", name: "Spanish" },
-  { id: "Italian", name: "Italian" },
-  { id: "Hindi", name: "Hindi" },
   { id: "French", name: "French" },
+  { id: "Gujarati", name: "Gujarati"},
+  { id: "Hindi", name: "Hindi" },
+  { id: "Italian", name: "Italian" },
   { id: "Japanese", name: "Japanese" },
+  { id: "Korean", name: "Korean"},
+  { id: "Mandarin", name: "Mandarin" },
+  { id: "Portuguese", name: "Portuguese"},
+  { id: "Russian", name: "Russian"},
+  { id: "Spanish", name: "Spanish" },
 ];
 export default function EditProfile({ route, navigation }) {
   const [Languages, setLanguages] = useState([]);
@@ -97,6 +103,7 @@ export default function EditProfile({ route, navigation }) {
               hideTags
               items={languageItem}
               uniqueKey="id"
+              fixedHeight={true}
               //ref={(component) => { multiSelect = component }}
               onSelectedItemsChange={setLanguages}
               selectedItems={Languages}

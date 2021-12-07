@@ -37,11 +37,9 @@ export default function IndividualRequest({ route, navigation }) {
     date,
   } = route.params;
 
- 
   useEffect(() => {
     setCorDate(new Date(date));
   },[]);
-
 
   var ApplicantsInfo = async () => {
     setData([]);

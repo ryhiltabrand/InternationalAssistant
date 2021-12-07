@@ -35,17 +35,22 @@ export default class FriendsSearchScreen extends React.Component {
       openRegionDropdown: false,
       country: null,
       Regions: [
-        { label: "Brazil", value: "Brazil" },
-        { label: "Canada", value: "Canada" },
+        { label: "Algeria", value: "Algeria"},
+        { label: "Brazil", value: "Brazil"},
+        { label: "Canada", value: "Canada"},
         { label: "China", value: "China" },
-        { label: "Finland", value: "Finland" },
-        { label: "France", value: "France" },
+        { label: "Egypt", value: "Egypt"},
+        { label: "France", value: "France"},
         { label: "India", value: "India" },
+        { label: "Italy", value: "Italy"},
         { label: "Japan", value: "Japan" },
-        { label: "Mexico", value: "Mexico" },
-        { label: "Saudi Arabia", value: "Saudi Arabia" },
-        { label: "South Korea", value: "South Korea" },
-        { label: "Spain", value: "Spain" },
+        { label: "Mexico", value: "Mexico"},
+        { label: "Portugal", value: "Portugal"},
+        { label: "Russia", value: "Russia"},
+        { label: "South Korea", value: "South Korea"},
+        { label: "Spain", value: "Spain"},   
+        { label: "United Kingdom", value: "United Kingdom" },
+        { label: "United States", value: "United States" },
         { label: "Any", value: null },
       ],
 
@@ -61,14 +66,17 @@ export default class FriendsSearchScreen extends React.Component {
       valueLanguages: null,
       Languages: [
         { label: "Arabic", value: "Arabic" },
-        { label: "Chinese", value: "Chinese" },
+        { label: "Cantonese", value: "Cantonese" },
         { label: "English", value: "English" },
         { label: "French", value: "French" },
-        { label: "Finish", value: "Finish" },
+        { label: "Gujarati", value: "Gujarati" },
         { label: "Hindi", value: "Hindi" },
+        { label: "Italian", value: "Italian" },
         { label: "Japanese", value: "Japanese" },
         { label: "Korean", value: "Korean" },
+        { label: "Mandarin", value: "Mandarin" },
         { label: "Portuguese", value: "Portuguese" },
+        { label: "Russian", value: "Russian" },
         { label: "Spanish", value: "Spanish" },
         { label: "Any", value: null },
       ],
@@ -76,7 +84,14 @@ export default class FriendsSearchScreen extends React.Component {
       openCampusDropdown: false,
       school: null,
       Campuses: [
-        { label: "ODU", value: "Old Dominion University" },
+        { label: "Virginia Tech", value: "Virginia Tech" },
+        { label: "Old Dominion University", value: "Old Dominion University" },
+        { label: "George Mason", value: "George Mason" },
+        {
+          label: "Norfolk State University",
+          value: "Norfolk State University",
+        },
+        { label: "William and Mary", value: "William and Mary" },
         { label: "Any", value: null },
       ],
     };
@@ -89,10 +104,12 @@ export default class FriendsSearchScreen extends React.Component {
     this.clearState();
     this._unsubscribe = this.props.navigation.addListener("focus", () => {
       this.clearState();
-      this.setModalVisible(false)
+      this.setModalVisible(false);
     });
   }
-  componentWillUnmount() {this._unsubscribe}
+  componentWillUnmount() {
+    this._unsubscribe;
+  }
 
   setOpenRegion = (open) => {
     console.debug("opens dropdown");
@@ -281,7 +298,9 @@ export default class FriendsSearchScreen extends React.Component {
     DropDownPicker.setTheme("DARK");
     const { name } = this.state;
     return (
-      <View style={{ flexDirection: "column", flex: 1, backgroundColor: "#003057"}}>
+      <View
+        style={{ flexDirection: "column", flex: 1, backgroundColor: "#003057" }}
+      >
         <View style={{ flex: 5 }}>
           <SearchBar
             placeholder="Search by Name..."
@@ -290,7 +309,7 @@ export default class FriendsSearchScreen extends React.Component {
             value={name}
           />
           <View>
-            <Text style={{color:"white", fontSize: 18}}> Region: </Text>
+            <Text style={{ color: "white", fontSize: 18 }}> Region: </Text>
             <DropDownPicker
               open={openRegionDropdown}
               value={country}
@@ -305,7 +324,7 @@ export default class FriendsSearchScreen extends React.Component {
             />
           </View>
           <View>
-            <Text style={{color:"white", fontSize: 18}}> Language: </Text>
+            <Text style={{ color: "white", fontSize: 18 }}> Language: </Text>
             <DropDownPicker
               open={openLanguagesDropdown}
               value={valueLanguages}
@@ -320,7 +339,10 @@ export default class FriendsSearchScreen extends React.Component {
             />
           </View>
           <View>
-            <Text style={{color:"white", fontSize: 18}}> Student Type: </Text>
+            <Text style={{ color: "white", fontSize: 18 }}>
+              {" "}
+              Student Type:{" "}
+            </Text>
             <DropDownPicker
               open={openTypeDropdown}
               value={native}
@@ -336,7 +358,7 @@ export default class FriendsSearchScreen extends React.Component {
           </View>
 
           <View>
-            <Text style={{color:"white", fontSize: 18}}> Campus: </Text>
+            <Text style={{ color: "white", fontSize: 18 }}> Campus: </Text>
             <DropDownPicker
               open={openCampusDropdown}
               value={school}
@@ -360,7 +382,11 @@ export default class FriendsSearchScreen extends React.Component {
             }}
           >
             <View style={{ marginRight: 2 }}>
-              <Button color="#98C5EA" title="Clear" onPress={() => this.clearState()} />
+              <Button
+                color="#98C5EA"
+                title="Clear"
+                onPress={() => this.clearState()}
+              />
             </View>
             <View style={{ marginLeft: 2 }}>
               <Button
@@ -385,13 +411,11 @@ export default class FriendsSearchScreen extends React.Component {
           <TouchableOpacity
             style={[styles.button, styles.buttonClose]}
             onPress={() => {
-              
               this.setModalVisible(!modalVisible);
               this.clearState();
             }}
           >
             <Text>Back to Search</Text>
-            
           </TouchableOpacity>
           <FlatList
             style={styles.container}
@@ -404,28 +428,28 @@ export default class FriendsSearchScreen extends React.Component {
               const UID = firebase.auth().currentUser.uid;
               return (
                 <>
-                
-                  
-                    <TouchableOpacity onPress={() => {
+                  <TouchableOpacity
+                    onPress={() => {
                       this.props.navigation.navigate("Profile", {
-                        UID: item.uid
+                        UID: item.uid,
                       });
-                    }}>
-                      <View style={styles.boxA}>
-                        <View style={{ flexDirection: "row" }}>
-                          <Image
-                            style={styles.image}
-                            source={{ uri: item.pic }}
-                          />
-                          <Text style={styles.name}>{item.name}</Text>
-                        </View>
-                        <View
-                    style={{
-                      paddingLeft: 280,
-                      paddingTop: 13,
-                      position: "absolute",
                     }}
                   >
+                    <View style={styles.boxA}>
+                      <View style={{ flexDirection: "row" }}>
+                        <Image
+                          style={styles.image}
+                          source={{ uri: item.pic }}
+                        />
+                        <Text style={styles.name}>{item.name}</Text>
+                      </View>
+                      <View
+                        style={{
+                          paddingLeft: 280,
+                          paddingTop: 13,
+                          position: "absolute",
+                        }}
+                      >
                         <TouchableOpacity
                           onPress={() => {
                             updatefriends(item.uid);
@@ -440,12 +464,19 @@ export default class FriendsSearchScreen extends React.Component {
                             backgroundColor: "teal",
                           }}
                         >
-                      <Text style={{fontSize: 18, paddingLeft: 6, paddingRight: 6}}>Add</Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              paddingLeft: 6,
+                              paddingRight: 6,
+                            }}
+                          >
+                            Add
+                          </Text>
                         </TouchableOpacity>
-                        </View>
                       </View>
-                    </TouchableOpacity>
-                  
+                    </View>
+                  </TouchableOpacity>
                 </>
               );
             }}
