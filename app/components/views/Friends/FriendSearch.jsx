@@ -438,7 +438,7 @@ export default class FriendsSearchScreen extends React.Component {
               const UID = firebase.auth().currentUser.uid;
               return (
                 <>
-                  <TouchableOpacity
+                  {item.uid != UID && <TouchableOpacity
                     onPress={() => {
                       this.props.navigation.navigate("Profile", {
                         UID: item.uid,
@@ -486,7 +486,7 @@ export default class FriendsSearchScreen extends React.Component {
                         </TouchableOpacity>
                       </View>
                     </View>
-                  </TouchableOpacity>
+                  </TouchableOpacity>}
                 </>
               );
             }}
