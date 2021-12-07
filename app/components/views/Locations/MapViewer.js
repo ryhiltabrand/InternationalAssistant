@@ -575,7 +575,7 @@ render() {
           userLocationUpdateInterval ={5000}
             pitchEnabled = {false}
             moveOnMarkerPress = {true}
-            mapType={"default"}
+            //mapType={"default"}
             style={styles.map}
             initialRegion={{
               latitude: 36.88639,

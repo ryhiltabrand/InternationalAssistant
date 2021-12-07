@@ -49,7 +49,7 @@ class AllRequest extends React.Component {
       this.AllRequests();
     });
   }
-  componentWillUnmount() {this._unsubscribe}
+  componentWillUnmount() {this._unsubscribe, this.AllRequests}
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };
@@ -210,7 +210,7 @@ AllRequests2 = async (date,
                     Applicants: item.Applicants,
                     Campus: item.Campus,
                     Comments: item.Comments,
-                    Date: item.Date,
+                    date: item.Date,
                     Description: item.Description,
                     Helpers: item.Helpers,
                     Language: item.Language,

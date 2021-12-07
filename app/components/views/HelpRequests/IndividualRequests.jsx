@@ -9,18 +9,20 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import React, { TouchableOpacity, useState } from "react";
+import React, { TouchableOpacity, useState, useEffect } from "react";
 import {
   AcceptApplicant,
   DenyApplicant,
 } from "./../../shardedComponents/Help/updateHelper";
 import firebase from "firebase";
 import AddChat from "../../shardedComponents/Help/createMessage.js";
+
 export default function IndividualRequest({ route, navigation }) {
   /* 2. Get the param */
   const [modalVisible, setModalVisible] = useState(false);
   const [Data, setData] = useState([]);
   const [current, setCurrent] = useState(null);
+  const [CorDate, setCorDate] = useState(new Date());
   const {
     Name,
     Pic,
@@ -32,8 +34,14 @@ export default function IndividualRequest({ route, navigation }) {
     HelpersUID,
     Language,
     Doc,
-    Date,
+    date,
   } = route.params;
+
+ 
+  useEffect(() => {
+    setCorDate(new Date(date));
+  },[]);
+
 
   var ApplicantsInfo = async () => {
     setData([]);
@@ -80,13 +88,14 @@ export default function IndividualRequest({ route, navigation }) {
           <Image style={styles.image} source={{ uri: Pic }} />
           <Text style={styles.name}>{Name}</Text>
           <Text style={styles.time}>
-            {Date.getMonth() +
+            { 
+            CorDate.getMonth() +
               "-" +
-              Date.getDate() +
+              CorDate.getDate() +
               " @ " +
-              Date.getHours() +
+              CorDate.getHours() +
               ":" +
-              Date.getMinutes()}
+            CorDate.getMinutes()}
           </Text>
         </View>
 

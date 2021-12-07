@@ -128,7 +128,7 @@ export class PostLocationScreen extends Component {
   }
 
   render() {
-    const [value, onChangeText] = React.useState(this.state.location_contributor);
+    //const [value, onChangeText] = React.useState(this.state.location_contributor);
     return (
       <ScrollView style={styles.container}>
 
