@@ -252,7 +252,8 @@ const styles = StyleSheet.create({
   body: {
     flexDirection: "column",
     backgroundColor: "#003057",
-    flex: 1
+    flex: 1,
+    marginBottom: 50
   },
   SumbitBtn: {
     width: "80%",

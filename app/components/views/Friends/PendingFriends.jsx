@@ -66,7 +66,7 @@ export default function PendingFriends({ route, navigation }) {
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
         <Button
-          title="Back to all requests"
+          title="Back"
           onPress={() => navigation.goBack()}
         />
       </View>

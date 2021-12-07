@@ -77,7 +77,7 @@ class MyQuestion extends React.Component {
     var name = doc.data().name;
     var pic = doc.data().profilepicture;
     var DocID;
-    RequestsQuery = await firebase
+    const RequestsQuery = await firebase
       .firestore()
       .collection("Questions and Answers")
       .where("RequesterUID", "==", firebase.auth().currentUser.uid)
@@ -227,7 +227,8 @@ const styles = StyleSheet.create({
   body: {
     flexDirection: "column",
     backgroundColor: "#003057",
-    flex: 1
+    flex: 1,
+    marginBottom: 50
   },
   box: {
     padding: 13,
