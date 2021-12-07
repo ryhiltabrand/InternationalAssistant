@@ -24,6 +24,7 @@ export default function OthersQuestion({ route, navigation }) {
     puller();
   },[]);
 
+
   async function puller() {
     setreplys([])
     const replyref = await firebase

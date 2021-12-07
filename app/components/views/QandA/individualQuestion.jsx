@@ -95,6 +95,29 @@ export default function Questionview({ route, navigation }) {
                 <Text style={styles.request}>{item.Text}</Text>
               </View>
               
+              {/* <View
+          style={{
+            flex: 1,
+            marginRight: 3,
+            justifyContent: "center",
+            alignContent: "center",
+            marginTop: 3
+          }}
+        >
+          <Pressable style={styles.button}>
+            <Text style={styles.text}>Like: {item.Like}</Text>
+          </Pressable>
+        </View>
+        <View style={{ flex: 1,
+            marginRight: 3,
+            marginTop: 3,
+            justifyContent: "center",
+            alignContent: "center", }}>
+          <Pressable style={styles.button}>
+            <Text style={styles.text}>DisLike: {item.Dislike}</Text>
+          </Pressable>
+        </View> */}
+
             </View>
           );
         }}
@@ -105,6 +128,26 @@ export default function Questionview({ route, navigation }) {
 const styles = StyleSheet.create({
   body: {
     flexDirection: "column",
+  },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: "#008B8B",
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "black",
+    alignContent: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center"
   },
   image: {
     width: 60,

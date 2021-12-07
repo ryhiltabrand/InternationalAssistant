@@ -122,8 +122,8 @@ AllQuestions2 = async (
     const doc = await userref.get()
     var pic = doc.data().profilepicture;
     var name = doc.data().name;
-    var like = 0
-    var dislike = 0
+    var like = []
+    var dislike = []
     const adderref = firebase.firestore().collection("Questions and Answers").doc(id).collection("Answers")
     
     data = {
@@ -131,7 +131,7 @@ AllQuestions2 = async (
       Name: name,
       Text: text,
       Like: like,
-      Dislike: dislike
+      Dislike: dislike,
     }
 
     const write = await adderref.add(data)
@@ -172,6 +172,7 @@ AllQuestions2 = async (
                   <View style={styles.secondLine}>
                     <Text style={styles.request}>{item.Question}</Text>
                   </View>
+
                   <View style >
                       <Button title="Reply" onPress={()=> this.setState({
                         modalVisible: true,
