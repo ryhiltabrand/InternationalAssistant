@@ -43,7 +43,6 @@ export class PostLocationScreen extends Component {
         { label: 'Worship', value: 'Worship' }
       ]
     };
-
     this.setValue = this.setValue.bind(this);
   }
 
@@ -56,7 +55,7 @@ export class PostLocationScreen extends Component {
     const name = doc.data().name;
     const country = doc.data().country;
     this.setState({
-      //location_contributor: name,
+      location_contributor: name,
       user_country: country
     });
   }
@@ -89,6 +88,7 @@ export class PostLocationScreen extends Component {
         uid: firebase.auth().currentUser.uid,
         user_country: this.state.user_country
       })
+      this.props.navigation.goBack();
   }
 
   CustomRatingBar = () => {
@@ -128,9 +128,7 @@ export class PostLocationScreen extends Component {
       </View>
     )
   }
-  //const [value, onChangeText] = React.useState(this.state.location_contributor);
   render() {
-   
     return (
       <ScrollView style={styles.container}>
 
