@@ -26,16 +26,25 @@ export default class LocalEvents extends React.Component {
     
     constructor(props) {
         super(props);
+        this._unsubscribe;
         this.state = {
             eventsDatabase: [],
         };
     }
     componentDidMount() {
-        this.LocalEvents();
+        this.clearState();
+        this._unsubscribe = this.props.navigation.addListener("focus", () => {
+            this.clearState();
+            this.LocalEvents();
+          });
+        
     }
-    clearState = () =>{
-    }
-    componentWillUnmount() { }
+    clearState = () => {
+        this.setState({
+            eventsDatabase: [],
+        });
+      };
+    componentWillUnmount() {this._unsubscribe }
 
     LocalEvents = async () =>{
         const userRef = firebase.firestore().collection("users")
@@ -100,7 +109,10 @@ export default class LocalEvents extends React.Component {
     
     render() {
         return (
-            <View style={styles.body}>
+            <View style={{
+                backgroundColor: "#003057",
+                flex: 1
+              }}>
                 <FlatList
                     style={styles.scrollView}
                     enableEmptySections={true}

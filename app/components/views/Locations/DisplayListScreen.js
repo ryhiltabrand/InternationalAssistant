@@ -168,10 +168,10 @@ export class DisplayList extends Component {
   //New plan pass the select items from the display to the mapviewer
   //Set's the name, rating, and address of the location
   SetMarker(item) {
-    let Viewer = new MapViewer();
 
-    //Moves data to the map viewer state
-    Viewer.state.markerDescription = {
+    //--------------------------------------
+    //Debug what's being passed
+    var tempMarker = {
       name: item.name,
       address: item.address,
       contributor: item.contributor,
@@ -179,14 +179,16 @@ export class DisplayList extends Component {
       rating: item.rating
     };
 
-    //Converts the address to coordinates
-    Viewer.AddresstoCoordinates();
+    console.log("tempMarker: ", tempMarker);
+    //--------------------------------------
 
-    //PRints the item from list saved in mapview state
-    Viewer.PrintItem();
-
-    //Return the view back to the updated map
-    this.props.navigation.navigate('MapViewer');
+    this.props.navigation.navigate('MapViewer', {
+      name: item.name,
+      address: item.address,
+      contributor: item.contributor,
+      category: item.category,
+      rating: item.rating
+    });
   }
 
   LocationCard = ({ item }) => {
@@ -386,7 +388,7 @@ export class DisplayList extends Component {
           <View style={styles.categoryBarSection}>
             <Pressable onPress={() => { this.getLocations() }}>
               <View style={[styles.filterButtonSection, styles.allFilterButton]}>
-                <Text style={[styles.filterButtonImage]}> All </Text>
+                <Text style={{/*[styles.filterButtonImage]*/}}> All </Text>
               </View>
             </Pressable>
             <Pressable onPress={() => { this.matchLocations("category", "Restaurant") }}>
@@ -430,7 +432,7 @@ export class DisplayList extends Component {
             </Pressable>
           </View>
         </View>
-        {/* <View style={styles.sortBy}> */}
+        <View style={{padding: 4}}>
         <DropDownPicker
           style={styles.sortBy}
           open={this.state.open}
@@ -441,7 +443,7 @@ export class DisplayList extends Component {
           setItems={this.setItems}
           dropDownContainerStyle={styles.sortByDropdown}
         />
-        {/* </View> */}
+         </View> 
         {/* Define list of places */}
         <View style={styles.locationList}>
           <FlatList
@@ -573,11 +575,15 @@ const styles = StyleSheet.create({
   /* Sort By Dropdown Styles */
   sortBy: {
     //flex: 1,
-    height: 20,
-    width: 107
+    alignContent:"center",
+    justifyContent:"center",
+    height: 40,
+    width: 107,
+    
   },
   sortByDropdown: {
     //flex: 1,
+    //height: 40,
     width: 107
   },
   /* Location Card Styles */

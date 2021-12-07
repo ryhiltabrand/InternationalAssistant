@@ -12,6 +12,8 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import firebase from "firebase";
 import { LinearGradient } from "expo-linear-gradient";
 import Pic from "./picArea"
+import EditProfile from "./EditScreen"
+import { createStackNavigator } from "@react-navigation/stack";
 
 class ProfileScreen extends Component {
   constructor(props) {
@@ -57,6 +59,15 @@ class ProfileScreen extends Component {
   }
 }
 
+const Nstack = createStackNavigator();
+const NavStack = () => {
+  return (
+    <Nstack.Navigator initialRouteName="PROFSCREEN">
+        <Nstack.Screen name="PROFSCREEN" component={Pic} options={{ headerShown: false}} />
+        <Nstack.Screen name="EditProfileScreen" component={EditProfile} options={{ headerShown: false}} />
+    </Nstack.Navigator>
+  );
+}
 
 const PStack = createNativeStackNavigator();
 const ProfileStackScreen = ({ navigation }) => (
@@ -74,7 +85,7 @@ const ProfileStackScreen = ({ navigation }) => (
   >
     <PStack.Screen
       name="ProfileScreen"
-      component={ProfileScreen}
+      component={NavStack}
       options={{
         title: "Profile",
         headerTitleAlign: "center",

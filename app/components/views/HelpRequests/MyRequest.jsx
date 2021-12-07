@@ -24,6 +24,7 @@ LogBox.ignoreLogs(["Setting a timer"]);
 class MyRequest extends React.Component {
   constructor(props) {
     super(props);
+    this._unsubscribe;
     this.state = {
       modalVisible: false,
       data: [],
@@ -52,9 +53,13 @@ class MyRequest extends React.Component {
   }
 
   componentDidMount() {
-    this.MyRequests();
+    this.clearState();
+    this._unsubscribe = this.props.navigation.addListener("focus", () => {
+      this.clearState();
+      this.MyRequests();
+    });
   }
-  componentWillUnmount() {}
+  componentWillUnmount() {this._unsubscribe}
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };
@@ -455,11 +460,13 @@ class MyRequest extends React.Component {
                   date
                 );
                 this.setModalVisible(!modalVisible);
+                this.clearState()
+                this.MyRequests()
               }
             }}
             style={styles.SumbitBtn}
           >
-            <Text style={styles.SumbitBtnText}>Sumbit</Text>
+            <Text style={styles.SumbitBtnText}>Submit</Text>
           </TouchableOpacity>
         </Modal>
       </View>

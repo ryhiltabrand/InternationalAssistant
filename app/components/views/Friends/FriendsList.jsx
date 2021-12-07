@@ -93,7 +93,17 @@ class FriendsListScreen extends React.Component {
   render() {
     return (
       <View style={styles.body}>
+        <View style={{ width: 150, marginTop:10, justifyContent:'center',alignSelf:"center" }}>
         <TouchableOpacity
+          style={{backgroundColor:'white',
+          //alignItems: "flex-end",
+          justifyContent: "center",
+          paddingVertical: 13,
+          //paddingHorizontal: 32,
+          borderRadius: 4,
+          borderColor: "#FFFFFF",
+          elevation: 3,
+          backgroundColor: "#404A5A",}}
           onPress={() => {
             this.clearState();
             this.Loc();
@@ -103,15 +113,15 @@ class FriendsListScreen extends React.Component {
             });
           }}
         >
-          <Text>Pending Friends</Text>
+          <Text style={{fontSize: 18, paddingLeft: 6, paddingRight: 6, color: 'white', textAlign:"center"}}>Pending Friends</Text>
         </TouchableOpacity>
-
+        </View>
         <FlatList
           style={styles.container}
           enableEmptySections={true}
           data={this.state.data}
           keyExtractor={(item) => {
-            return item.name;
+            return item.uid;
           }}
           renderItem={({ item }) => {
             return (
@@ -147,7 +157,7 @@ class FriendsListScreen extends React.Component {
                         deletefriends(item.uid);
                       }}
                     >
-                      <Text style={{fontSize: 18, paddingLeft: 6, paddingRight: 6}}>Remove</Text>
+                      <Text style={{fontSize: 18, paddingLeft: 6, paddingRight: 6, color: 'white'}}>Remove</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
