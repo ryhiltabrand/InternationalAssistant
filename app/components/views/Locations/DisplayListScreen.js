@@ -75,8 +75,8 @@ export class DisplayList extends Component {
 
   // set location list property to wat is defined
   onLocationsReceived = (locationList) => {
-    console.log("The keys mason ", Object.keys(locationList))
-    console.log("What is in locationList ", locationList)
+    //console.log("The keys mason ", Object.keys(locationList))
+    //console.log("What is in locationList ", locationList)
 
     this.setState(prevState => ({
       locationList: prevState.locationList = locationList
@@ -288,32 +288,79 @@ export class DisplayList extends Component {
         }));
       })
       .catch(error => console.log(error))
+  }
 
-
+  FlatListItemSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 2,
+          width: "50%",
+          backgroundColor: "#d9d9d9ff",
+          alignSelf: 'center',
+        }}
+      />
+    );
   }
 
   //Contributor Section
   contributorSection = () => {
     var contributor = this.state.commentContributor
-    var description = this.state.commentDescription
+    var description = this.state.commentContributorDescription
     var rating = this.state.commentContributorRating
     var country = this.state.commentContributorRegion
 
 
     return (
       <View style={styles.contributorSection}>
+        <View style={styles.contributorLeftBase}>
+          <View styles={styles.contributorTopLeftSection}>
+            <View style={styles.contributorUser}>
+              <Text style={styles.contributorUserText}> {contributor} </Text>
+            </View>
+            <View style={styles.contributorButtomLeftSection}>
+              <Text style={styles.contributor}> {description} </Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.contributorMiddleBase}>
+          <View style={styles.contributorRegionSection}>
+            <Image source={regionFlag(country)} style={styles.contributorRegion} />
+          </View>
+        </View>
+        <View style={styles.contributorRightBase}>
+          <View style={styles.contributorRatingSection}>
+            <ImageBackground source={require('./../../../assets/locations/locationCard/star.png')} style={styles.contributorRatingStar}>
+              <Text style={styles.contributorRatingText}> {rating} </Text>
+            </ImageBackground>
+          </View>
+        </View>
+      </View>
+    )
+  }
+
+  //List of Comments Template
+  commentSection = ({ item, index, separator }) => {
+    var contributor = this.state.commentList[item].name
+    var description = this.state.commentList[item].comment
+    var rating = this.state.commentList[item].rating
+    var country = this.state.commentList[item].user_country
+
+    return (
+      
+      <View style={styles.commentCard}>
         <View style={styles.commentLeftBase}>
           <View styles={styles.commentTopLeftSection}>
             <View style={styles.commentUser}>
               <Text style={styles.commentUserText}> {contributor} </Text>
             </View>
-            <View styles={styles.commentButtomLeftSection}>
+            <View style={styles.commentButtomLeftSection}>
               <Text style={styles.comment}> {description} </Text>
             </View>
           </View>
         </View>
         <View style={styles.commentMiddleBase}>
-          <View styles={styles.commentRegionSection}>
+          <View style={styles.commentRegionSection}>
             <Image source={regionFlag(country)} style={styles.commentRegion} />
           </View>
         </View>
@@ -327,13 +374,6 @@ export class DisplayList extends Component {
       </View>
     )
   }
-
-  //List of Comments Template
-  commentSection = () => (
-    <View style={styles.commentCard}>
-      <Text> Body of the future </Text>
-    </View>
-  )
 
   render() {
     //console.log(this.state.locationList[0].name)
@@ -419,7 +459,7 @@ export class DisplayList extends Component {
             bottomSheerColor="#FFFFFF"
             ref="BottomSheet"
             initialPosition={'35'} //200, 300
-            snapPoints={['0%', '35', '100%']}
+            snapPoints={['0%', '89%']}
             isBackDrop={false}
             isBackDropDismissByPress={true}
             isRoundBorderWithTipHeader={true}
@@ -431,7 +471,16 @@ export class DisplayList extends Component {
             // bodyStyle={{backgroundColor:"red",flex:1}}
             header={this.contributorSection()}
 
-            body={this.commentSection()}
+            body={
+              <FlatList
+                data={Object.keys(this.state.commentList)}
+                renderItem={this.commentSection}
+                ItemSeparatorComponent = { this.FlatListItemSeparator }
+                keyExtractor={(item) => this.state.commentList[item].name}
+                highlighted={true}
+              // fadingEdgeLength={15}
+              />
+            }
           />
         ) : null}
 
@@ -605,14 +654,77 @@ const styles = StyleSheet.create({
   },
   buttomDrawerHeaderArea: {
     height: 100,
+    borderBottomWidth: 2,
+    borderColor: 'black'
   },
   /* Contributor Section */
   contributorSection: {
     flex: 1,
     flexDirection: 'row',
   },
-  // contributorName: {},
-  // contributorDescription: {},
+  contributorList: {
+    flex: 10,
+    //padding: 2,
+    //marginTop: 5,
+  },
+  contributorCard: {
+    flex: 10,
+    padding: 10,
+    // marginVertical: 8,
+    // marginHorizontal: 10,
+    // borderWidth: 2,
+    height: 75,
+  },
+  contributorLeftBase: {
+    flex: 3,
+    flexDirection: 'column',
+    padding: 5,
+  },
+  contributorTopLeftSection: {
+    flex: 1,
+  },
+  contributorUser: {
+    flex: 1,
+  },
+  contributorUserText: {
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  contributorButtomLeftSection: {
+    flex: 1
+  },
+  contributor: {
+    flex: 1,
+    position: 'absolute',
+    marginTop: 25,
+  },
+  contributorMiddleBase: {
+    flex: 1
+  },
+  contributorRegionSection: {
+    flex: 1,
+  },
+  contributorRegion: {
+    resizeMode: 'contain',
+    width: 35,
+    height: 35,
+  },
+  contributorRightBase: {
+    flex: 1,
+  },
+  contributorRatingSection: {
+
+  },
+  contributorRatingStar: {
+    justifyContent: 'center',
+    width: 45,
+    height: 45,
+  },
+  contributorRatingText: {
+    textAlign: 'center',
+    fontSize: 15,
+    marginBottom: 5
+  },
 
   /* Comment List Styles */
   commentList: {
@@ -621,11 +733,11 @@ const styles = StyleSheet.create({
     //marginTop: 5,
   },
   commentCard: {
-    flex: 10,
+    flex: 1,
+    flexDirection: 'row',
     padding: 10,
     // marginVertical: 8,
     // marginHorizontal: 10,
-    // borderWidth: 2,
     height: 75,
   },
   commentLeftBase: {
@@ -640,7 +752,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   commentUserText: {
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: 'bold'
   },
   commentButtomLeftSection: {
