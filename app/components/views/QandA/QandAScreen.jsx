@@ -47,7 +47,7 @@ const HelpStackScreen = ({ navigation }) => (
     <HelpStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: "#ADD8E6",
+          backgroundColor: "#202898",
         },
         headerShown:true,
         headerTintColor: "#000000",
@@ -62,12 +62,13 @@ const HelpStackScreen = ({ navigation }) => (
         options={{
           title: "Q&A",
           headerTitleAlign: "center",
+        headerTitleStyle: {color:"white"},
           headerLeft: () => (
             <FontAwesome5.Button
               name="bars"
               size={25}
-              color="#000000"
-              backgroundColor="#ADD8E6"
+              color="white"
+            backgroundColor="#202898"
               onPress={() => navigation.openDrawer()}
             ></FontAwesome5.Button>
           ),

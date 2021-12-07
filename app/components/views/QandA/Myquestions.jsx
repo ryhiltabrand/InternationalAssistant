@@ -25,6 +25,7 @@ LogBox.ignoreLogs(["Setting a timer"]);
 class MyQuestion extends React.Component {
   constructor(props) {
     super(props);
+    this._unsubscribe;
     this.state = {
       modalVisible: false,
       data: [],
@@ -33,9 +34,14 @@ class MyQuestion extends React.Component {
   }
   
   componentDidMount() {
-    this.MyRequests();
+      this.clearState();
+      //this.Loc();
+      this._unsubscribe = this.props.navigation.addListener("focus", () => {
+      this.clearState();
+      this.MyRequests();
+    });
   }
-  componentWillUnmount() {}
+  componentWillUnmount() {this._unsubscribe;}
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };
@@ -185,6 +191,8 @@ class MyQuestion extends React.Component {
 
                 );
                 this.setModalVisible(!modalVisible);
+                this.clearState()
+                this.MyRequests()
               }
             }}
             style={styles.SumbitBtn}
@@ -216,7 +224,11 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 15,
   },
-
+  body: {
+    flexDirection: "column",
+    backgroundColor: "#003057",
+    flex: 1
+  },
   box: {
     padding: 13,
     marginTop: 5,

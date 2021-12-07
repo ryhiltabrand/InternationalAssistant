@@ -18,13 +18,12 @@ import firebase from "firebase";
 import AddAnswer from "../../shardedComponents/QandA/postQuestion";
 
 
-
-
 LogBox.ignoreLogs(["Setting a timer"]);
 
 class AllQuestion extends React.Component {
   constructor(props) {
     super(props);
+    this._unsubscribe;
     this.state = {
       modalVisible: false,
       data: [],
@@ -36,9 +35,15 @@ class AllQuestion extends React.Component {
     };
   }
   componentDidMount() {
+    
+    this.clearState();
+    //this.Loc();
+    this._unsubscribe = this.props.navigation.addListener("focus", () => {
+    this.clearState();
     this.AllQuestions();
+  });
   }
-  componentWillUnmount() {}
+  componentWillUnmount() {this._unsubscribe;}
   setModalVisible = (visible) => {
     this.setState({ modalVisible: visible });
   };
@@ -243,6 +248,11 @@ const styles = StyleSheet.create({
   image: {
     width: 60,
     height: 60,
+  },
+  body: {
+    flexDirection: "column",
+    backgroundColor: "#003057",
+    flex: 1
   },
   SumbitBtn: {
     width: "80%",

@@ -36,8 +36,9 @@ export default function Questionview({ route, navigation }) {
       var pic = doc.data().Pic
       var text = doc.data().Text
       var id = doc.id
-      var like = doc.data().Like
-      var dislike = doc.data().Dislike
+      //var Rater = doc
+      //var like = doc.data().Like
+      //var dislike = doc.data().Dislike
       var size = replyref.size
       
       let reply = {
@@ -45,8 +46,8 @@ export default function Questionview({ route, navigation }) {
         Pic: pic,
         Text: text,
         ID: id,
-        Dislike: dislike,
-        Like: like,
+        //Dislike: dislike,
+        //Like: like,
       }
       setanswers(size)
       setreplys((replys) => [...replys, reply]);
