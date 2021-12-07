@@ -17,12 +17,13 @@ import { FontAwesome5, AntDesign } from "@expo/vector-icons";
 
 import * as Location from "expo-location";
 
-import BottomSheet from 'reanimated-bottom-sheet';
+import BottomSheet from 'react-native-bottomsheet-reanimated';
 import { SearchBar } from 'react-native-elements';
 
 import firebase from "../../../utilities/firebase";
 import { regionFlag } from "../../../utilities/regionFlagFinder";
 import { TouchableOpacity, FlatList, RectButton } from "react-native-gesture-handler"
+import SegmentedControl from "rn-segmented-control";
 
 export class MapViewer extends Component {
 
@@ -31,20 +32,13 @@ export class MapViewer extends Component {
   }
 
   state = {
+    selectedIndex: 0,
     //Flatlist 
     locationList: [],
     selectedLocationCard: null,
     searchQuery: null,
     //------------------
     location: null,
-    loadingMap: false,
-    errorMessage: null,
-    positionState: {
-      latitude: 0,
-      longitude: 0,
-      latitudeDelta: 0,
-      longitudeDelta: 0,
-    },
     markerPosition: {
       latitude: 0,
       longitude: 0,
@@ -70,17 +64,40 @@ export class MapViewer extends Component {
     }]
   };
 
-  /*componentDidUpdate() {
-    if (this.state.positionState.latitude !== "0") {
-      this.state.loadingMap = true;
+  //Broken: only passes the previous params
+  //When you press an item from the Displaylist for the first time this function returns it as a null.
+  //If you press the item again it will display the marker.
+  //If you press another item from the display list it will display it will pass the previous item. 
+  //You will have to press that item again because this function only holds the previous params
+  UNSAFE_componentWillReceiveProps()
+  {
+    //TESTER
+    const data = this.props.route.params
+    console.log("Show data: ", data);
+
+    if(data != null) {
+      this.getCoordinates(data.address);
+      this.state.marker = {
+        name: data.name,
+        address: data.address,
+        contributor: data.contributor,
+        category: data.category,
+        rating: data.rating
+      }
     }
-  }*/
-
-  componentWillUpdate() {
-
+  
+    console.log("------------ Items from the display list --------------------");
+    console.log(this.state.marker.name);
+    console.log(this.state.marker.address);
+    console.log(this.state.marker.contributor);
+    console.log(this.state.marker.category);
+    console.log(this.state.marker.rating);
+    console.log("----------- Print the converted coorinates from item --------------------");
+    console.log("Latitude: ",this.state.markerPosition.latitude);
+    console.log("Longitude: ", this.state.markerPosition.longitude);
 
   }
-  
+
   //----------------------------------------------------------------------------------
   //Location converter and Print list
 
@@ -222,6 +239,18 @@ export class MapViewer extends Component {
 
 //-----------------------------------------------------------------
 
+  handleTabsChange = (index) => {
+    console.log("index: ", index)
+    this.setState({ selectedIndex: index });
+
+    if (this.state.selectedIndex == 0) {
+      this.props.navigation.navigate("PostLocationScreen");
+    } 
+    if(this.state.selectedIndex == 1) {
+      this.props.navigation.navigate("DisplayList");
+    }
+  }
+
  renderContent = () => (
   <><View
      style={{
@@ -239,6 +268,18 @@ export class MapViewer extends Component {
        placeholder="Type Here to Search..."
        value={this.state.searchQuery} />
 
+     {/*<SegmentedControl
+       tabs={["Post location", "Display list"]}
+       paddingVertical={6}
+       containerStyle={{
+         marginVertical: 20,
+       }}
+       //segmentedControlBackgroundColor="#fff9e8ff"
+       //activeSegmentBackgroundColor="black"
+       currentIndex={this.state.selectedIndex}
+       onChange={this.handleTabsChange}
+     //theme={theme}
+      />*/}
 
       <FlatList
          data={Object.keys(this.state.locationList)}
@@ -250,7 +291,7 @@ export class MapViewer extends Component {
 
 //-----------------------------------------------------------------
 
-PlaceMarker2()
+  PlaceMarker2()
   {
     //TESTER
     const data = this.props.route.params
@@ -291,6 +332,7 @@ PlaceMarker2()
       category: item.category,
       rating: item.rating
     }
+
     //Prints the item from list saved in mapview state
     this.PrintItem();
   }
@@ -303,7 +345,6 @@ AddLocations = () => {
 
     this.matchLocations("category", "Restaurant");
     this.state.locationList.map((location) => (
-      //Convert
       console.log("What is the name of the location ", location.name ),
       console.log("What is the name of the location ", location.address ),
       this.setState(state => {
@@ -542,9 +583,9 @@ render() {
               latitudeDelta: 0.015,
               longitudeDelta: 0.0121,
             }}> 
-           {<MapView.Marker title={this.state.marker.name} coordinate={this.state.markerPosition}/>}
+           {<MapView.Marker title={this.state.marker.name} description={"Address:" + this.state.marker.address +" "+ "Contributor:" + this.state.marker.contributor} coordinate={this.state.markerPosition}/>}
            {/*this.state.markers.map(marker => ( <MapView.Marker coordinate={marker.coordinates} title={marker.title} />))*/}
-          </MapView> 
+          </MapView>
 
         </View>}
 
@@ -567,12 +608,27 @@ render() {
           </Pressable>
 
         </View>}
-
-        {<BottomSheet
-        snapPoints={[450, 250, 150]}
-        borderRadius={10}
-        renderContent={this.renderContent}
-        />}
+        <BottomSheet
+          keyboardAware
+          keyboardAwareExtraSnapHeight={50}
+          bottomSheerColor="#fff9e8ff"
+          ref="BottomSheet"
+          initialPosition={'35%'} //200, 300
+          snapPoints={[450, 250, 150]}
+          //snapPoints={['50%', '100%']}
+         // isBackDrop={true}
+          isBackDropDismissByPress={true}
+          isRoundBorderWithTipHeader={true}
+          // backDropColor="red"
+          // isModal
+           containerStyle={{backgroundColor:'#fff9e8ff'}}
+           tipStyle={{backgroundColor:"grey"}}
+          // headerStyle={{backgroundColor:"red"}}
+          // bodyStyle={{backgroundColor:"red",flex:1}}
+          body={
+            <this.renderContent/>
+          }
+        />
       </>
     );
   }
@@ -585,19 +641,6 @@ const styles = StyleSheet.create({
   },
   btncontainer: {
     flex: 1,
-  },
-  //Slider
-   TabBtn1:{
-      width:"35%",
-      backgroundColor:'rgba(182, 32, 32, 0.7)',
-      height:25,
-  },
-   //Slider
-   TabBtn2:{
-    width:"35%",
-    backgroundColor:'rgba(182, 32, 32, 0.7)',
-    height:25,
-    top: 10
   },
   listBtn: {
     borderRadius: 20,
@@ -723,7 +766,7 @@ const styles = StyleSheet.create({
     color: '#fff9e8ff',
     backgroundColor: '#fff9e8ff',
     borderColor: '#fff9e8ff',
-    top: 10,
-    marginVertical:10
+    top: -10,
+    //marginVertical:10
   }
 });
