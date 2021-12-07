@@ -136,12 +136,12 @@ export class MapViewer extends Component {
   //----------------------------------------------------------------------------------
   //matchLocations and searchlocations
 
-  matchLocations = (value1, value2) => {
+  matchLocations = async (value1, value2) => {
 
     var locationList = [];
 
     console.log('mounted')
-    firebase.firestore()
+    const match = await firebase.firestore()
       .collection('Locations')
       .where(value1, '==', value2)
       .get()
@@ -155,12 +155,12 @@ export class MapViewer extends Component {
       .catch(error => console.log(error))
   }
 
-  searchLocations = (value) => {
+  searchLocations = async (value) => {
 
     var locationList = [];
 
     console.log('mounted')
-    firebase.firestore()
+    const Searchref = await firebase.firestore()
       .collection('Locations')
       .orderBy('name')
       .startAt(value)
@@ -575,7 +575,7 @@ render() {
           userLocationUpdateInterval ={5000}
             pitchEnabled = {false}
             moveOnMarkerPress = {true}
-            mapType={"default"}
+            //mapType={"default"}
             style={styles.map}
             initialRegion={{
               latitude: 36.88639,
