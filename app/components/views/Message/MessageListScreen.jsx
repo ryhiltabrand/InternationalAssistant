@@ -514,7 +514,7 @@ export class MessageListScreen extends Component {
                     })
                   }
                 >
-                  <View style={{ backgroundColor: "black" }}>
+                  <View style={styles.box}>
                     <Image style={styles.image} source={{ uri: item.pic }} />
                     <Text style={styles.name}>Help Request: {item.name}</Text>
                   </View>

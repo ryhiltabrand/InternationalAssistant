@@ -1,5 +1,5 @@
 import { Modal, Text, View, Pressable,TextInput, Button, StyleSheet, Image } from "react-native";
-import React, {TouchableOpacity, useState} from "react";
+import React, {TouchableOpacity, useState, useEffect} from "react";
 import ApplyForRequest from "./../../shardedComponents/Help/ApplyForRequest"
 
 export default function OthersRequests({ route, navigation }) {
@@ -11,13 +11,19 @@ export default function OthersRequests({ route, navigation }) {
     Applicants,
     Campus,
     Comments,
-    Date,
+    date,
     Description,
     Helpers,
     Language,
     DocID
   } = route.params;
+  const [CorDate, setCorDate] = useState(new Date());
   const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    setCorDate(new Date(date));
+  },[]);
+
   return (
     <View style={styles.body}>
       <View style>
@@ -30,7 +36,7 @@ export default function OthersRequests({ route, navigation }) {
         <View style={styles.firstLine}>
           <Image style={styles.image} source={{ uri: Pic }} />
           <Text style={styles.name}>{Name}</Text>
-          <Text style={styles.time}>{Date.getMonth()+"-"+Date.getDate()+" @ "+Date.getHours()+":"+Date.getMinutes()}</Text>
+          <Text style={styles.time}>{CorDate.getMonth()+"-"+CorDate.getDate()+" @ "+CorDate.getHours()+":"+CorDate.getMinutes()}</Text>
         </View>
 
         <View style={styles.secondLine}>

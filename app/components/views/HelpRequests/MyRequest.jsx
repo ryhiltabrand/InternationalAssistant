@@ -160,7 +160,7 @@ class MyRequest extends React.Component {
     const doc = await usersRef.get();
     var name = doc.data().name;
     var pic = doc.data().profilepicture;
-    RequestsQuery = await firebase
+    const RequestsQuery = await firebase
       .firestore()
       .collection("Requests")
       .where("RequesterUID", "==", firebase.auth().currentUser.uid)
@@ -235,6 +235,7 @@ class MyRequest extends React.Component {
             return (
               <TouchableOpacity
                 onPress={() => {
+                  console.log(item.Date.toJSON())
                   this.props.navigation.navigate("IndividualRequest", {
                     Name: item.Name,
                     Pic: item.Pic,
@@ -246,7 +247,7 @@ class MyRequest extends React.Component {
                     HelpersUID: item.HelpersUID,
                     Language: item.Language,
                     Doc: item.DocID,
-                    Date: item.Date,
+                    date: item.Date.toJSON(),
                   });
                 }}
               >
