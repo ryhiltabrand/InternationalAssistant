@@ -49,18 +49,40 @@ class FriendsMatchScreen extends React.Component {
 
   render() {
     return (
-      <View style={{flexDirection: "column", flex: 1, backgroundColor: "#003057"}}>
-        <TouchableOpacity
-          onPress={() => {
-            this.setState({ data: [] });
-            this.Recomendations();
-            if (this.state.data.length == 0) {
-              alert("No More");
-            }
+      <View
+        style={{ flexDirection: "column", flex: 1, backgroundColor: "#003057" }}
+      >
+        <View
+          style={{
+            width: 150,
+            marginTop: 10,
+            justifyContent: "center",
+            alignSelf: "center",
           }}
         >
-          <Text>Retry</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "white",
+              //alignItems: "flex-end",
+              justifyContent: "center",
+              paddingVertical: 13,
+              //paddingHorizontal: 32,
+              borderRadius: 4,
+              borderColor: "#FFFFFF",
+              elevation: 3,
+              backgroundColor: "#404A5A",
+            }}
+            onPress={() => {
+              this.setState({ data: [] });
+              this.Recomendations();
+              if (this.state.data.length == 0) {
+                alert("No More");
+              }
+            }}
+          >
+            <Text style={{fontSize: 18, paddingLeft: 6, paddingRight: 6, color: 'white', textAlign:"center"}}>Retry</Text>
+          </TouchableOpacity>
+        </View>
         <FlatList
           style={styles.container}
           enableEmptySections={true}
@@ -69,14 +91,14 @@ class FriendsMatchScreen extends React.Component {
             return item.uid;
           }}
           renderItem={({ item }) => {
-            
             return (
               <TouchableOpacity
-              onPress={() => {
-                this.props.navigation.navigate("Profile", {
-                  UID: item.uid
-                });
-              }}>
+                onPress={() => {
+                  this.props.navigation.navigate("Profile", {
+                    UID: item.uid,
+                  });
+                }}
+              >
                 <>{/*console.log(this.state.data)*/}</>
                 <View style={styles.boxA}>
                   <View style={{ flexDirection: "row" }}>
@@ -104,7 +126,11 @@ class FriendsMatchScreen extends React.Component {
                         backgroundColor: "#404A5A",
                       }}
                     >
-                      <Text style={{fontSize: 18, paddingLeft: 6, paddingRight: 6}}>Add</Text>
+                      <Text
+                       style={{fontSize: 18, paddingLeft: 6, paddingRight: 6, color: 'white', textAlign:"center"}}
+                      >
+                        Add
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -140,7 +166,7 @@ const styles = StyleSheet.create({
   body: {
     flexDirection: "column",
     backgroundColor: "#003057",
-    flex: 1
+    flex: 1,
   },
   image: {
     width: 60,
