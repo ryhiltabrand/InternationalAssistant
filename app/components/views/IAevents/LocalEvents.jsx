@@ -26,16 +26,25 @@ export default class LocalEvents extends React.Component {
     
     constructor(props) {
         super(props);
+        this._unsubscribe;
         this.state = {
             eventsDatabase: [],
         };
     }
     componentDidMount() {
-        this.LocalEvents();
+        this.clearState();
+        this._unsubscribe = this.props.navigation.addListener("focus", () => {
+            this.clearState();
+            this.LocalEvents();
+          });
+        
     }
-    clearState = () =>{
-    }
-    componentWillUnmount() { }
+    clearState = () => {
+        this.setState({
+            eventsDatabase: [],
+        });
+      };
+    componentWillUnmount() {this._unsubscribe }
 
     LocalEvents = async () =>{
         const userRef = firebase.firestore().collection("users")

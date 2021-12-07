@@ -39,16 +39,22 @@ export default class Pic extends Component {
     };
   }
   componentDidMount() {
-    
     this._unsubscribe = this.props.navigation.addListener("focus", () => {
       this.clearState();
       this.Profile();
     });
   }
   componentWillUnmount() {this._unsubscribe();}
+
   clearState = () => {
     this.setState({
       pic: null,
+      pic: null,
+      name: null,
+      country: null,
+      language: [],
+      bio: null,
+      type: null,
     });
   };
 
